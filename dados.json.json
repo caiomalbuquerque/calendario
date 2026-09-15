@@ -1,0 +1,39 @@
+{
+  "eventos": [
+    {
+      "id": 1,
+      "data": "2026-06-10",
+      "titulo": "Disponibilização da planilha",
+      "descricao": "Planilha para revisão dos OKRs para o 3º ciclo.",
+      "tipo": "info"
+    },
+    {
+      "id": 2,
+      "data": "2026-06-19",
+      "titulo": "Prazo final para revisão dos OKRs",
+      "descricao": "A planilha será bloqueada às 15h desta data.",
+      "tipo": "prazo"
+    },
+    {
+      "id": 3,
+      "data": "2026-06-25",
+      "titulo": "Montagem das planilhas de tarefas",
+      "descricao": "",
+      "tipo": "tarefa"
+    },
+    {
+      "id": 4,
+      "data": "2026-06-26",
+      "titulo": "Montagem das planilhas de tarefas",
+      "descricao": "",
+      "tipo": "tarefa"
+    },
+    {
+      "id": 5,
+      "data": "2026-06-29",
+      "titulo": "Disponibilização das planilhas",
+      "descricao": "Planilhas de tarefas disponíveis para as Unidades.",
+      "tipo": "comunicado"
+    }
+  ]
+}
