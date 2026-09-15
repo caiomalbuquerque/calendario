@@ -40,22 +40,20 @@
     .calendar td.other-month .day-number { color: #c5cdd6; }
     .calendar td.other-month:hover { background: #f8fafc; }
     .calendar td.weekend .day-number { color: #2b6ca3; }
-    .day-number { font-size: 18px; font-weight: 600; color: #163c6d; margin-bottom: 6px; display: block; }
+    .day-number { font-size: 18px; font-weight: 600; color: #163c6d; margin-bottom: 6px; display: inline-block; }
     .calendar td.other-month .day-number { font-weight: 500; }
 
     .events-list { display: flex; flex-direction: column; gap: 4px; max-height: 100px; overflow-y: auto; }
     .event-chip { padding: 6px 8px; border-radius: 6px; font-size: 11px; line-height: 1.25; border-left: 3px solid; cursor: pointer; transition: filter 0.15s; }
     .event-chip:hover { filter: brightness(0.95); }
     .event-chip .chip-title { font-weight: 700; display: block; margin-bottom: 2px; }
-    .event-chip .chip-desc { display: none; }
-    .event-chip.expanded .chip-desc { display: block; margin-top: 3px; font-size: 10.5px; }
 
     /* Cores dos tipos de evento */
-    .tipo-info     { background: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
-    .tipo-prazo    { background: #fff8e1; border-color: #f5a623; color: #7a4b00; }
-    .tipo-tarefa   { background: #e3f2fd; border-color: #2196f3; color: #0d3c6e; }
-    .tipo-comunicado { background: #f3e5f5; border-color: #9c27b0; color: #4a148c; }
-    .tipo-feriado  { background: #ffebee; border-color: #e53935; color: #8e0000; }
+    .tipo-info      { background: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
+    .tipo-prazo     { background: #fff8e1; border-color: #f5a623; color: #7a4b00; }
+    .tipo-tarefa    { background: #e3f2fd; border-color: #2196f3; color: #0d3c6e; }
+    .tipo-comunicado{ background: #f3e5f5; border-color: #9c27b0; color: #4a148c; }
+    .tipo-feriado   { background: #ffebee; border-color: #e53935; color: #8e0000; }
 
     .day-badge { position: absolute; top: 6px; right: 6px; background: #163c6d; color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
 
@@ -72,12 +70,13 @@
     .modal .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
     .modal .actions .left { margin-right: auto; }
 
-    .events-day-list { margin: 15px 0; max-height: 250px; overflow-y: auto; }
+    .events-day-list { margin: 15px 0; max-height: 300px; overflow-y: auto; }
     .events-day-list .event-row { padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
     .events-day-list .event-row .info { flex: 1; }
     .events-day-list .event-row .info strong { display: block; margin-bottom: 3px; font-size: 14px; }
-    .events-day-list .event-row .info span { font-size: 12px; opacity: 0.85; }
-    .events-day-list .event-row .row-actions { display: flex; gap: 4px; }
+    .events-day-list .event-row .info .tipo-label { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.75; margin-bottom: 4px; letter-spacing: 0.4px; }
+    .events-day-list .event-row .info span.desc { font-size: 12px; opacity: 0.85; display: block; }
+    .events-day-list .event-row .row-actions { display: flex; gap: 4px; flex-shrink: 0; }
     .btn-mini { padding: 4px 8px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; }
     .btn-mini.edit { background: #2b6ca3; color: white; }
     .btn-mini.del { background: #dc3545; color: white; }
@@ -99,7 +98,6 @@
         .calendar td { height: 85px; padding: 4px; }
         .day-number { font-size: 13px; margin-bottom: 3px; }
         .event-chip { font-size: 9px; padding: 3px 5px; }
-        .event-chip .chip-desc { font-size: 8.5px; }
         .day-badge { font-size: 9px; padding: 1px 5px; }
     }
 </style>
@@ -129,7 +127,7 @@
         <button class="btn btn-nav" onclick="mudarMes(1)">›</button>
         <button class="btn btn-primary" onclick="hoje()">📅 Hoje</button>
         <span style="flex:1"></span>
-        <button class="btn btn-secondary" onclick="abrirModalDia()">➕ Novo evento</button>
+        <button class="btn btn-secondary" onclick="novoEventoHoje()">➕ Novo evento</button>
         <button class="btn btn-success" onclick="saveDataToGitHub()">💾 Salvar</button>
     </div>
 
@@ -144,7 +142,7 @@
     </div>
 </div>
 
-<!-- Modal de dia -->
+<!-- Modal do dia -->
 <div class="modal-overlay" id="modalDia" onclick="if(event.target===this) fecharModalDia()">
     <div class="modal">
         <h2 id="modalDiaTitulo">Eventos do dia</h2>
@@ -156,12 +154,11 @@
     </div>
 </div>
 
-<!-- Modal de formulário -->
+<!-- Modal do formulário -->
 <div class="modal-overlay" id="modalForm" onclick="if(event.target===this) fecharForm()">
     <div class="modal">
-        <h2 id="formTitulo">Novo evento</h2>
+        <h2 id="formTituloModal">Novo evento</h2>
         <input type="hidden" id="formId">
-        <input type="hidden" id="formDataOriginal">
 
         <div class="field">
             <label>Data</label>
@@ -206,9 +203,16 @@ const CACHE_DURATION = 5 * 60 * 1000;
 
 const MESES = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
 const MESES_CURTOS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const TIPO_LABEL = {
+    info: 'Informativo',
+    prazo: 'Prazo',
+    tarefa: 'Tarefa',
+    comunicado: 'Comunicado',
+    feriado: 'Feriado'
+};
 
 /* ============================================================
-   ESTADO
+   ESTADO GLOBAL
 ============================================================ */
 let data = { eventos: [] };
 let nextId = 1;
@@ -216,7 +220,7 @@ let mesAtual, anoAtual;
 let diaSelecionado = null;
 
 /* ============================================================
-   PERSISTÊNCIA
+   PERSISTÊNCIA (GitHub + cache local)
 ============================================================ */
 async function loadDataFromGitHub() {
     const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_FILE_PATH}`;
@@ -224,7 +228,10 @@ async function loadDataFromGitHub() {
         const r = await fetch(url + '?t=' + Date.now());
         if (!r.ok) throw new Error('Arquivo não encontrado');
         return await r.json();
-    } catch(e) { console.warn('Sem dados remotos:', e); return null; }
+    } catch (e) {
+        console.warn('Sem dados remotos:', e);
+        return null;
+    }
 }
 
 async function saveDataToGitHub() {
@@ -233,19 +240,30 @@ async function saveDataToGitHub() {
     const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
     let sha;
     try {
-        const r = await fetch(apiUrl + `?ref=${GITHUB_BRANCH}`, { headers: { Authorization: `Bearer ${token}` }});
+        const r = await fetch(apiUrl + `?ref=${GITHUB_BRANCH}`, { headers: { Authorization: `Bearer ${token}` } });
         if (r.ok) sha = (await r.json()).sha;
-    } catch(e) {}
+    } catch (e) { /* arquivo novo */ }
+
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-    const body = { message: `Atualiza calendário - ${new Date().toLocaleString('pt-BR')}`, content, branch: GITHUB_BRANCH };
+    const body = {
+        message: `Atualiza calendário - ${new Date().toLocaleString('pt-BR')}`,
+        content, branch: GITHUB_BRANCH
+    };
     if (sha) body.sha = sha;
+
     try {
-        const put = await fetch(apiUrl, { method: 'PUT', headers: { Authorization: `Bearer ${token}`, 'Content-Type':'application/json' }, body: JSON.stringify(body) });
-        if (!put.ok) throw new Error((await put.json()).message || 'Erro');
+        const put = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!put.ok) throw new Error((await put.json()).message || 'Erro desconhecido');
         localStorage.setItem(CACHE_TIME_KEY, String(Date.now()));
         cacheLocal();
         alert('Salvo no GitHub com sucesso!');
-    } catch(e) { alert('Erro ao salvar: ' + e.message); }
+    } catch (e) {
+        alert('Erro ao salvar: ' + e.message);
+    }
 }
 
 function cacheLocal() { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); }
@@ -253,8 +271,9 @@ function cacheLocal() { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); }
 async function loadData() {
     const raw = localStorage.getItem(CACHE_KEY);
     const t = Number(localStorage.getItem(CACHE_TIME_KEY) || 0);
+
     if (raw && t && (Date.now() - t < CACHE_DURATION)) {
-        try { data = JSON.parse(raw); prepararIds(); return; } catch(e) {}
+        try { data = JSON.parse(raw); if (!data.eventos) data.eventos = []; prepararIds(); return; } catch (e) {}
     }
     const remote = await loadDataFromGitHub();
     if (remote) {
@@ -263,7 +282,9 @@ async function loadData() {
         localStorage.setItem(CACHE_TIME_KEY, String(Date.now()));
         cacheLocal(); prepararIds(); return;
     }
-    if (raw) { try { data = JSON.parse(raw); if (!data.eventos) data.eventos = []; prepararIds(); return; } catch(e) {} }
+    if (raw) {
+        try { data = JSON.parse(raw); if (!data.eventos) data.eventos = []; prepararIds(); return; } catch (e) {}
+    }
     data = { eventos: [] };
     cacheLocal();
 }
@@ -275,7 +296,7 @@ function prepararIds() {
 }
 
 /* ============================================================
-   NAVEGAÇÃO
+   NAVEGAÇÃO DE MÊS/ANO
 ============================================================ */
 function mudarMes(delta) {
     let m = mesAtual + delta;
@@ -303,11 +324,11 @@ function sincronizarSelects() {
 function initSelects() {
     const sm = document.getElementById('selectMes');
     const sa = document.getElementById('selectAno');
-    sm.innerHTML = MESES_CURTOS.map((m,i)=>`<option value="${i}">${m}</option>`).join('');
+    sm.innerHTML = MESES_CURTOS.map((m, i) => `<option value="${i}">${m}</option>`).join('');
     const anoCorrente = new Date().getFullYear();
     const anos = [];
     for (let y = anoCorrente - 3; y <= anoCorrente + 5; y++) anos.push(y);
-    sa.innerHTML = anos.map(y=>`<option value="${y}">${y}</option>`).join('');
+    sa.innerHTML = anos.map(y => `<option value="${y}">${y}</option>`).join('');
     sm.addEventListener('change', () => { mesAtual = Number(sm.value); render(); });
     sa.addEventListener('change', () => { anoAtual = Number(sa.value); render(); });
 }
@@ -315,35 +336,40 @@ function initSelects() {
 /* ============================================================
    HELPERS
 ============================================================ */
-function pad(n){ return String(n).padStart(2,'0'); }
-function dateKey(y, m, d){ return `${y}-${pad(m+1)}-${pad(d)}`; }
+function pad(n) { return String(n).padStart(2, '0'); }
+function dateKey(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
 
 function eventosDoDia(key) {
-    return (data.eventos || []).filter(e => e.data === key).sort((a,b)=> (a.tipo||'').localeCompare(b.tipo||''));
+    return (data.eventos || [])
+        .filter(e => e.data === key)
+        .sort((a, b) => (a.tipo || '').localeCompare(b.tipo || ''));
 }
 
 function escapeHtml(t) {
     if (t == null) return '';
-    return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    return String(t)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 /* ============================================================
-   RENDER
+   RENDER DO CALENDÁRIO
 ============================================================ */
 function render() {
     document.getElementById('monthTitle').textContent = MESES[mesAtual];
     document.getElementById('yearTitle').textContent = anoAtual;
 
     const primeiroDia = new Date(anoAtual, mesAtual, 1);
-    const diaSemanaIni = primeiroDia.getDay(); // 0=Dom
+    const diaSemanaIni = primeiroDia.getDay();
     const ultimoDia = new Date(anoAtual, mesAtual + 1, 0).getDate();
     const ultimoDiaAnt = new Date(anoAtual, mesAtual, 0).getDate();
 
-    const hojeKey = (() => { const d = new Date(); return dateKey(d.getFullYear(), d.getMonth(), d.getDate()); })();
+    const hojeDate = new Date();
+    const hojeKey = dateKey(hojeDate.getFullYear(), hojeDate.getMonth(), hojeDate.getDate());
 
     let html = '<table class="calendar"><thead><tr>';
-    ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'].forEach((d,i) => {
-        html += `<th class="${(i===0||i===6)?'weekend':''}">${d}</th>`;
+    ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].forEach((d, i) => {
+        html += `<th class="${(i === 0 || i === 6) ? 'weekend' : ''}">${d}</th>`;
     });
     html += '</tr></thead><tbody>';
 
@@ -351,6 +377,7 @@ function render() {
 
     for (let i = 0; i < totalCelulas; i++) {
         if (i % 7 === 0) html += '<tr>';
+
         const dia = i - diaSemanaIni + 1;
         let cellY = anoAtual, cellM = mesAtual, cellD, other = false;
 
@@ -379,18 +406,23 @@ function render() {
 
         html += `<td class="${classes}" ${other ? '' : `onclick="abrirModalDia('${key}')"`}>`;
         html += `<span class="day-number" ${isHoje ? 'style="background:#163c6d;color:white;display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;border-radius:50%;font-size:14px;padding:0;"' : ''}>${cellD}</span>`;
+
         if (evs.length > 0) {
             html += `<span class="day-badge">${evs.length}</span>`;
             html += '<div class="events-list">';
             evs.slice(0, 4).forEach(ev => {
-                html += `<div class="event-chip tipo-${escapeHtml(ev.tipo || 'info')}" onclick="event.stopPropagation(); abrirFormEvento(${ev.id})" title="${escapeHtml(ev.descricao || ev.titulo)}">
-                    <span class="chip-title">${escapeHtml(ev.titulo)}</span>
-                    ${ev.descricao ? `<span class="chip-desc">${escapeHtml(ev.descricao)}</span>` : ''}
-                </div>`;
+                html += `<div class="event-chip tipo-${escapeHtml(ev.tipo || 'info')}"
+                              onclick="event.stopPropagation(); abrirFormEvento(${ev.id})"
+                              title="${escapeHtml(ev.descricao || ev.titulo)}">
+                            <span class="chip-title">${escapeHtml(ev.titulo)}</span>
+                         </div>`;
             });
-            if (evs.length > 4) html += `<div style="font-size:10px;text-align:center;color:#163c6d;font-weight:600;">+${evs.length - 4} mais</div>`;
+            if (evs.length > 4) {
+                html += `<div style="font-size:10px;text-align:center;color:#163c6d;font-weight:600;">+${evs.length - 4} mais</div>`;
+            }
             html += '</div>';
         }
+
         html += '</td>';
         if (i % 7 === 6) html += '</tr>';
     }
@@ -408,8 +440,8 @@ function abrirModalDia(key) {
         key = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
     }
     diaSelecionado = key;
-    const [y,m,dd] = key.split('-');
-    document.getElementById('modalDiaTitulo').textContent = `${Number(dd)} de ${MESES[Number(m)-1]} de ${y}`;
+    const [y, m, dd] = key.split('-');
+    document.getElementById('modalDiaTitulo').textContent = `${Number(dd)} de ${MESES[Number(m) - 1]} de ${y}`;
     renderListaDia();
     document.getElementById('modalDia').classList.add('active');
 }
@@ -417,6 +449,7 @@ function abrirModalDia(key) {
 function renderListaDia() {
     const evs = eventosDoDia(diaSelecionado);
     const container = document.getElementById('eventsDayList');
+
     if (evs.length === 0) {
         container.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">Nenhum evento neste dia.</p>';
         return;
@@ -424,8 +457,9 @@ function renderListaDia() {
     container.innerHTML = evs.map(ev => `
         <div class="event-row tipo-${escapeHtml(ev.tipo || 'info')}">
             <div class="info">
+                <span class="tipo-label">${escapeHtml(TIPO_LABEL[ev.tipo] || 'Informativo')}</span>
                 <strong>${escapeHtml(ev.titulo)}</strong>
-                ${ev.descricao ? `<span>${escapeHtml(ev.descricao)}</span>` : ''}
+                ${ev.descricao ? `<span class="desc">${escapeHtml(ev.descricao)}</span>` : ''}
             </div>
             <div class="row-actions">
                 <button class="btn-mini edit" onclick="abrirFormEvento(${ev.id})">Editar</button>
@@ -442,16 +476,30 @@ function fecharModalDia() {
 /* ============================================================
    MODAL DE FORMULÁRIO
 ============================================================ */
+function novoEventoHoje() {
+    const d = new Date();
+    diaSelecionado = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
+    abrirFormEvento();
+}
+
 function abrirFormEvento(id) {
     document.getElementById('modalDia').classList.remove('active');
+
     const ev = id ? (data.eventos || []).find(e => e.id === id) : null;
-    document.getElementById('formTitulo').textContent = ev ? 'Editar evento' : 'Novo evento';
+
+    // Se não veio ID e nem dia selecionado, usa hoje
+    if (!ev && !diaSelecionado) {
+        const d = new Date();
+        diaSelecionado = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
+    }
+
+    document.getElementById('formTituloModal').textContent = ev ? 'Editar evento' : 'Novo evento';
     document.getElementById('formId').value = ev ? ev.id : '';
-    document.getElementById('formDataOriginal').value = ev ? ev.data : '';
-    document.getElementById('formData').value = ev ? ev.data : (diaSelecionado || '');
+    document.getElementById('formData').value = ev ? ev.data : diaSelecionado;
     document.getElementById('formTitulo').value = ev ? ev.titulo : '';
     document.getElementById('formDescricao').value = ev ? (ev.descricao || '') : '';
     document.getElementById('formTipo').value = ev ? (ev.tipo || 'info') : 'info';
+
     document.getElementById('modalForm').classList.add('active');
     setTimeout(() => document.getElementById('formTitulo').focus(), 100);
 }
@@ -461,36 +509,39 @@ function fecharForm() {
 }
 
 function salvarEvento() {
-    const data_ = document.getElementById('formData').value;
+    const dataVal = document.getElementById('formData').value;
     const titulo = document.getElementById('formTitulo').value.trim();
     const descricao = document.getElementById('formDescricao').value.trim();
     const tipo = document.getElementById('formTipo').value;
     const id = document.getElementById('formId').value;
 
-    if (!data_) { alert('Informe a data.'); return; }
+    if (!dataVal) { alert('Informe a data.'); return; }
     if (!titulo) { alert('Informe o título.'); return; }
 
     if (id) {
-        const ev = data.eventos.find(e => e.id === Number(id));
+        const ev = (data.eventos || []).find(e => e.id === Number(id));
         if (ev) {
-            ev.data = data_;
+            ev.data = dataVal;
             ev.titulo = titulo;
             ev.descricao = descricao;
             ev.tipo = tipo;
         }
     } else {
-        data.eventos.push({ id: nextId++, data: data_, titulo, descricao, tipo });
+        data.eventos.push({ id: nextId++, data: dataVal, titulo, descricao, tipo });
     }
 
     cacheLocal();
     fecharForm();
-    diaSelecionado = data_;
+    diaSelecionado = dataVal;
     render();
+
+    // Reabre o modal do dia para o usuário ver o evento salvo
+    abrirModalDia(dataVal);
 }
 
 function excluirEvento(id) {
     if (!confirm('Excluir este evento?')) return;
-    data.eventos = data.eventos.filter(e => e.id !== id);
+    data.eventos = (data.eventos || []).filter(e => e.id !== id);
     cacheLocal();
     renderListaDia();
     render();
