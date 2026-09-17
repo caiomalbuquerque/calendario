@@ -6,99 +6,456 @@
 <title>Calendário de Eventos FGH</title>
 <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7fa; margin: 20px; color: #333; }
-    .container { max-width: 1300px; margin: 0 auto; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 16px rgba(22, 60, 109, 0.08); border: 1px solid #e6edf5; }
+    html, body { margin: 0; padding: 0; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f7fa;
+        color: #333;
+        padding: 12px;
+        min-height: 100vh;
+    }
+    .container {
+        width: 100%;
+        max-width: 1600px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 20px 22px;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(22, 60, 109, 0.08);
+        border: 1px solid #e6edf5;
+    }
 
-    .header-wrapper { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
-    .title-block h1 { margin: 0; font-size: 56px; font-weight: 900; color: #163c6d; letter-spacing: 1px; line-height: 1; text-transform: uppercase; }
-    .title-block .year-row { display: flex; align-items: center; gap: 15px; margin-top: 10px; font-size: 22px; color: #163c6d; font-weight: 500; }
-    .title-block .year-row .line { flex: 1; height: 2px; background: #163c6d; max-width: 110px; }
-    .logo-block { text-align: right; }
-    .logo-block img { height: 90px; }
-    .logo-fallback { font-size: 48px; font-weight: 900; color: #163c6d; line-height: 1; text-align: center; }
-    .logo-fallback small { display: block; font-size: 34px; letter-spacing: 2px; margin-top: -4px; }
+    /* ---------- Cabeçalho ---------- */
+    .header-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .title-block h1 {
+        margin: 0;
+        font-size: clamp(28px, 5vw, 56px);
+        font-weight: 900;
+        color: #163c6d;
+        letter-spacing: 1px;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+    .title-block .year-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+        font-size: clamp(14px, 2vw, 20px);
+        color: #163c6d;
+        font-weight: 500;
+    }
+    .title-block .year-row .line { flex: 1; height: 2px; background: #163c6d; max-width: 100px; }
+    .logo-block { text-align: right; flex-shrink: 0; }
+    .logo-block img { height: clamp(50px, 8vw, 90px); }
+    .logo-fallback {
+        font-size: clamp(28px, 6vw, 48px);
+        font-weight: 900;
+        color: #163c6d;
+        line-height: 1;
+        text-align: center;
+    }
+    .logo-fallback small { display: block; font-size: 0.7em; letter-spacing: 2px; margin-top: -4px; }
 
-    .toolbar { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; padding: 12px 15px; background: #f8fafc; border: 1px solid #e6edf5; border-radius: 8px; }
-    .toolbar label { font-weight: 600; color: #163c6d; font-size: 14px; }
-    .toolbar select { padding: 8px 12px; border: 1px solid #d1d8e2; border-radius: 6px; font-size: 14px; color: #163c6d; background: #ffffff; font-weight: 600; cursor: pointer; }
-    .btn { border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; padding: 8px 16px; font-size: 14px; }
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        background: #f8fafc;
+        border: 1px solid #e6edf5;
+        border-radius: 8px;
+    }
+    .toolbar select {
+        padding: 8px 10px;
+        border: 1px solid #d1d8e2;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #163c6d;
+        background: #ffffff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .toolbar .spacer { flex: 1; }
+    .btn {
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.15s;
+        padding: 8px 14px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
     .btn-primary { background: #163c6d; color: white; }
     .btn-primary:hover { background: #0e2b4f; }
     .btn-secondary { background: #2b6ca3; color: white; }
     .btn-secondary:hover { background: #1f5280; }
     .btn-success { background: #1a9c4a; color: white; }
     .btn-success:hover { background: #13803b; }
-    .btn-nav { background: #e9edf2; color: #163c6d; padding: 8px 14px; font-size: 18px; min-width: 44px; }
+    .btn-nav { background: #e9edf2; color: #163c6d; padding: 8px 12px; font-size: 18px; min-width: 40px; }
     .btn-nav:hover { background: #d3dde8; }
+    .btn-toggle { background: #eef3f9; color: #163c6d; border: 1px solid #d1d8e2; }
+    .btn-toggle.active { background: #163c6d; color: white; border-color: #163c6d; }
 
-    .calendar { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #dbe0e5; border-radius: 8px; overflow: hidden; }
-    .calendar thead th { background: #163c6d; color: #ffffff; padding: 14px 8px; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border: none; }
+    /* ---------- Calendário ---------- */
+    .calendar {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        table-layout: fixed;
+        border: 1px solid #dbe0e5;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .calendar thead th {
+        background: #163c6d;
+        color: #ffffff;
+        padding: 12px 6px;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+    }
     .calendar thead th.weekend { background: #1f4d85; }
-    .calendar td { border: 1px solid #e6edf5; padding: 8px; vertical-align: top; height: 130px; background: #ffffff; position: relative; cursor: pointer; transition: background 0.15s; }
+    .calendar td {
+        border: 1px solid #e6edf5;
+        padding: 6px;
+        vertical-align: top;
+        height: 160px;            /* célula mais alta para caber mais texto */
+        background: #ffffff;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.15s;
+        overflow: hidden;
+    }
     .calendar td:hover { background: #f8fbff; }
     .calendar td.other-month { background: #f8fafc; cursor: default; }
     .calendar td.other-month .day-number { color: #c5cdd6; }
     .calendar td.other-month:hover { background: #f8fafc; }
     .calendar td.weekend .day-number { color: #2b6ca3; }
-    .day-number { font-size: 18px; font-weight: 600; color: #163c6d; margin-bottom: 6px; display: inline-block; }
+    .day-number {
+        font-size: 15px;
+        font-weight: 600;
+        color: #163c6d;
+        margin-bottom: 4px;
+        display: inline-block;
+        line-height: 24px;
+        width: 24px;
+        text-align: center;
+    }
     .calendar td.other-month .day-number { font-weight: 500; }
+    .day-number.hoje {
+        background: #163c6d;
+        color: white !important;
+        border-radius: 50%;
+    }
+    .day-badge {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: #163c6d;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 10px;
+        line-height: 1.4;
+    }
 
-    .events-list { display: flex; flex-direction: column; gap: 4px; max-height: 100px; overflow-y: auto; }
-    .event-chip { padding: 6px 8px; border-radius: 6px; font-size: 11px; line-height: 1.25; border-left: 3px solid; cursor: pointer; transition: filter 0.15s; }
+    /* ---------- Lista de eventos dentro do dia ---------- */
+    .events-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        margin-top: 3px;
+        max-height: 118px;        /* permite rolagem se houver muitos eventos */
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 2px;
+    }
+    .events-list::-webkit-scrollbar { width: 5px; }
+    .events-list::-webkit-scrollbar-thumb { background: #c8d6e8; border-radius: 3px; }
+    .events-list::-webkit-scrollbar-track { background: transparent; }
+
+    /* ---------- Chips de evento ---------- */
+    .event-chip {
+        font-size: 11px;
+        line-height: 1.3;
+        padding: 5px 7px;
+        border-radius: 5px;
+        border-left: 3px solid;
+        cursor: pointer;
+        transition: filter 0.15s;
+        display: block;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        white-space: normal;       /* permite quebra de linha */
+        flex-shrink: 0;
+    }
     .event-chip:hover { filter: brightness(0.95); }
-    .event-chip .chip-title { font-weight: 700; display: block; margin-bottom: 2px; }
 
-    /* Cores dos tipos de evento */
+    .chip-title {
+        font-weight: 700;
+    }
+
+    /* Badge de responsável: leve destaque antes do título */
+    .chip-resp {
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.10);
+        padding: 0 5px;
+        border-radius: 3px;
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        margin-right: 4px;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    /* Marca de continuação para eventos com período */
+    .continuation-mark {
+        display: inline-block;
+        font-size: 10px;
+        opacity: 0.6;
+        margin-right: 3px;
+        font-weight: 700;
+    }
+
+    /* Cores por tipo */
     .tipo-info      { background: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
     .tipo-prazo     { background: #fff8e1; border-color: #f5a623; color: #7a4b00; }
     .tipo-tarefa    { background: #e3f2fd; border-color: #2196f3; color: #0d3c6e; }
     .tipo-comunicado{ background: #f3e5f5; border-color: #9c27b0; color: #4a148c; }
     .tipo-feriado   { background: #ffebee; border-color: #e53935; color: #8e0000; }
 
-    .day-badge { position: absolute; top: 6px; right: 6px; background: #163c6d; color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
+    /* ---------- Visão de lista (mobile) ---------- */
+    .list-view { display: none; }
+    .list-view.active { display: block; }
+    .calendar-view.hidden { display: none; }
 
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(22, 60, 109, 0.55); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .list-day {
+        border: 1px solid #e6edf5;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        background: #ffffff;
+    }
+    .list-day-header {
+        background: #f0f4f8;
+        padding: 8px 12px;
+        font-weight: 700;
+        color: #163c6d;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .list-day-header .weekday {
+        font-weight: 600;
+        font-size: 12px;
+        color: #5a7ba3;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .list-day-body { padding: 8px 10px; }
+    .list-day-body .event-chip {
+        margin-bottom: 5px;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    .list-day-body .event-chip:last-child { margin-bottom: 0; }
+
+    /* ---------- Legenda ---------- */
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid #e6edf5;
+        font-size: 12px;
+        color: #555;
+    }
+    .legend .item { display: flex; align-items: center; gap: 6px; }
+    .legend .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        border-left: 3px solid;
+    }
+
+    /* ---------- Modal ---------- */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(22, 60, 109, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 16px;
+    }
     .modal-overlay.active { display: flex; }
-    .modal { background: white; border-radius: 12px; padding: 25px; max-width: 520px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.25); max-height: 90vh; overflow-y: auto; }
-    .modal h2 { margin: 0 0 18px 0; color: #163c6d; font-size: 22px; }
-    .modal .field { margin-bottom: 14px; }
-    .modal label { display: block; font-weight: 600; color: #163c6d; font-size: 13px; margin-bottom: 5px; }
-    .modal input[type="text"], .modal input[type="date"], .modal textarea, .modal select { width: 100%; padding: 10px; border: 1px solid #d1d8e2; border-radius: 6px; font-size: 14px; font-family: inherit; color: #333; }
-    .modal textarea { resize: vertical; min-height: 80px; }
-    .modal input:focus, .modal textarea:focus, .modal select:focus { outline: none; border-color: #2b6ca3; box-shadow: 0 0 0 3px rgba(43,108,163,0.1); }
-    .modal .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
+    .modal {
+        background: white;
+        border-radius: 12px;
+        padding: 22px;
+        max-width: 540px;
+        width: 100%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+    .modal h2 { margin: 0 0 16px 0; color: #163c6d; font-size: 20px; }
+    .modal .field { margin-bottom: 12px; }
+    .modal label {
+        display: block;
+        font-weight: 600;
+        color: #163c6d;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    .modal .hint { font-size: 11px; color: #7a8ba3; margin-top: 3px; display: block; }
+    .modal input[type="text"],
+    .modal input[type="date"],
+    .modal textarea,
+    .modal select {
+        width: 100%;
+        padding: 9px 10px;
+        border: 1px solid #d1d8e2;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+        color: #333;
+    }
+    .modal textarea { resize: vertical; min-height: 70px; }
+    .modal input:focus,
+    .modal textarea:focus,
+    .modal select:focus {
+        outline: none;
+        border-color: #2b6ca3;
+        box-shadow: 0 0 0 3px rgba(43, 108, 163, 0.1);
+    }
+    .modal .actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 18px;
+        flex-wrap: wrap;
+    }
     .modal .actions .left { margin-right: auto; }
 
-    .events-day-list { margin: 15px 0; max-height: 300px; overflow-y: auto; }
-    .events-day-list .event-row { padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-    .events-day-list .event-row .info { flex: 1; }
-    .events-day-list .event-row .info strong { display: block; margin-bottom: 3px; font-size: 14px; }
-    .events-day-list .event-row .info .tipo-label { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.75; margin-bottom: 4px; letter-spacing: 0.4px; }
-    .events-day-list .event-row .info span.desc { font-size: 12px; opacity: 0.85; display: block; }
-    .events-day-list .event-row .row-actions { display: flex; gap: 4px; flex-shrink: 0; }
-    .btn-mini { padding: 4px 8px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; }
+    .events-day-list { margin: 12px 0; max-height: 320px; overflow-y: auto; }
+    .events-day-list .event-row {
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        border-left: 4px solid;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .events-day-list .event-row .info { flex: 1; min-width: 0; }
+    .events-day-list .event-row .info .tipo-label {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        opacity: 0.75;
+        margin-bottom: 3px;
+        letter-spacing: 0.4px;
+    }
+    .events-day-list .event-row .info .resp-label {
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.08);
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+        margin-left: 4px;
+    }
+    .events-day-list .event-row .info strong {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 14px;
+        word-break: break-word;
+    }
+    .events-day-list .event-row .info .periodo {
+        font-size: 11px;
+        opacity: 0.8;
+        display: block;
+        margin-bottom: 3px;
+        font-style: italic;
+    }
+    .events-day-list .event-row .info .desc {
+        font-size: 12px;
+        opacity: 0.85;
+        display: block;
+        word-break: break-word;
+    }
+    .events-day-list .event-row .row-actions {
+        display: flex;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+    .btn-mini {
+        padding: 4px 8px;
+        font-size: 11px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
     .btn-mini.edit { background: #2b6ca3; color: white; }
     .btn-mini.del { background: #dc3545; color: white; }
 
-    .legend { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e6edf5; font-size: 12px; color: #555; }
-    .legend .item { display: flex; align-items: center; gap: 6px; }
-    .legend .dot { width: 12px; height: 12px; border-radius: 3px; border-left: 3px solid; }
-
-    @media (max-width: 800px) {
-        body { margin: 8px; padding: 0; }
-        .container { padding: 14px; }
-        .title-block h1 { font-size: 34px; }
-        .title-block .year-row { font-size: 16px; }
-        .logo-block img { height: 55px; }
-        .logo-fallback { font-size: 32px; } .logo-fallback small { font-size: 22px; }
-        .toolbar { padding: 10px; gap: 8px; }
-        .toolbar select, .toolbar .btn { font-size: 12px; padding: 6px 10px; }
-        .calendar thead th { font-size: 11px; padding: 8px 3px; }
-        .calendar td { height: 85px; padding: 4px; }
-        .day-number { font-size: 13px; margin-bottom: 3px; }
-        .event-chip { font-size: 9px; padding: 3px 5px; }
-        .day-badge { font-size: 9px; padding: 1px 5px; }
+    /* ---------- Responsividade ---------- */
+    @media (max-width: 900px) {
+        body { padding: 8px; }
+        .container { padding: 14px; border-radius: 8px; }
+        .header-wrapper { gap: 10px; margin-bottom: 14px; }
+        .toolbar { padding: 8px 10px; gap: 6px; margin-bottom: 12px; }
+        .toolbar select { font-size: 12px; padding: 6px 8px; }
+        .toolbar .btn { font-size: 12px; padding: 6px 10px; }
+        .btn-nav { padding: 6px 10px; font-size: 16px; min-width: 34px; }
+        .calendar thead th { font-size: 10.5px; padding: 8px 2px; }
+        .calendar td { height: 120px; padding: 4px; }
+        .day-number { font-size: 12px; line-height: 18px; width: 18px; }
+        .day-badge { font-size: 9px; padding: 1px 5px; top: 4px; right: 4px; }
+        .event-chip { font-size: 10px; padding: 4px 5px; }
+        .chip-resp { font-size: 8.5px; padding: 0 4px; }
+        .events-list { max-height: 82px; }
+    }
+    @media (max-width: 560px) {
+        .title-block h1 { font-size: 26px; }
+        .title-block .year-row { font-size: 13px; }
+        .logo-block img { height: 44px; }
+        .toolbar { gap: 5px; }
+        .toolbar .spacer { display: none; }
+        .toolbar .btn { flex: 1; justify-content: center; }
+        .calendar thead th { font-size: 9.5px; padding: 6px 1px; letter-spacing: 0; }
+        .calendar td { height: 95px; padding: 3px; }
+        .day-number { font-size: 11px; line-height: 16px; width: 16px; }
+        .event-chip { font-size: 9px; padding: 3px 4px; }
+        .chip-resp { font-size: 8px; padding: 0 3px; }
+        .day-badge { font-size: 8px; padding: 0 4px; }
+        .events-list { max-height: 62px; }
+        .modal { padding: 16px; }
     }
 </style>
 </head>
@@ -115,23 +472,27 @@
             </div>
         </div>
         <div class="logo-block" id="logoBlock">
-            <img src="images/logo_fgh.png" alt="Logo FGH" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';">
+            <img src="images/logo_fgh.png" alt="Logo FGH"
+                 onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';">
             <div id="logoFallback" class="logo-fallback" style="display:none;">FGH</div>
         </div>
     </div>
 
     <div class="toolbar">
-        <button class="btn btn-nav" onclick="mudarMes(-1)">‹</button>
+        <button class="btn btn-nav" onclick="mudarMes(-1)" title="Mês anterior">‹</button>
         <select id="selectMes"></select>
         <select id="selectAno"></select>
-        <button class="btn btn-nav" onclick="mudarMes(1)">›</button>
+        <button class="btn btn-nav" onclick="mudarMes(1)" title="Próximo mês">›</button>
         <button class="btn btn-primary" onclick="hoje()">📅 Hoje</button>
-        <span style="flex:1"></span>
+        <button class="btn btn-toggle" id="btnViewMonth" onclick="setView('mes')">Mês</button>
+        <button class="btn btn-toggle" id="btnViewList" onclick="setView('lista')">Lista</button>
+        <span class="spacer"></span>
         <button class="btn btn-secondary" onclick="novoEventoHoje()">➕ Novo evento</button>
         <button class="btn btn-success" onclick="saveDataToGitHub()">💾 Salvar</button>
     </div>
 
-    <div id="calendarContainer"></div>
+    <div id="calendarContainer" class="calendar-view"></div>
+    <div id="listContainer" class="list-view"></div>
 
     <div class="legend">
         <div class="item"><div class="dot tipo-info"></div> Informativo</div>
@@ -161,12 +522,22 @@
         <input type="hidden" id="formId">
 
         <div class="field">
-            <label>Data</label>
-            <input type="date" id="formData">
+            <label>Data de início</label>
+            <input type="date" id="formDataInicio">
+        </div>
+        <div class="field">
+            <label>Data de término (opcional)</label>
+            <input type="date" id="formDataFim">
+            <span class="hint">Deixe em branco para eventos de um único dia. Preencha para criar uma tarefa com período.</span>
         </div>
         <div class="field">
             <label>Título</label>
             <input type="text" id="formTitulo" placeholder="Ex.: Disponibilização da planilha">
+        </div>
+        <div class="field">
+            <label>Responsável (opcional)</label>
+            <input type="text" id="formResponsavel" placeholder="Ex.: João Silva">
+            <span class="hint">Se preenchido, aparece em destaque antes do título do evento.</span>
         </div>
         <div class="field">
             <label>Descrição (opcional)</label>
@@ -203,6 +574,8 @@ const CACHE_DURATION = 5 * 60 * 1000;
 
 const MESES = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
 const MESES_CURTOS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const DIAS_SEMANA_LONGO = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+
 const TIPO_LABEL = {
     info: 'Informativo',
     prazo: 'Prazo',
@@ -218,9 +591,10 @@ let data = { eventos: [] };
 let nextId = 1;
 let mesAtual, anoAtual;
 let diaSelecionado = null;
+let modoVisualizacao = 'mes'; // 'mes' | 'lista'
 
 /* ============================================================
-   PERSISTÊNCIA (GitHub + cache local)
+   PERSISTÊNCIA
 ============================================================ */
 async function loadDataFromGitHub() {
     const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_FILE_PATH}`;
@@ -273,30 +647,340 @@ async function loadData() {
     const t = Number(localStorage.getItem(CACHE_TIME_KEY) || 0);
 
     if (raw && t && (Date.now() - t < CACHE_DURATION)) {
-        try { data = JSON.parse(raw); if (!data.eventos) data.eventos = []; prepararIds(); return; } catch (e) {}
+        try { data = JSON.parse(raw); prepararDados(); return; } catch (e) {}
     }
     const remote = await loadDataFromGitHub();
     if (remote) {
         data = remote;
-        if (!data.eventos) data.eventos = [];
         localStorage.setItem(CACHE_TIME_KEY, String(Date.now()));
-        cacheLocal(); prepararIds(); return;
+        prepararDados(); cacheLocal(); return;
     }
     if (raw) {
-        try { data = JSON.parse(raw); if (!data.eventos) data.eventos = []; prepararIds(); return; } catch (e) {}
+        try { data = JSON.parse(raw); prepararDados(); return; } catch (e) {}
     }
     data = { eventos: [] };
     cacheLocal();
 }
 
-function prepararIds() {
+function prepararDados() {
+    if (!data.eventos) data.eventos = [];
+
+    // Migração: eventos antigos com "data" passam a ter dataInicio/dataFim
+    data.eventos.forEach(ev => {
+        if (!ev.dataInicio && ev.data) {
+            ev.dataInicio = ev.data;
+            delete ev.data;
+        }
+        if (!ev.dataFim) ev.dataFim = ev.dataInicio;
+        if (ev.responsavel === undefined) ev.responsavel = '';
+    });
+
     let max = 0;
-    (data.eventos || []).forEach(e => { if (e.id > max) max = e.id; });
+    data.eventos.forEach(e => { if (e.id > max) max = e.id; });
     nextId = max + 1;
 }
 
 /* ============================================================
-   NAVEGAÇÃO DE MÊS/ANO
+   HELPERS
+============================================================ */
+function pad(n) { return String(n).padStart(2, '0'); }
+function dateKey(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
+
+function parseDateKey(key) {
+    const [y, m, d] = key.split('-').map(Number);
+    return new Date(y, m - 1, d);
+}
+
+function formatarDataBR(key) {
+    const [y, m, d] = key.split('-');
+    return `${Number(d)}/${Number(m)}/${y}`;
+}
+
+function escapeHtml(t) {
+    if (t == null) return '';
+    return String(t)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+/* ============================================================
+   CONSTRUÇÃO DO MAPA DE EVENTOS DO MÊS
+   { 'YYYY-MM-DD': [ {ev, position} ] }
+   position: 'single' | 'start' | 'middle' | 'end'
+============================================================ */
+function construirMapaEventos() {
+    const mapa = {};
+    const primeiroDiaMes = new Date(anoAtual, mesAtual, 1);
+    const ultimoDiaMes = new Date(anoAtual, mesAtual + 1, 0);
+
+    (data.eventos || []).forEach(ev => {
+        const iniKey = ev.dataInicio || ev.dataFim;
+        const fimKey = ev.dataFim || ev.dataInicio;
+        if (!iniKey || !fimKey) return;
+
+        const dIni = parseDateKey(iniKey);
+        const dFim = parseDateKey(fimKey);
+
+        if (dFim < primeiroDiaMes || dIni > ultimoDiaMes) return;
+
+        const visIni = dIni < primeiroDiaMes ? primeiroDiaMes : dIni;
+        const visFim = dFim > ultimoDiaMes ? ultimoDiaMes : dFim;
+
+        const cursor = new Date(visIni);
+        while (cursor <= visFim) {
+            const key = dateKey(cursor.getFullYear(), cursor.getMonth(), cursor.getDate());
+
+            let position;
+            if (dIni.getTime() === dFim.getTime()) {
+                position = 'single';
+            } else if (cursor.getTime() === visIni.getTime()) {
+                position = 'start';
+            } else if (cursor.getTime() === visFim.getTime()) {
+                position = 'end';
+            } else {
+                position = 'middle';
+            }
+
+            if (!mapa[key]) mapa[key] = [];
+            mapa[key].push({ ev, position });
+            cursor.setDate(cursor.getDate() + 1);
+        }
+    });
+
+    // Ordena: primeiro os eventos com período (pela data de início), depois os de um único dia
+    Object.keys(mapa).forEach(key => {
+        mapa[key].sort((a, b) => {
+            const aPeriodo = a.ev.dataInicio !== a.ev.dataFim ? 0 : 1;
+            const bPeriodo = b.ev.dataInicio !== b.ev.dataFim ? 0 : 1;
+            if (aPeriodo !== bPeriodo) return aPeriodo - bPeriodo;
+            if (a.ev.dataInicio !== b.ev.dataInicio) return a.ev.dataInicio.localeCompare(b.ev.dataInicio);
+            return (a.ev.id || 0) - (b.ev.id || 0);
+        });
+    });
+
+    return mapa;
+}
+
+/* ============================================================
+   RENDER DA VISÃO DE MÊS
+============================================================ */
+function renderMes() {
+    document.getElementById('monthTitle').textContent = MESES[mesAtual];
+    document.getElementById('yearTitle').textContent = anoAtual;
+
+    const primeiroDia = new Date(anoAtual, mesAtual, 1);
+    const diaSemanaIni = primeiroDia.getDay();
+    const ultimoDia = new Date(anoAtual, mesAtual + 1, 0).getDate();
+    const ultimoDiaAnt = new Date(anoAtual, mesAtual, 0).getDate();
+
+    const hojeDate = new Date();
+    const hojeKey = dateKey(hojeDate.getFullYear(), hojeDate.getMonth(), hojeDate.getDate());
+
+    const mapa = construirMapaEventos();
+
+    let html = '<table class="calendar"><thead><tr>';
+    ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].forEach((d, i) => {
+        html += `<th class="${(i === 0 || i === 6) ? 'weekend' : ''}">${d}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    const totalCelulas = Math.ceil((diaSemanaIni + ultimoDia) / 7) * 7;
+
+    for (let i = 0; i < totalCelulas; i++) {
+        if (i % 7 === 0) html += '<tr>';
+
+        const dia = i - diaSemanaIni + 1;
+        let cellY = anoAtual, cellM = mesAtual, cellD, other = false;
+
+        if (dia < 1) {
+            other = true;
+            cellM = mesAtual - 1; cellY = anoAtual;
+            if (cellM < 0) { cellM = 11; cellY--; }
+            cellD = ultimoDiaAnt + dia;
+        } else if (dia > ultimoDia) {
+            other = true;
+            cellM = mesAtual + 1; cellY = anoAtual;
+            if (cellM > 11) { cellM = 0; cellY++; }
+            cellD = dia - ultimoDia;
+        } else {
+            cellD = dia;
+        }
+
+        const key = dateKey(cellY, cellM, cellD);
+        const eventosDia = (!other && mapa[key]) ? mapa[key] : [];
+        const isWeekend = (i % 7 === 0 || i % 7 === 6);
+        const isHoje = key === hojeKey;
+
+        let classes = '';
+        if (other) classes += ' other-month';
+        if (isWeekend) classes += ' weekend';
+
+        html += `<td class="${classes}" ${other ? '' : `onclick="abrirModalDia('${key}')"`}>`;
+        html += `<span class="day-number ${isHoje ? 'hoje' : ''}">${cellD}</span>`;
+
+        if (eventosDia.length > 0) {
+            html += `<span class="day-badge">${eventosDia.length}</span>`;
+            html += '<div class="events-list">';
+
+            eventosDia.slice(0, 8).forEach(({ ev, position }) => {
+                html += renderChipEvento(ev, position);
+            });
+
+            if (eventosDia.length > 8) {
+                html += `<div style="font-size:10px;text-align:center;color:#163c6d;font-weight:600;">+${eventosDia.length - 8} mais</div>`;
+            }
+            html += '</div>';
+        }
+
+        html += '</td>';
+        if (i % 7 === 6) html += '</tr>';
+    }
+
+    html += '</tbody></table>';
+    document.getElementById('calendarContainer').innerHTML = html;
+}
+
+/* ============================================================
+   CHIP DE EVENTO — sempre mostra o texto completo
+   Nos dias de continuação (não início), exibe uma seta ↳
+============================================================ */
+function renderChipEvento(ev, position) {
+    const tipoClass = 'tipo-' + escapeHtml(ev.tipo || 'info');
+    const isMultiDay = ev.dataInicio !== ev.dataFim;
+    const isContinuation = isMultiDay && position !== 'start' && position !== 'single';
+
+    // Tooltip nativo
+    const partes = [];
+    if (ev.responsavel) partes.push('Responsável: ' + ev.responsavel);
+    partes.push(ev.titulo);
+    if (isMultiDay) {
+        partes.push(`Período: ${formatarDataBR(ev.dataInicio)} → ${formatarDataBR(ev.dataFim)}`);
+    }
+    if (ev.descricao) partes.push('\n' + ev.descricao);
+    const tooltip = partes.join(' • ');
+
+    const respHtml = ev.responsavel
+        ? `<span class="chip-resp" title="Responsável: ${escapeHtml(ev.responsavel)}">@${escapeHtml(ev.responsavel)}</span>`
+        : '';
+
+    // Marca de continuação para dias no meio/fim do período
+    const continuationMark = isContinuation
+        ? '<span class="continuation-mark" title="Continuação">↳</span>'
+        : '';
+
+    return `<div class="event-chip ${tipoClass}"
+                 data-id="${ev.id}"
+                 title="${escapeHtml(tooltip)}"
+                 onclick="event.stopPropagation(); abrirFormEvento(${ev.id})">
+                ${continuationMark}${respHtml}<span class="chip-title">${escapeHtml(ev.titulo)}</span>
+            </div>`;
+}
+
+/* ============================================================
+   RENDER DA VISÃO DE LISTA
+============================================================ */
+function renderLista() {
+    document.getElementById('monthTitle').textContent = MESES[mesAtual];
+    document.getElementById('yearTitle').textContent = anoAtual;
+
+    const ultimoDia = new Date(anoAtual, mesAtual + 1, 0).getDate();
+    const hojeDate = new Date();
+    const hojeKey = dateKey(hojeDate.getFullYear(), hojeDate.getMonth(), hojeDate.getDate());
+
+    const mapa = construirMapaEventos();
+
+    let html = '';
+    let totalEventos = 0;
+
+    for (let d = 1; d <= ultimoDia; d++) {
+        const key = dateKey(anoAtual, mesAtual, d);
+        const eventosDia = mapa[key] || [];
+        if (eventosDia.length === 0) continue;
+
+        totalEventos += eventosDia.length;
+
+        const dt = new Date(anoAtual, mesAtual, d);
+        const diaSemana = DIAS_SEMANA_LONGO[dt.getDay()];
+        const isHoje = key === hojeKey;
+
+        html += `
+            <div class="list-day">
+                <div class="list-day-header" ${isHoje ? 'style="background:#163c6d;color:white;"' : ''}>
+                    <span>${d} de ${MESES[mesAtual]} ${isHoje ? ' • HOJE' : ''}</span>
+                    <span class="weekday" ${isHoje ? 'style="color:#c8d6e8;"' : ''}>${diaSemana}</span>
+                </div>
+                <div class="list-day-body">
+                    ${eventosDia.map(({ ev }) => renderChipLista(ev)).join('')}
+                </div>
+            </div>`;
+    }
+
+    if (totalEventos === 0) {
+        html = `<p style="text-align:center;color:#888;padding:40px 20px;font-size:14px;">
+            Nenhum evento neste mês.
+        </p>`;
+    }
+
+    document.getElementById('listContainer').innerHTML = html;
+}
+
+function renderChipLista(ev) {
+    const tipoClass = 'tipo-' + escapeHtml(ev.tipo || 'info');
+    const respHtml = ev.responsavel
+        ? `<span class="chip-resp">@${escapeHtml(ev.responsavel)}</span>`
+        : '';
+    const periodoInfo = ev.dataInicio !== ev.dataFim
+        ? `<div style="font-size:11px;opacity:0.75;margin-top:4px;font-style:italic;">
+              📅 ${formatarDataBR(ev.dataInicio)} → ${formatarDataBR(ev.dataFim)}
+           </div>`
+        : '';
+    const descInfo = ev.descricao
+        ? `<div style="font-size:12px;opacity:0.85;margin-top:4px;">${escapeHtml(ev.descricao)}</div>`
+        : '';
+    const tipoInfo = `<div style="font-size:10px;font-weight:700;text-transform:uppercase;opacity:0.7;margin-top:2px;">
+        ${escapeHtml(TIPO_LABEL[ev.tipo] || 'Informativo')}
+    </div>`;
+
+    return `<div class="event-chip ${tipoClass}"
+                 onclick="abrirFormEvento(${ev.id})"
+                 style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                    ${respHtml}
+                    <strong style="font-size:13px;">${escapeHtml(ev.titulo)}</strong>
+                </div>
+                ${periodoInfo}
+                ${descInfo}
+                ${tipoInfo}
+            </div>`;
+}
+
+/* ============================================================
+   RENDER GERAL
+============================================================ */
+function render() {
+    if (modoVisualizacao === 'mes') {
+        document.getElementById('calendarContainer').classList.remove('hidden');
+        document.getElementById('listContainer').classList.remove('active');
+        document.getElementById('btnViewMonth').classList.add('active');
+        document.getElementById('btnViewList').classList.remove('active');
+        renderMes();
+    } else {
+        document.getElementById('calendarContainer').classList.add('hidden');
+        document.getElementById('listContainer').classList.add('active');
+        document.getElementById('btnViewMonth').classList.remove('active');
+        document.getElementById('btnViewList').classList.add('active');
+        renderLista();
+    }
+}
+
+function setView(v) {
+    modoVisualizacao = v;
+    localStorage.setItem('calendario_view_mode', v);
+    render();
+}
+
+/* ============================================================
+   NAVEGAÇÃO
 ============================================================ */
 function mudarMes(delta) {
     let m = mesAtual + delta;
@@ -334,104 +1018,6 @@ function initSelects() {
 }
 
 /* ============================================================
-   HELPERS
-============================================================ */
-function pad(n) { return String(n).padStart(2, '0'); }
-function dateKey(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
-
-function eventosDoDia(key) {
-    return (data.eventos || [])
-        .filter(e => e.data === key)
-        .sort((a, b) => (a.tipo || '').localeCompare(b.tipo || ''));
-}
-
-function escapeHtml(t) {
-    if (t == null) return '';
-    return String(t)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-}
-
-/* ============================================================
-   RENDER DO CALENDÁRIO
-============================================================ */
-function render() {
-    document.getElementById('monthTitle').textContent = MESES[mesAtual];
-    document.getElementById('yearTitle').textContent = anoAtual;
-
-    const primeiroDia = new Date(anoAtual, mesAtual, 1);
-    const diaSemanaIni = primeiroDia.getDay();
-    const ultimoDia = new Date(anoAtual, mesAtual + 1, 0).getDate();
-    const ultimoDiaAnt = new Date(anoAtual, mesAtual, 0).getDate();
-
-    const hojeDate = new Date();
-    const hojeKey = dateKey(hojeDate.getFullYear(), hojeDate.getMonth(), hojeDate.getDate());
-
-    let html = '<table class="calendar"><thead><tr>';
-    ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].forEach((d, i) => {
-        html += `<th class="${(i === 0 || i === 6) ? 'weekend' : ''}">${d}</th>`;
-    });
-    html += '</tr></thead><tbody>';
-
-    const totalCelulas = Math.ceil((diaSemanaIni + ultimoDia) / 7) * 7;
-
-    for (let i = 0; i < totalCelulas; i++) {
-        if (i % 7 === 0) html += '<tr>';
-
-        const dia = i - diaSemanaIni + 1;
-        let cellY = anoAtual, cellM = mesAtual, cellD, other = false;
-
-        if (dia < 1) {
-            other = true;
-            cellM = mesAtual - 1; cellY = anoAtual;
-            if (cellM < 0) { cellM = 11; cellY--; }
-            cellD = ultimoDiaAnt + dia;
-        } else if (dia > ultimoDia) {
-            other = true;
-            cellM = mesAtual + 1; cellY = anoAtual;
-            if (cellM > 11) { cellM = 0; cellY++; }
-            cellD = dia - ultimoDia;
-        } else {
-            cellD = dia;
-        }
-
-        const key = dateKey(cellY, cellM, cellD);
-        const evs = eventosDoDia(key);
-        const isWeekend = (i % 7 === 0 || i % 7 === 6);
-        const isHoje = key === hojeKey;
-
-        let classes = 'day-cell';
-        if (other) classes += ' other-month';
-        if (isWeekend) classes += ' weekend';
-
-        html += `<td class="${classes}" ${other ? '' : `onclick="abrirModalDia('${key}')"`}>`;
-        html += `<span class="day-number" ${isHoje ? 'style="background:#163c6d;color:white;display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;border-radius:50%;font-size:14px;padding:0;"' : ''}>${cellD}</span>`;
-
-        if (evs.length > 0) {
-            html += `<span class="day-badge">${evs.length}</span>`;
-            html += '<div class="events-list">';
-            evs.slice(0, 4).forEach(ev => {
-                html += `<div class="event-chip tipo-${escapeHtml(ev.tipo || 'info')}"
-                              onclick="event.stopPropagation(); abrirFormEvento(${ev.id})"
-                              title="${escapeHtml(ev.descricao || ev.titulo)}">
-                            <span class="chip-title">${escapeHtml(ev.titulo)}</span>
-                         </div>`;
-            });
-            if (evs.length > 4) {
-                html += `<div style="font-size:10px;text-align:center;color:#163c6d;font-weight:600;">+${evs.length - 4} mais</div>`;
-            }
-            html += '</div>';
-        }
-
-        html += '</td>';
-        if (i % 7 === 6) html += '</tr>';
-    }
-
-    html += '</tbody></table>';
-    document.getElementById('calendarContainer').innerHTML = html;
-}
-
-/* ============================================================
    MODAL DO DIA
 ============================================================ */
 function abrirModalDia(key) {
@@ -441,32 +1027,51 @@ function abrirModalDia(key) {
     }
     diaSelecionado = key;
     const [y, m, dd] = key.split('-');
-    document.getElementById('modalDiaTitulo').textContent = `${Number(dd)} de ${MESES[Number(m) - 1]} de ${y}`;
+    document.getElementById('modalDiaTitulo').textContent =
+        `${Number(dd)} de ${MESES[Number(m) - 1]} de ${y}`;
     renderListaDia();
     document.getElementById('modalDia').classList.add('active');
 }
 
 function renderListaDia() {
-    const evs = eventosDoDia(diaSelecionado);
+    const evs = (data.eventos || [])
+        .filter(e => {
+            const ini = e.dataInicio || e.data;
+            const fim = e.dataFim || ini;
+            return diaSelecionado >= ini && diaSelecionado <= fim;
+        })
+        .sort((a, b) => (a.dataInicio || '').localeCompare(b.dataInicio || ''));
+
     const container = document.getElementById('eventsDayList');
 
     if (evs.length === 0) {
         container.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">Nenhum evento neste dia.</p>';
         return;
     }
-    container.innerHTML = evs.map(ev => `
+
+    container.innerHTML = evs.map(ev => {
+        const periodo = ev.dataInicio !== ev.dataFim
+            ? `<span class="periodo">📅 ${formatarDataBR(ev.dataInicio)} → ${formatarDataBR(ev.dataFim)}</span>`
+            : '';
+        const resp = ev.responsavel
+            ? `<span class="resp-label">@${escapeHtml(ev.responsavel)}</span>`
+            : '';
+
+        return `
         <div class="event-row tipo-${escapeHtml(ev.tipo || 'info')}">
             <div class="info">
                 <span class="tipo-label">${escapeHtml(TIPO_LABEL[ev.tipo] || 'Informativo')}</span>
+                ${resp}
                 <strong>${escapeHtml(ev.titulo)}</strong>
+                ${periodo}
                 ${ev.descricao ? `<span class="desc">${escapeHtml(ev.descricao)}</span>` : ''}
             </div>
             <div class="row-actions">
                 <button class="btn-mini edit" onclick="abrirFormEvento(${ev.id})">Editar</button>
                 <button class="btn-mini del" onclick="excluirEvento(${ev.id})">Excluir</button>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 function fecharModalDia() {
@@ -474,7 +1079,7 @@ function fecharModalDia() {
 }
 
 /* ============================================================
-   MODAL DE FORMULÁRIO
+   MODAL DO FORMULÁRIO
 ============================================================ */
 function novoEventoHoje() {
     const d = new Date();
@@ -487,7 +1092,6 @@ function abrirFormEvento(id) {
 
     const ev = id ? (data.eventos || []).find(e => e.id === id) : null;
 
-    // Se não veio ID e nem dia selecionado, usa hoje
     if (!ev && !diaSelecionado) {
         const d = new Date();
         diaSelecionado = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
@@ -495,8 +1099,10 @@ function abrirFormEvento(id) {
 
     document.getElementById('formTituloModal').textContent = ev ? 'Editar evento' : 'Novo evento';
     document.getElementById('formId').value = ev ? ev.id : '';
-    document.getElementById('formData').value = ev ? ev.data : diaSelecionado;
+    document.getElementById('formDataInicio').value = ev ? ev.dataInicio : diaSelecionado;
+    document.getElementById('formDataFim').value = ev ? (ev.dataFim !== ev.dataInicio ? ev.dataFim : '') : '';
     document.getElementById('formTitulo').value = ev ? ev.titulo : '';
+    document.getElementById('formResponsavel').value = ev ? (ev.responsavel || '') : '';
     document.getElementById('formDescricao').value = ev ? (ev.descricao || '') : '';
     document.getElementById('formTipo').value = ev ? (ev.tipo || 'info') : 'info';
 
@@ -509,34 +1115,46 @@ function fecharForm() {
 }
 
 function salvarEvento() {
-    const dataVal = document.getElementById('formData').value;
+    const dataInicio = document.getElementById('formDataInicio').value;
+    const dataFimRaw = document.getElementById('formDataFim').value;
     const titulo = document.getElementById('formTitulo').value.trim();
+    const responsavel = document.getElementById('formResponsavel').value.trim();
     const descricao = document.getElementById('formDescricao').value.trim();
     const tipo = document.getElementById('formTipo').value;
     const id = document.getElementById('formId').value;
 
-    if (!dataVal) { alert('Informe a data.'); return; }
+    if (!dataInicio) { alert('Informe a data de início.'); return; }
     if (!titulo) { alert('Informe o título.'); return; }
+
+    const dataFim = dataFimRaw && dataFimRaw > dataInicio ? dataFimRaw : dataInicio;
 
     if (id) {
         const ev = (data.eventos || []).find(e => e.id === Number(id));
         if (ev) {
-            ev.data = dataVal;
+            ev.dataInicio = dataInicio;
+            ev.dataFim = dataFim;
             ev.titulo = titulo;
+            ev.responsavel = responsavel;
             ev.descricao = descricao;
             ev.tipo = tipo;
         }
     } else {
-        data.eventos.push({ id: nextId++, data: dataVal, titulo, descricao, tipo });
+        data.eventos.push({
+            id: nextId++,
+            dataInicio,
+            dataFim,
+            titulo,
+            responsavel,
+            descricao,
+            tipo
+        });
     }
 
     cacheLocal();
     fecharForm();
-    diaSelecionado = dataVal;
+    diaSelecionado = dataInicio;
     render();
-
-    // Reabre o modal do dia para o usuário ver o evento salvo
-    abrirModalDia(dataVal);
+    abrirModalDia(dataInicio);
 }
 
 function excluirEvento(id) {
@@ -557,7 +1175,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     anoAtual = d.getFullYear();
     initSelects();
     sincronizarSelects();
+
+    // Preferência de visualização salva
+    const pref = localStorage.getItem('calendario_view_mode');
+    if (pref) modoVisualizacao = pref;
+    else if (window.innerWidth < 560) modoVisualizacao = 'lista';
+
     render();
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            fecharForm();
+            fecharModalDia();
+        }
+    });
 });
 </script>
 </body>
