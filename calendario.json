@@ -203,6 +203,66 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 200
+    },
+    {
+      "id": 20,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "FGH Digital - Criação de Painel de Treinamentos",
+      "responsavel": "Caio Albuquerque",
+      "area": "",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 210
+    },
+    {
+      "id": 21,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Programas - Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 220
+    },
+    {
+      "id": 22,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Atualizações: Atendimento",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "Colocar a estrutura de tabelas da Ouvidoria no PE;\nColocar Estrutura do Multiatendimento no PE",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 230
+    },
+    {
+      "id": 23,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Agrupar exames de imagem pelo nome do exame",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 240
+    },
+    {
+      "id": 24,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Coluna de Justificativa para atraso, suspensão e não conclusão de tarefas",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 250
     }
   ],
   "config": {
@@ -249,12 +309,16 @@
       {
         "label": "Diretoria de Atendimento",
         "cor": "#d151f5"
+      },
+      {
+        "label": "Ensino e Pesquisa",
+        "cor": "#48c8fe"
       }
     ],
     "background": {
       "tipo": "imagem",
       "cor": "#0582ff",
-      "imagem": "ebdd04fccd1b465eae0d03a99b9e0cb8.jpg"
+      "imagem": "bg4.jpg"
     },
     "status": [
       {
