@@ -1166,7 +1166,7 @@ function renderDia(){
                     <button class="btn btn-nav" onclick="navDiaPrev()" title="Dia anterior (←)">‹</button>
                     <button class="btn btn-today" onclick="irHoje()" title="Ir para hoje">📅 Hoje</button>
                     <button class="btn btn-nav" onclick="navDiaNext()" title="Próximo dia (→)">›</button>
-                    <button class="btn btn-secondary" onclick="abrirFormEvento()">➕ Novo evento</button>
+                    <button class="btn btn-secondary" onclick="abrirFormEvento(null, '${key}')">➕ Novo evento</button>
                 </div>
              </div>`;
     html += renderDayStrip();
@@ -1418,10 +1418,14 @@ function fecharModalDia(){ document.getElementById('modalDia').classList.remove(
 ============================================================ */
 function novoEventoHoje(){ diaSelecionado = dateKeyFromDate(currentDate); abrirFormEvento(); }
 
-function abrirFormEvento(id){
+function abrirFormEvento(id, diaForcado){
     fecharModalDia();
     const ev = id ? data.eventos.find(e=>e.id===id) : null;
-    if(!ev && !diaSelecionado) diaSelecionado = dateKeyFromDate(new Date());
+    if(diaForcado){
+        diaSelecionado = diaForcado;
+    } else if(!ev && !diaSelecionado){
+        diaSelecionado = dateKeyFromDate(new Date());
+    }
 
     document.getElementById('formTituloModal').textContent = ev ? 'Editar evento' : 'Novo evento';
     document.getElementById('formId').value = ev ? ev.id : '';
