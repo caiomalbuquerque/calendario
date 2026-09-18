@@ -63,7 +63,7 @@
     .day-number.hoje { background:#163c6d; color:#fff !important; border-radius:50%; }
     .day-badge { position:absolute; top:6px; right:6px; background:#163c6d; color:#fff; font-weight:700; border-radius:10px; line-height:1.4; z-index:2; }
 
-    /* Novo: célula flexível que ocupa 100% do quadradinho */
+    /* Célula flexível que ocupa 100% do quadradinho */
     .day-cell {
         display:flex;
         flex-direction:column;
@@ -143,7 +143,7 @@
     .events-list::-webkit-scrollbar-thumb { background:#c8d6e8; border-radius:3px; }
 
     /* ================= Cabeçalho colorido do cartão ================= */
-    .chip-header { display:flex; flex-wrap:wrap; align-items:center; }
+    .chip-header { display:flex; flex-wrap:wrap; align-items:center; gap:3px; }
     .chip-header .continuation-mark { margin-right:2px; }
     .badge {
         display:inline-block;
@@ -258,7 +258,8 @@
     .filters .count { font-size: clamp(10px, 0.8vw, 12px); }
     .filters .btn { font-size: clamp(11px, 0.9vw, 13px); padding: clamp(5px, 0.7vw, 9px) clamp(8px, 1vw, 12px); }
 
-    .calendar td { height: clamp(85px, 12vh, 200px); }
+    /* Altura base dos quadradinhos do mês (versão proporcional) */
+    .calendar td { height: clamp(80px, 11vh, 130px); }
     .calendar thead th { font-size: clamp(9.5px, 0.9vw, 13px); padding: clamp(5px, 0.9vw, 12px) clamp(2px, 0.4vw, 6px); }
     .day-number { font-size: clamp(10.5px, 1.1vw, 16px); line-height: clamp(17px, 1.9vw, 26px); width: clamp(17px, 1.9vw, 26px); margin-bottom: clamp(2px, 0.5vw, 4px); }
     .day-badge { font-size: clamp(8px, 0.75vw, 11px); padding: 1px clamp(4px, 0.6vw, 7px); top: clamp(4px, 0.5vw, 6px); right: clamp(4px, 0.5vw, 6px); }
@@ -316,11 +317,10 @@
     .teletubies-img { max-width: 60vw; max-height: 60vh; }
 
     /* ============================================================
-       MÊS SEM ROLAGEM — cabe inteiro na página
+       MÊS SEM ROLAGEM — cabe na página mas com células proporcionais
     ============================================================ */
-    body.view-mes { height: 100vh; overflow: hidden; }
+    body.view-mes { min-height: 100vh; overflow: hidden; }
     body.view-mes .container {
-        height: calc(100vh - 2 * clamp(4px, 1vw, 14px));
         max-height: calc(100vh - 2 * clamp(4px, 1vw, 14px));
         display: flex;
         flex-direction: column;
@@ -337,18 +337,25 @@
         flex-direction: column;
         overflow: hidden;
     }
+    /* IMPORTANTE: não estica o calendário para preencher toda a altura.
+       Ele fica no tamanho natural (baseado na altura das células) e alinhado ao topo.
+       Se sobrar espaço, sobra embaixo. Se faltar, dá scroll na área. */
     body.view-mes .calendar {
-        flex: 1 1 auto;
-        height: 100%;
-        min-height: 0;
+        flex: 0 1 auto;
+        align-self: flex-start;
+        width: 100%;
+        max-height: 100%;
     }
-    body.view-mes .calendar td { height: auto; }
-    /* Em modo sem rolagem, eventos preenchem o quadradinho; se passar, rola dentro do dia */
+    body.view-mes .calendar td {
+        /* Altura fixa e proporcional — evita quadradinhos esticados */
+        height: clamp(80px, 11vh, 130px);
+    }
     body.view-mes .day-cell .events-list { max-height: none; }
 
     /* ================= Telas grandes ================= */
     @media (min-width: 1900px) {
         .container { padding: 28px 34px; }
+        .calendar td { height: 150px; }
         .event-chip { font-size: 13px; }
         .week-col { min-height: 480px; }
     }
@@ -372,6 +379,7 @@
         .title-block .year-row { font-size: 12px; }
         .logo-block img { height: 42px; }
         .calendar thead th { font-size: 9.5px; padding: 5px 1px; letter-spacing: 0; }
+        .calendar td, body.view-mes .calendar td { height: clamp(60px, 13vw, 95px); }
         .day-number { font-size: 11px; line-height: 16px; width: 16px; }
         .event-chip { font-size: clamp(8.5px, 2vw, 10px); padding: 3px 4px; }
         .badge { font-size: 8px; padding: 0 4px; }
@@ -391,6 +399,7 @@
     }
 
     @media (max-width: 400px) {
+        .calendar td, body.view-mes .calendar td { height: 55px; }
         .day-number { font-size: 10px; width: 15px; line-height: 15px; }
         .event-chip { font-size: 8px; padding: 2px 3px; }
         .day-badge { font-size: 8px; padding: 0 4px; }
@@ -610,8 +619,12 @@ function daysBetween(a,b){ return Math.round((parseDateKey(b)-parseDateKey(a))/8
 function escapeHtml(t){ if(t==null) return ''; return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
 function slug(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
 
-/* Cores */
-function hexToRgb(hex){ const m = String(hex).match(/^#?([a-f\d]{2})([a-fd]{2})([a-f\d]{2})$/i); if(!m) return {r:128,g:128,b:128}; return {r:parseInt(m[1],16),g:parseInt(m[2],16),b:parseInt(m[3],16)}; }
+/* Cores — ATENÇÃO: regex corrigida ([a-f\d] em todas as capturas) */
+function hexToRgb(hex){
+    const m = String(hex).match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    if(!m) return {r:128,g:128,b:128};
+    return {r:parseInt(m[1],16), g:parseInt(m[2],16), b:parseInt(m[3],16)};
+}
 function mix(a,b,t){ return {r:Math.round(a.r+(b.r-a.r)*t), g:Math.round(a.g+(b.g-a.g)*t), b:Math.round(a.b+(b.b-a.b)*t)}; }
 function rgbToHex(c){ return '#'+[c.r,c.g,c.b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 function tipoCss(cor){ const base = hexToRgb(cor||'#888'); const bg = rgbToHex(mix(base,{r:255,g:255,b:255},.85)); const txt = rgbToHex(mix(base,{r:0,g:0,b:0},.45)); return `background:${bg};border-left-color:${cor||'#888'};color:${txt};`; }
@@ -1457,7 +1470,7 @@ function fecharModalDia(){ document.getElementById('modalDia').classList.remove(
    FORMULÁRIO
 ============================================================ */
 function novoEventoHoje(){ diaSelecionado = dateKeyFromDate(currentDate); abrirFormEvento(); }
-/* Nova função: cria evento já com a data que está sendo exibida na view Dia */
+/* Cria evento já com a data exibida na view Dia */
 function novoEventoDiaAtual(){ diaSelecionado = dateKeyFromDate(currentDate); abrirFormEvento(); }
 
 function abrirFormEvento(id){
@@ -1497,7 +1510,7 @@ function mostrarTeletubies(){
     const el = document.getElementById('teletubiesOverlay');
     if(!el) return;
     el.classList.add('active');
-    setTimeout(() => el.classList.remove('active'), 1500);
+    setTimeout(() => el.classList.remove('active'), 1000);
 }
 
 function salvarEvento(){
