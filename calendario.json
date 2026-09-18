@@ -170,8 +170,8 @@
     },
     {
       "id": 17,
-      "dataInicio": "2026-09-24",
-      "dataFim": "2026-09-24",
+      "dataInicio": "",
+      "dataFim": "",
       "titulo": "Painel - Exames de Imagem",
       "responsavel": "Caio Albuquerque",
       "area": "SAS",
@@ -190,7 +190,7 @@
       "descricao": "",
       "tipo": "lembrete",
       "status": "nao-iniciado",
-      "ordem": 190
+      "ordem": 40
     },
     {
       "id": 19,
@@ -311,6 +311,30 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 300
+    },
+    {
+      "id": 30,
+      "dataInicio": "2026-09-24",
+      "dataFim": "2026-09-24",
+      "titulo": "Painel de Metas",
+      "responsavel": "Caio Albuquerque",
+      "area": "SG",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 30
+    },
+    {
+      "id": 31,
+      "dataInicio": "2026-09-25",
+      "dataFim": "2026-09-25",
+      "titulo": "Painel de Metas",
+      "responsavel": "Caio Albuquerque",
+      "area": "SG",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 30
     }
   ],
   "config": {
