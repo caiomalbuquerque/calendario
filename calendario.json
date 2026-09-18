@@ -275,6 +275,54 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 260
+    },
+    {
+      "id": 26,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Inserir no BI a quantitativo de pacientes que realizaram exames laboratoriais e de imagens no BI do planejamento estratégico.",
+      "responsavel": "",
+      "area": "",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 270
+    },
+    {
+      "id": 27,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "coluna de justificativa para atraso, suspensa e não conclusão de tarefas",
+      "responsavel": "",
+      "area": "",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 280
+    },
+    {
+      "id": 28,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Realizar a construção de um BI ligado ao banco de dados da plataforma FGH digital.",
+      "responsavel": "",
+      "area": "",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 290
+    },
+    {
+      "id": 29,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "HCR - Solicitação",
+      "responsavel": "",
+      "area": "",
+      "descricao": "Gostaria de solicitar alguns ajustes no BI do Planejamento Estratégico.\n\nNa planilha \"Indicadores\", especificamente na aba \"Assistência\", seria possível detalhar os dados por especialidade, ofertadas e agendadas, contemplando:\nConsultas médicas;\nConsultas multiprofissionais;\nSessões multiprofissionais; e\nCentro de Especialidades Odontológicas (CEO).\n\nAlém disso, peço que essas informações sejam refletidas no BI, permitindo a visualização da perda primária e do absenteísmo por especialidade/categoria (médica, multiprofissional e CEO), mantendo também os indicadores consolidados de perda primária e absenteísmo geral.\n\nQuanto aos exames, não há necessidade de ajustes, pois já estão detalhados por tipo de exame.\n\nPor solicitação do Samuel, peço ainda que seja incluído no BI de Tempo de Espera do Planejamento Estratégico o acompanhamento do tempo de espera dos atendimentos multiprofissionais e odontológicos.",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 300
     }
   ],
   "config": {
