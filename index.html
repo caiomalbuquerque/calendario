@@ -350,6 +350,28 @@
         .theme-field { flex-wrap: wrap; }
         .theme-field input[type=text], .theme-field input[type=number], .theme-field select { width: 100%; }
     }
+        /* === Chip expandido (view Lista) com ações === */
+    .event-chip-expandido {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        position: relative;
+    }
+    .event-chip-expandido .chip-expandido-body {
+        flex: 1;
+        min-width: 0;
+    }
+    .chip-actions {
+        display: flex;
+        gap: 4px;
+        flex-shrink: 0;
+        align-self: flex-start;
+    }
+    /* No mobile os botões ficam ligeiramente menores */
+    @media (max-width: 560px) {
+        .chip-actions .btn-mini { font-size: 11px; padding: 2px 6px; }
+    }
 </style>
 </head>
 <body>
@@ -1982,6 +2004,29 @@ function renderChip(ev, position, dayKey, expandido){
     const tipoLabel = expandido ? `<div style="font-size:11px;font-weight:700;text-transform:uppercase;opacity:.7;margin-top:3px;">${escapeHtml(t.label)}</div>` : '';
     const statusLabel = ev.status ? (getStatus(ev.status) ? getStatus(ev.status).label : ev.status) : '';
     const tooltip = [statusLabel?'Status: '+statusLabel:'', ev.responsavel?'Resp: '+ev.responsavel:'', ev.area?'Área: '+ev.area:'', ev.titulo, isMulti?`${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}`:'', ev.descricao||''].filter(Boolean).join(' • ');
+
+    // === Modo expandido (view Lista) com ações ===
+    if(expandido){
+        return `<div class="event-chip event-chip-expandido" style="${tipoCss(t.cor)}" draggable="true"
+                     data-event-id="${ev.id}" data-day="${dayKey}"
+                     title="${escapeHtml(tooltip)}"
+                     ondragstart="onChipDragStart(event, ${ev.id}, '${dayKey}')"
+                     ondragend="onChipDragEnd(event)"
+                     onclick="abrirFormEvento(${ev.id})">
+                    <div class="chip-expandido-body">
+                        ${header}
+                        <span class="chip-title">${escapeHtml(ev.titulo)}</span>
+                        ${periodo}${desc}${tipoLabel}
+                    </div>
+                    <div class="chip-actions">
+                        <button class="btn-mini edit" onclick="event.stopPropagation(); abrirFormEvento(${ev.id})" title="Editar">✎</button>
+                        <button class="btn-mini dup" onclick="event.stopPropagation(); duplicarEvento(${ev.id})" title="Duplicar">⎘</button>
+                        <button class="btn-mini del" onclick="event.stopPropagation(); excluirEvento(${ev.id})" title="Excluir">✕</button>
+                    </div>
+                </div>`;
+    }
+
+    // === Modo compacto (Mês / Semana) — sem ações, apenas clique abre o form ===
     return `<div class="event-chip" style="${tipoCss(t.cor)}" draggable="true"
                  data-event-id="${ev.id}" data-day="${dayKey}"
                  title="${escapeHtml(tooltip)}"
