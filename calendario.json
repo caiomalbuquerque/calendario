@@ -70,7 +70,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "ordem": 70,
-      "status": "nao-iniciado"
+      "status": "suspenso"
     },
     {
       "id": 7,
@@ -289,18 +289,6 @@
       "ordem": 270
     },
     {
-      "id": 27,
-      "dataInicio": "",
-      "dataFim": "",
-      "titulo": "coluna de justificativa para atraso, suspensa e não conclusão de tarefas",
-      "responsavel": "",
-      "area": "",
-      "descricao": "",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 280
-    },
-    {
       "id": 28,
       "dataInicio": "",
       "dataFim": "",
@@ -395,6 +383,11 @@
         "id": "finalizado",
         "label": "Finalizado",
         "cor": "#1a9c4a"
+      },
+      {
+        "id": "suspenso",
+        "label": "Suspenso",
+        "cor": "#f9941f"
       }
     ],
     "userPhoto": "sormanio.png",
