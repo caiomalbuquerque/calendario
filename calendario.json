@@ -58,7 +58,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "ordem": 60,
-      "status": "nao-iniciado"
+      "status": "em-andamento"
     },
     {
       "id": 6,
@@ -82,7 +82,7 @@
       "descricao": "",
       "tipo": "lembrete",
       "ordem": 40,
-      "status": "em-andamento"
+      "status": "finalizado"
     },
     {
       "id": 10,
@@ -210,7 +210,7 @@
       {
         "id": "tarefa",
         "label": "Tarefa",
-        "cor": "#1f86db"
+        "cor": "#288ee2"
       },
       {
         "id": "lembrete",
@@ -273,7 +273,7 @@
         "cor": "#1a9c4a"
       }
     ],
-    "userPhoto": "",
+    "userPhoto": "sormanio.png",
     "temas": [
       {
         "id": "default",
