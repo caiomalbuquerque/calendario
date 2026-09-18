@@ -8,7 +8,7 @@
 <style>
     /* ============================================================
        VARIÁVEIS DE TEMA
-    ================marcarAlterado(opts)============================================ */
+    ============================================================ */
     :root {
         --bg-body: #f4f7fa; --bg-body-image: none;
         --bg-container: #ffffff; --bg-panel: #f8fafc; --bg-panel-alt: #ffffff;
@@ -612,28 +612,37 @@
             </div>
         </div>
 
-             <div class="admin-pane" id="pane-config">
-            <h3 style="color:var(--text-heading);font-family:var(--font-heading);font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:1px;">💾 Salvamento</h3>
+        <div class="admin-pane" id="pane-config">
+            <h3 style="color:var(--text-heading);font-family:var(--font-heading);font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:1px;">💾 Salvamento automático</h3>
             <div class="config-row">
                 <div class="config-lbl">
-                    Modo manual ativo
-                    <span class="config-hint">
-                        As alterações ficam apenas no cache local até você clicar em <b>💾 Salvar</b>.<br>
-                        Se fechar a aba com pendências, o navegador vai avisar. Nada é enviado ao GitHub automaticamente.
-                    </span>
+                    Ativar auto-save
+                    <span class="config-hint">Salva automaticamente após alterações. Se desligado, você salva manualmente.</span>
                 </div>
+                <select id="cfgAutosave" onchange="salvarConfigAutosave()" style="width:110px;">
+                    <option value="1">Ligado</option>
+                    <option value="0">Desligado</option>
+                </select>
+            </div>
+            <div class="config-row">
+                <div class="config-lbl">
+                    Tempo de espera (debounce)
+                    <span class="config-hint">Segundos sem alterações antes de salvar. Valores altos = menos commits.</span>
+                </div>
+                <input type="number" id="cfgDebounce" min="1" max="30" onchange="salvarConfigAutosave()" style="width:80px;">
+            </div>
+            <div class="config-row">
+                <div class="config-lbl">
+                    Salvar imediatamente ao arrastar
+                    <span class="config-hint">Aplica-se a drag-and-drop de eventos.</span>
+                </div>
+                <select id="cfgDrag" onchange="salvarConfigAutosave()" style="width:110px;">
+                    <option value="1">Sim</option>
+                    <option value="0">Não</option>
+                </select>
             </div>
             <div class="field" style="margin-top:14px;">
-                <button class="btn btn-primary" onclick="salvarManual()">💾 Salvar agora</button>
-            </div>
-            <div class="field" style="margin-top:10px;">
-                <span class="config-hint" style="display:block;">
-                    <b>Como funciona o indicador no botão:</b><br>
-                    • <b>💾 Salvar</b> — tudo sincronizado com o GitHub<br>
-                    • <b>💾 Salvar ●</b> — existem alterações pendentes<br>
-                    • <b>⏳ Salvando…</b> — enviando ao GitHub<br>
-                    • <b>⚠️ Erro</b> — falha no envio, clique para tentar de novo
-                </span>
+                <button class="btn btn-secondary" onclick="forcarSalvamento()">💾 Forçar salvamento agora</button>
             </div>
         </div>
 
@@ -845,20 +854,37 @@ function getAutosaveConfig(){
 /* Chamado a cada alteração de conteúdo.
    - Salva em localStorage imediatamente (garantia)
    - Se autosave ativo: agenda salvamento (debounce) */
-/* Chamado a cada alteração de conteúdo.
-   MODO MANUAL: apenas salva em localStorage e marca que há pendências.
-   O salvamento no GitHub só acontece quando o usuário clica em 💾 Salvar. */
-function marcarAlterado(){
+function marcarAlterado(opts){
+    opts = opts || {};
     cacheLocal();
-    if(!authToken) return;
+    if(!getAutosaveConfig().ativo) return;
+    if(!authToken) return; // sem login, não tenta salvar no GitHub
+
     autosave.alteracoesPendentes = true;
-    autosave.estado = 'salvo';
     atualizarBotaoSalvar();
+
+    if(opts.imediato){
+        // Salva já (drag-and-drop ou config muda)
+        if(autosave.timer){ clearTimeout(autosave.timer); autosave.timer = null; }
+        if(autosave.timerRetentativa){ clearTimeout(autosave.timerRetentativa); autosave.timerRetentativa = null; }
+        salvarAutomatico();
+        return;
+    }
+
+    // Debounce normal
+    if(autosave.timer) clearTimeout(autosave.timer);
+    const wait = getAutosaveConfig().debounceMs;
+    autosave.timer = setTimeout(() => {
+        autosave.timer = null;
+        if(autosave.alteracoesPendentes) salvarAutomatico();
+    }, wait);
 }
 
-/* Desativado — modo manual. Mantido apenas para compatibilidade. */
-/* Desativado — modo manual. Mantido apenas para compatibilidade. */
-async function salvarAutomatico(){ /* no-op */ }
+async function salvarAutomatico(){
+    if(!authToken){ return; }
+    if(!autosave.alteracoesPendentes){ return; }
+    if(autosave.estado === 'salvando'){ return; } // evita corrida
+
     autosave.estado = 'salvando';
     atualizarBotaoSalvar();
 
@@ -971,9 +997,23 @@ async function salvarManual(){
 }
 
 /* Salva antes de fechar a aba, se houver pendências */
-/* Desativado — modo manual. */
-/* Desativado — modo manual. Mantido apenas para compatibilidade. */
-async function salvarAutomatico(){ /* no-op */ }(e){}
+function salvarAntesDeFechar(){
+    if(!autosave.alteracoesPendentes) return;
+    if(!authToken) return;
+    // fetch com keepalive para tentar salvar mesmo após o fechamento
+    try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+        // Não temos tempo de pegar o sha, então tentamos um PUT mesmo assim.
+        // Se o sha estiver errado, o GitHub retorna 409 e o usuário perde a alteração —
+        // por isso o cacheLocal() já foi feito antes.
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+        const body = JSON.stringify({ message:`Autosave ao fechar - ${new Date().toLocaleString('pt-BR')}`, content, branch:GITHUB_BRANCH });
+        fetch(apiUrl, {
+            method:'PUT',
+            headers:{Authorization:`Bearer ${authToken}`,'Content-Type':'application/json'},
+            body, keepalive: true
+        }).catch(()=>{});
+    } catch(e){}
 }
 
 /* ============================================================
@@ -1359,14 +1399,16 @@ async function abrirAdmin(){
 }
 function fecharAdmin(){
     document.getElementById('modalAdmin').classList.remove('active');
-    // Modo manual: não salva automaticamente. Use o botão 💾 Salvar.
+    // Se houver pendências, força salvamento
+    if(autosave.alteracoesPendentes && authToken){
+        if(autosave.timer){ clearTimeout(autosave.timer); autosave.timer = null; }
+        salvarAutomatico();
+    }
 }
 function fazerLogout(){
-    if(autosave.alteracoesPendentes){
-        if(!confirm('Há alterações não salvas no GitHub. Sair mesmo assim?\n\nAs mudanças continuarão no cache local, mas NÃO serão enviadas para o repositório até você clicar em 💾 Salvar.')) return;
-    } else {
-        if(!confirm('Sair do modo admin?')) return;
-    }
+    if(!confirm('Sair do modo admin?')) return;
+    // Salva pendências antes de sair
+    if(autosave.alteracoesPendentes) salvarAutomatico();
     authToken = '';
     sessionStorage.removeItem(TOKEN_KEY);
     fecharAdmin();
@@ -2367,12 +2409,20 @@ document.addEventListener('DOMContentLoaded', async ()=>{
         }
     });
 
-    // Aviso ao fechar a aba com alterações não salvas (modo manual)
+    // Salva antes de fechar a aba
     window.addEventListener('beforeunload', (e) => {
-        if(autosave.alteracoesPendentes){
-            e.preventDefault();
-            e.returnValue = '';
-            return '';
+        if(autosave.alteracoesPendentes && authToken){
+            salvarAntesDeFechar();
+            // Mostra aviso do navegador como fallback
+            // (nem todos os navegadores permitem; se não permitirem, apenas salva em cache)
+        }
+    });
+
+    // Salva quando a aba perde foco (ex: minimizou, trocou de aba)
+    document.addEventListener('visibilitychange', () => {
+        if(document.hidden && autosave.alteracoesPendentes && authToken){
+            if(autosave.timer){ clearTimeout(autosave.timer); autosave.timer = null; }
+            salvarAutomatico();
         }
     });
 });
