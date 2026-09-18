@@ -71,6 +71,31 @@
     .day-view-header { background:#163c6d; color:#fff; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
     .day-view-header h2 { margin:0; }
     .day-view-header .sub { opacity:.85; }
+
+    /* Barra de navegação do dia */
+    .day-view-header .day-nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .day-view-header .day-nav .btn { font-size: clamp(11px, .95vw, 14px); padding: clamp(6px, .8vw, 10px) clamp(10px, 1.2vw, 16px); }
+    .day-nav .btn-nav { min-width: clamp(34px, 3.2vw, 46px); font-size: clamp(18px, 1.8vw, 24px); line-height:1; font-weight:900; }
+    .day-nav .btn-today { background:#2b6ca3; color:#fff; }
+    .day-nav .btn-today:hover { background:#1f5280; }
+
+    /* Faixa da semana clicável */
+    .day-strip { display:grid; grid-template-columns:repeat(7,1fr); gap: clamp(4px, .6vw, 8px); margin-bottom: clamp(8px, 1.2vw, 14px); }
+    .day-strip-item {
+        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+        border:1px solid #e6edf5; background:#fff; border-radius:8px;
+        padding: clamp(5px, .8vw, 9px) 2px; cursor:pointer;
+        font-family:inherit; color:#163c6d; transition:.15s;
+    }
+    .day-strip-item:hover { background:#f0f6ff; border-color:#c8d6e8; }
+    .day-strip-item .ds-wd { font-size: clamp(9px, .8vw, 11px); font-weight:700; text-transform:uppercase; letter-spacing:.5px; opacity:.7; }
+    .day-strip-item .ds-num { font-size: clamp(13px, 1.3vw, 18px); font-weight:700; }
+    .day-strip-item.hoje .ds-num { background:#f5a623; color:#fff; border-radius:50%; width:1.75em; height:1.75em; display:flex; align-items:center; justify-content:center; }
+    .day-strip-item.active { background:#163c6d; border-color:#163c6d; }
+    .day-strip-item.active .ds-wd, .day-strip-item.active .ds-num { color:#fff; }
+    .day-strip-item.active.hoje .ds-num { background:#f5a623; }
+    .day-strip-item.weekend:not(.active) { background:#f8fafc; }
+
     .day-view-list { display:flex; flex-direction:column; min-height:150px; }
     .day-view-list:empty::after { content:'Nenhum evento neste dia. Arraste para cá ou clique em "Novo evento".'; display:block; text-align:center; color:#888; border:2px dashed #dbe0e5; border-radius:10px; }
     .day-card { border-left:5px solid; cursor:grab; transition:.15s; display:flex; flex-direction:column; min-width:0; }
@@ -301,6 +326,12 @@
         .modal { padding: 14px; }
         .modal .row2 { grid-template-columns: 1fr; }
         .teletubies-img { max-width: 80vw; max-height: 50vh; }
+
+        /* Navegação do dia no mobile */
+        .day-view-header .day-nav { width:100%; justify-content:center; }
+        .day-view-header .day-nav .btn-nav { width:auto; flex:0 0 auto; }
+        .day-strip-item .ds-num { font-size:14px; }
+        .day-strip-item .ds-wd { font-size:8.5px; }
     }
 
     @media (max-width: 400px) {
@@ -744,6 +775,20 @@ function initSelects(){
 }
 function setView(v){ view = v; localStorage.setItem(VIEW_KEY, v); render(); }
 
+/* Navegação dia-a-dia (usada na view "Dia") */
+function navDiaPrev(){
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1);
+    sincronizarSelects(); render();
+}
+function navDiaNext(){
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+    sincronizarSelects(); render();
+}
+function irParaDia(key){
+    currentDate = parseDateKey(key);
+    sincronizarSelects(); render();
+}
+
 /* ============================================================
    MAPA DE EVENTOS
 ============================================================ */
@@ -918,11 +963,41 @@ function renderDia(){
                     <h2>${dt.getDate()} de ${MESES[dt.getMonth()]} de ${dt.getFullYear()}</h2>
                     <div class="sub">${DIAS_SEMANA_LONGO[dt.getDay()]} ${hj?'• HOJE':''}</div>
                 </div>
-                <div><button class="btn btn-secondary" onclick="abrirFormEvento()">➕ Novo evento</button></div>
+                <div class="day-nav">
+                    <button class="btn btn-nav" onclick="navDiaPrev()" title="Dia anterior (←)">‹</button>
+                    <button class="btn btn-today" onclick="irHoje()" title="Ir para hoje">📅 Hoje</button>
+                    <button class="btn btn-nav" onclick="navDiaNext()" title="Próximo dia (→)">›</button>
+                    <button class="btn btn-secondary" onclick="abrirFormEvento()">➕ Novo evento</button>
+                </div>
              </div>`;
+    html += renderDayStrip();
     html += `<div class="day-view-list" data-day="${key}" ondragover="onDayDragOver(event, this)" ondragleave="onDayDragLeave(event, this)" ondrop="onDayDrop(event, this)">`;
     evs.forEach(({ev, position})=>{ html += renderDayCard(ev, position, key); });
     html += '</div></div>';
+    return html;
+}
+
+/* Faixa com os 7 dias da semana atual (clicável) */
+function renderDayStrip(){
+    const ini = new Date(currentDate);
+    ini.setDate(currentDate.getDate() - currentDate.getDay());
+    const hojeKey = dateKeyFromDate(new Date());
+    const curKey = dateKeyFromDate(currentDate);
+
+    let html = '<div class="day-strip">';
+    for(let i=0;i<7;i++){
+        const d = new Date(ini); d.setDate(ini.getDate()+i);
+        const k = dateKeyFromDate(d);
+        const cls = ['day-strip-item'];
+        if(k === curKey) cls.push('active');
+        if(k === hojeKey) cls.push('hoje');
+        if(i === 0 || i === 6) cls.push('weekend');
+        html += `<button type="button" class="${cls.join(' ')}" onclick="irParaDia('${k}')" title="${DIAS_SEMANA_LONGO[i]}, ${d.getDate()}/${d.getMonth()+1}">
+                    <span class="ds-wd">${DIAS_SEMANA_CURTO[i]}</span>
+                    <span class="ds-num">${d.getDate()}</span>
+                 </button>`;
+    }
+    html += '</div>';
     return html;
 }
 
@@ -1180,7 +1255,7 @@ function mostrarTeletubies(){
     const el = document.getElementById('teletubiesOverlay');
     if(!el) return;
     el.classList.add('active');
-    setTimeout(() => el.classList.remove('active'), 1000);
+    setTimeout(() => el.classList.remove('active'), 5000);
 }
 
 function salvarEvento(){
@@ -1237,7 +1312,17 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     render();
 
     document.addEventListener('keydown', e=>{
-        if(e.key === 'Escape'){ fecharForm(); fecharModalDia(); fecharAdmin(); }
+        if(e.key === 'Escape'){ fecharForm(); fecharModalDia(); fecharAdmin(); return; }
+
+        // Setas ← → navegam apenas na view "Dia" e quando não estiver digitando
+        if(view === 'dia'){
+            const tag = (e.target.tagName || '').toLowerCase();
+            const digitando = (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable);
+            const modalAberto = document.querySelector('.modal-overlay.active');
+            if(digitando || modalAberto) return;
+            if(e.key === 'ArrowLeft'){ e.preventDefault(); navDiaPrev(); }
+            if(e.key === 'ArrowRight'){ e.preventDefault(); navDiaNext(); }
+        }
     });
 });
 </script>
