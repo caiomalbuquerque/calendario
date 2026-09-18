@@ -143,6 +143,9 @@
         text-overflow:ellipsis;
     }
     .badge-area { font-style:italic; font-weight:600; }
+    /* Status: mostra uma bolinha colorida antes do label */
+    .badge-status { display:inline-flex; align-items:center; gap:4px; }
+    .badge-status .status-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; background:#888; }
 
     /* ================= Drop target ================= */
     td.drop-target, .week-col.drop-target, .day-view-list.drop-target, .list-day-body.drop-target { background:#fffbe6 !important; box-shadow:inset 0 0 0 2px #f5a623; }
@@ -151,6 +154,7 @@
     .legend { display:flex; flex-wrap:wrap; border-top:1px solid #e6edf5; color:#555; }
     .legend .item { display:flex; align-items:center; gap:6px; }
     .legend .dot { border-radius:3px; border-left:3px solid; }
+    .legend .sep { width:1px; align-self:stretch; background:#e6edf5; margin:0 4px; }
 
     /* ================= Modais ================= */
     .modal-overlay { position:fixed; inset:0; background:rgba(22,60,109,.55); display:none; align-items:center; justify-content:center; z-index:1000; padding:16px; }
@@ -218,7 +222,7 @@
     }
 
     /* ============================================================
-       RESPONSIVIDADE GLOBAL — ajusta o layout a qualquer resolução
+       RESPONSIVIDADE GLOBAL
     ============================================================ */
     *, *::before, *::after { min-width: 0; }
     img, table { max-width: 100%; }
@@ -391,6 +395,7 @@
     <div class="filters" id="filtersBar">
         <span class="lbl">Filtros:</span>
         <select id="filterTipo" onchange="aplicarFiltros()"></select>
+        <select id="filterStatus" onchange="aplicarFiltros()"></select>
         <select id="filterResp" onchange="aplicarFiltros()"></select>
         <select id="filterArea" onchange="aplicarFiltros()"></select>
         <button class="btn btn-mini" style="background:#f5d99b;color:#7a4b00;" onclick="limparFiltros()">Limpar</button>
@@ -407,7 +412,7 @@
         <h2 id="modalDiaTitulo">Eventos do dia</h2>
         <div class="events-day-list" id="eventsDayList"></div>
         <div class="actions">
-            <button class="btn btn-secondary left" onclick="abrirFormEvento()">➕ Adicionar evento neste dia</button>
+            <button class="btn btn-secondary left" onclick="abrirFormEvento(null, diaSelecionado)">➕ Adicionar evento neste dia</button>
             <button class="btn btn-primary" onclick="fecharModalDia()">Fechar</button>
         </div>
     </div>
@@ -428,7 +433,10 @@
             <div class="field"><label>Área</label><select id="formArea"></select></div>
         </div>
         <div class="field"><label>Descrição (opcional)</label><textarea id="formDescricao" placeholder="Detalhes do evento..."></textarea></div>
-        <div class="field"><label>Tipo</label><select id="formTipo"></select></div>
+        <div class="row2">
+            <div class="field"><label>Tipo</label><select id="formTipo"></select></div>
+            <div class="field"><label>Status</label><select id="formStatus"></select></div>
+        </div>
         <div class="actions">
             <button class="btn btn-danger left" id="btnExcluirForm" style="display:none;" onclick="excluirEventoForm()">🗑 Excluir</button>
             <button class="btn btn-primary" onclick="salvarEvento()">Salvar</button>
@@ -443,6 +451,7 @@
         <h2>🔧 Painel de Administrador</h2>
         <div class="admin-tabs">
             <button class="admin-tab active" data-pane="tipos" onclick="switchAdminTab('tipos')">Tipos</button>
+            <button class="admin-tab" data-pane="status" onclick="switchAdminTab('status')">Status</button>
             <button class="admin-tab" data-pane="responsaveis" onclick="switchAdminTab('responsaveis')">Responsáveis</button>
             <button class="admin-tab" data-pane="areas" onclick="switchAdminTab('areas')">Áreas</button>
             <button class="admin-tab" data-pane="aparencia" onclick="switchAdminTab('aparencia')">Aparência</button>
@@ -454,6 +463,15 @@
                 <input type="color" id="novoTipoCor" value="#4caf50">
                 <input type="text" id="novoTipoLabel" placeholder="Nome do tipo (ex.: Urgente)">
                 <button class="btn btn-primary" onclick="addTipo()">Adicionar tipo</button>
+            </div>
+        </div>
+
+        <div class="admin-pane" id="pane-status">
+            <ul class="admin-list" id="listaStatus"></ul>
+            <div class="admin-add">
+                <input type="color" id="novoStatusCor" value="#9e9e9e">
+                <input type="text" id="novoStatusLabel" placeholder="Nome do status (ex.: Pausado)">
+                <button class="btn btn-primary" onclick="addStatus()">Adicionar status</button>
             </div>
         </div>
 
@@ -539,6 +557,11 @@ const DEFAULT_CONFIG = {
         { id:'comunicado', label:'Comunicado',  cor:'#9c27b0' },
         { id:'feriado',    label:'Feriado',     cor:'#e53935' }
     ],
+    status: [
+        { id:'nao-iniciado', label:'Não iniciado', cor:'#9e9e9e' },
+        { id:'em-andamento', label:'Em andamento', cor:'#f5a623' },
+        { id:'finalizado',   label:'Finalizado',   cor:'#1a9c4a' }
+    ],
     responsaveis: [],
     areas: [],
     background: { tipo: 'cor', cor: '#f4f7fa', imagem: '' }
@@ -553,7 +576,7 @@ let currentDate = new Date();
 let view = 'mes';
 let diaSelecionado = null;
 let authToken = sessionStorage.getItem(TOKEN_KEY) || '';
-let filtros = { tipo:'', responsavel:'', area:'' };
+let filtros = { tipo:'', status:'', responsavel:'', area:'' };
 let dragState = { eventId: null, sourceDay: null };
 let backgroundsDisponiveis = [];
 let backgroundsCarregados = false;
@@ -577,6 +600,7 @@ function mix(a,b,t){ return {r:Math.round(a.r+(b.r-a.r)*t), g:Math.round(a.g+(b.
 function rgbToHex(c){ return '#'+[c.r,c.g,c.b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 function tipoCss(cor){ const base = hexToRgb(cor||'#888'); const bg = rgbToHex(mix(base,{r:255,g:255,b:255},.85)); const txt = rgbToHex(mix(base,{r:0,g:0,b:0},.45)); return `background:${bg};border-left-color:${cor||'#888'};color:${txt};`; }
 function getTipo(id){ return (data.config.tipos||[]).find(t=>t.id===id) || {id, label:id||'Sem tipo', cor:'#888'}; }
+function getStatus(id){ if(!id) return null; return (data.config.status||[]).find(s=>s.id===id) || {id, label:id, cor:'#888'}; }
 
 function corAutomatica(label){
     let h = 0;
@@ -613,6 +637,7 @@ function prepararDados(){
     if(!data.eventos) data.eventos = [];
     if(!data.config) data.config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     if(!data.config.tipos) data.config.tipos = JSON.parse(JSON.stringify(DEFAULT_CONFIG.tipos));
+    if(!data.config.status) data.config.status = JSON.parse(JSON.stringify(DEFAULT_CONFIG.status));
     if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
 
     data.config.responsaveis = (data.config.responsaveis || []).map(r =>
@@ -627,6 +652,7 @@ function prepararDados(){
         if(!ev.dataFim) ev.dataFim = ev.dataInicio;
         if(ev.responsavel === undefined) ev.responsavel = '';
         if(ev.area === undefined) ev.area = '';
+        if(ev.status === undefined) ev.status = '';   // eventos antigos: sem status
         if(ev.ordem === undefined) ev.ordem = ev.id*10;
     });
     let max = 0;
@@ -740,6 +766,7 @@ function switchAdminTab(pane){
 }
 
 function renderAdminListas(){
+    // ---- Tipos ----
     const lt = document.getElementById('listaTipos');
     lt.innerHTML = data.config.tipos.length === 0
         ? '<div class="admin-empty">Nenhum tipo cadastrado.</div>'
@@ -755,6 +782,23 @@ function renderAdminListas(){
                 </div>
             </li>`).join('');
 
+    // ---- Status ----
+    const ls = document.getElementById('listaStatus');
+    ls.innerHTML = data.config.status.length === 0
+        ? '<div class="admin-empty">Nenhum status cadastrado.</div>'
+        : data.config.status.map((s,i)=>`
+            <li>
+                <div class="item-color" style="background:${escapeHtml(s.cor)}"></div>
+                <input type="text" class="item-label" value="${escapeHtml(s.label)}" onchange="editarStatusLabel(${i}, this.value)" style="border:1px solid transparent;background:transparent;font-weight:600;color:#163c6d;font-size:14px;">
+                <input type="color" value="${escapeHtml(s.cor)}" onchange="editarStatusCor(${i}, this.value)">
+                <div class="item-actions">
+                    <button class="btn-mini up" onclick="moverStatus(${i}, -1)" title="Subir" ${i===0?'disabled':''}>↑</button>
+                    <button class="btn-mini down" onclick="moverStatus(${i}, 1)" title="Descer" ${i===data.config.status.length-1?'disabled':''}>↓</button>
+                    <button class="btn-mini del" onclick="delStatus(${i})" title="Excluir">✕</button>
+                </div>
+            </li>`).join('');
+
+    // ---- Responsáveis ----
     const lr = document.getElementById('listaResponsaveis');
     lr.innerHTML = data.config.responsaveis.length === 0
         ? '<div class="admin-empty">Nenhum responsável cadastrado.</div>'
@@ -770,6 +814,7 @@ function renderAdminListas(){
                 </div>
             </li>`).join('');
 
+    // ---- Áreas ----
     const la = document.getElementById('listaAreas');
     la.innerHTML = data.config.areas.length === 0
         ? '<div class="admin-empty">Nenhuma área cadastrada.</div>'
@@ -798,9 +843,25 @@ function addTipo(){
     cacheLocal(); renderAdminListas(); renderLegend(); popularFiltros();
 }
 function editarTipoLabel(i,v){ data.config.tipos[i].label = v.trim()||data.config.tipos[i].label; cacheLocal(); renderLegend(); popularFiltros(); }
-function editarTipoCor(i,v){ data.config.tipos[i].cor = v; cacheLocal(); renderAdminListas(); renderLegend(); }
+function editarTipoCor(i,v){ data.config.tipos[i].cor = v; cacheLocal(); renderAdminListas(); renderLegend(); render(); }
 function delTipo(i){ const t=data.config.tipos[i]; if(!confirm(`Remover o tipo "${t.label}"?`)) return; data.config.tipos.splice(i,1); cacheLocal(); renderAdminListas(); renderLegend(); popularFiltros(); render(); }
 function moverTipo(i, dir){ moverItem(data.config.tipos, i, dir, renderAdminListas); }
+
+/* ---- Status ---- */
+function addStatus(){
+    const label = document.getElementById('novoStatusLabel').value.trim();
+    const cor = document.getElementById('novoStatusCor').value;
+    if(!label){ alert('Informe o nome do status.'); return; }
+    let id = slug(label) || ('status-'+Date.now());
+    if(data.config.status.find(s=>s.id===id)) id = id+'-'+Date.now();
+    data.config.status.push({id,label,cor});
+    document.getElementById('novoStatusLabel').value = '';
+    cacheLocal(); renderAdminListas(); popularFiltros();
+}
+function editarStatusLabel(i,v){ data.config.status[i].label = v.trim()||data.config.status[i].label; cacheLocal(); popularFiltros(); render(); }
+function editarStatusCor(i,v){ data.config.status[i].cor = v; cacheLocal(); renderAdminListas(); render(); }
+function delStatus(i){ const s=data.config.status[i]; if(!confirm(`Remover o status "${s.label}"?`)) return; data.config.status.splice(i,1); cacheLocal(); renderAdminListas(); popularFiltros(); render(); }
+function moverStatus(i, dir){ moverItem(data.config.status, i, dir, renderAdminListas); }
 
 /* ---- Responsáveis ---- */
 function addResponsavel(){
@@ -919,27 +980,31 @@ function renderBgPreview(){
 ============================================================ */
 function popularFiltros(){
     const ft = document.getElementById('filterTipo');
+    const fs = document.getElementById('filterStatus');
     const fr = document.getElementById('filterResp');
     const fa = document.getElementById('filterArea');
     ft.innerHTML = '<option value="">Tipo: todos</option>' + (data.config.tipos||[]).map(t=>`<option value="${escapeHtml(t.id)}">${escapeHtml(t.label)}</option>`).join('');
+    fs.innerHTML = '<option value="">Status: todos</option>' + (data.config.status||[]).map(s=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.label)}</option>`).join('');
     fr.innerHTML = '<option value="">Responsável: todos</option>' + (data.config.responsaveis||[]).map(r=>`<option value="${escapeHtml(r.label)}">${escapeHtml(r.label)}</option>`).join('');
     fa.innerHTML = '<option value="">Área: todas</option>' + (data.config.areas||[]).map(a=>`<option value="${escapeHtml(a.label)}">${escapeHtml(a.label)}</option>`).join('');
-    ft.value = filtros.tipo; fr.value = filtros.responsavel; fa.value = filtros.area;
+    ft.value = filtros.tipo; fs.value = filtros.status; fr.value = filtros.responsavel; fa.value = filtros.area;
 }
 function aplicarFiltros(){
     filtros.tipo = document.getElementById('filterTipo').value;
+    filtros.status = document.getElementById('filterStatus').value;
     filtros.responsavel = document.getElementById('filterResp').value;
     filtros.area = document.getElementById('filterArea').value;
     render();
 }
-function limparFiltros(){ filtros = {tipo:'',responsavel:'',area:''}; popularFiltros(); render(); }
+function limparFiltros(){ filtros = {tipo:'',status:'',responsavel:'',area:''}; popularFiltros(); render(); }
 function passaFiltro(ev){
     if(filtros.tipo && ev.tipo !== filtros.tipo) return false;
+    if(filtros.status && ev.status !== filtros.status) return false;
     if(filtros.responsavel && ev.responsavel !== filtros.responsavel) return false;
     if(filtros.area && ev.area !== filtros.area) return false;
     return true;
 }
-function temFiltroAtivo(){ return filtros.tipo || filtros.responsavel || filtros.area; }
+function temFiltroAtivo(){ return filtros.tipo || filtros.status || filtros.responsavel || filtros.area; }
 
 /* ============================================================
    NAVEGAÇÃO
@@ -1050,11 +1115,15 @@ function atualizarTitulo(){
 }
 
 /* ============================================================
-   CABEÇALHO DO CARTÃO (badges de responsável + área)
+   CABEÇALHO DO CARTÃO (status + responsável + área)
 ============================================================ */
 function renderChipHeader(ev, isContinuation){
     const parts = [];
     if(isContinuation) parts.push('<span class="continuation-mark" title="Continuação">↳</span>');
+    if(ev.status){
+        const s = getStatus(ev.status);
+        parts.push(`<span class="badge badge-status" style="${badgeStyle(s.cor)}" title="Status: ${escapeHtml(s.label)}"><span class="status-dot" style="background:${escapeHtml(s.cor)}"></span>${escapeHtml(s.label)}</span>`);
+    }
     if(ev.responsavel){
         const cor = getRespCor(ev.responsavel);
         parts.push(`<span class="badge badge-resp" style="${badgeStyle(cor)}" title="Responsável: ${escapeHtml(ev.responsavel)}">@${escapeHtml(ev.responsavel)}</span>`);
@@ -1268,7 +1337,8 @@ function renderChip(ev, position, dayKey, expandido){
     const periodo = (expandido && isMulti) ? `<div style="font-size:11.5px;opacity:.75;margin-top:3px;font-style:italic;">📅 ${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</div>` : '';
     const desc = (expandido && ev.descricao) ? `<div style="font-size:12.5px;opacity:.85;margin-top:3px;">${escapeHtml(ev.descricao)}</div>` : '';
     const tipoLabel = expandido ? `<div style="font-size:10.5px;font-weight:700;text-transform:uppercase;opacity:.7;margin-top:3px;">${escapeHtml(t.label)}</div>` : '';
-    const tooltip = [ev.responsavel?'Resp: '+ev.responsavel:'', ev.area?'Área: '+ev.area:'', ev.titulo, isMulti?`${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}`:'', ev.descricao||''].filter(Boolean).join(' • ');
+    const statusLabel = ev.status ? (getStatus(ev.status) ? getStatus(ev.status).label : ev.status) : '';
+    const tooltip = [statusLabel?'Status: '+statusLabel:'', ev.responsavel?'Resp: '+ev.responsavel:'', ev.area?'Área: '+ev.area:'', ev.titulo, isMulti?`${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}`:'', ev.descricao||''].filter(Boolean).join(' • ');
 
     return `<div class="event-chip" style="${tipoCss(t.cor)}" draggable="true"
                  data-event-id="${ev.id}" data-day="${dayKey}"
@@ -1287,11 +1357,17 @@ function renderChip(ev, position, dayKey, expandido){
 ============================================================ */
 function renderLegend(){
     const l = document.getElementById('legend');
-    l.innerHTML = (data.config.tipos||[]).map(t=>`
+    const tipos = (data.config.tipos||[]).map(t=>`
         <div class="item">
             <div class="dot" style="background:${rgbToHex(mix(hexToRgb(t.cor),{r:255,g:255,b:255},.85))};border-left-color:${escapeHtml(t.cor)}"></div>
             ${escapeHtml(t.label)}
         </div>`).join('');
+    const status = (data.config.status||[]).map(s=>`
+        <div class="item">
+            <div class="dot" style="background:${rgbToHex(mix(hexToRgb(s.cor),{r:255,g:255,b:255},.85))};border-left-color:${escapeHtml(s.cor)}"></div>
+            ${escapeHtml(s.label)}
+        </div>`).join('');
+    l.innerHTML = tipos + (tipos && status ? '<div class="sep"></div>' : '') + status;
 }
 
 /* ============================================================
@@ -1437,9 +1513,16 @@ function abrirFormEvento(id, diaForcado){
 
     preencherSelect('formResponsavel', data.config.responsaveis.map(r => r.label), ev ? ev.responsavel : '');
     preencherSelect('formArea', data.config.areas.map(a => a.label), ev ? ev.area : '');
+
     // Tipo default = PRIMEIRO da lista configurada
     const tipoDefault = (data.config.tipos[0] && data.config.tipos[0].id) || '';
     preencherSelect('formTipo', data.config.tipos.map(t=>({value:t.id,label:t.label})), ev ? ev.tipo : tipoDefault);
+
+    // Status default = PRIMEIRO da lista configurada (para novo) ou o status do evento
+    const statusDefault = ev
+        ? (ev.status || '')
+        : ((data.config.status[0] && data.config.status[0].id) || '');
+    preencherSelect('formStatus', data.config.status.map(s=>({value:s.id,label:s.label})), statusDefault);
 
     document.getElementById('modalForm').classList.add('active');
     setTimeout(()=>document.getElementById('formTitulo').focus(), 100);
@@ -1471,6 +1554,7 @@ function salvarEvento(){
     const area = document.getElementById('formArea').value;
     const descricao = document.getElementById('formDescricao').value.trim();
     const tipo = document.getElementById('formTipo').value;
+    const status = document.getElementById('formStatus').value;
     const id = document.getElementById('formId').value;
 
     if(!dataInicio){ alert('Informe a data de início.'); return; }
@@ -1482,10 +1566,11 @@ function salvarEvento(){
         if(ev){
             ev.dataInicio = dataInicio; ev.dataFim = dataFim;
             ev.titulo = titulo; ev.responsavel = responsavel;
-            ev.area = area; ev.descricao = descricao; ev.tipo = tipo;
+            ev.area = area; ev.descricao = descricao;
+            ev.tipo = tipo; ev.status = status;
         }
     } else {
-        data.eventos.push({ id: nextId++, dataInicio, dataFim, titulo, responsavel, area, descricao, tipo, ordem: nextId*10 });
+        data.eventos.push({ id: nextId++, dataInicio, dataFim, titulo, responsavel, area, descricao, tipo, status, ordem: nextId*10 });
         mostrarTeletubies();
     }
     cacheLocal(); fecharForm(); diaSelecionado = dataInicio; render(); abrirModalDia(dataInicio);
