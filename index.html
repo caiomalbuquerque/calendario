@@ -713,6 +713,106 @@
         accent-color: var(--primary);
         flex-shrink: 0;
     }
+        /* ============================================================
+       INBOX — Caixa de entrada
+    ============================================================ */
+    .inbox-badge {
+        display: inline-block;
+        background: #dc3545;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 10px;
+        margin-left: 4px;
+        min-width: 18px;
+        text-align: center;
+        line-height: 1.4;
+    }
+
+    .inbox-view { margin: 0 20px; }
+    .inbox-header {
+        background: var(--day-header-bg);
+        color: var(--day-header-text);
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .inbox-header h2 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: clamp(16px, 1.9vw, 22px);
+    }
+    .inbox-header .sub { opacity: .85; font-size: 14px; }
+    .inbox-header .day-nav { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+    .inbox-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-height: 150px;
+        border-radius: var(--radius);
+        transition: background .15s, box-shadow .15s;
+    }
+    .inbox-list:empty::after {
+        content: 'Nenhuma tarefa na caixa de entrada. Adicione tarefas sem data ou arraste tarefas do calendário para cá.';
+        display: block;
+        text-align: center;
+        color: var(--text-muted);
+        border: 2px dashed var(--border-color-strong);
+        border-radius: var(--radius);
+        padding: 40px 20px;
+        font-size: 16px;
+        font-family: var(--font-body);
+    }
+
+    /* Dropzone flutuante (aparece durante o drag) */
+    .inbox-dropzone {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%);
+        background: var(--primary);
+        color: var(--text-on-primary);
+        padding: 12px 24px;
+        border-radius: 0 0 var(--radius) var(--radius);
+        font-family: var(--font-heading);
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        z-index: 1500;
+        transition: transform .2s, background .15s;
+        box-shadow: 0 4px 20px rgba(0,0,0,.25);
+        pointer-events: none;
+    }
+    body.arrastando .inbox-dropzone {
+        transform: translateX(-50%) translateY(0);
+        pointer-events: auto;
+    }
+    body.arrastando .inbox-dropzone.drop-target {
+        background: var(--success);
+        transform: translateX(-50%) translateY(0) scale(1.05);
+    }
+    .inbox-dropzone .icon { margin-right: 8px; }
+
+    /* Linha com o checkbox "Sem data" */
+    .data-toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        padding: 6px 8px;
+        background: var(--bg-panel);
+        border: var(--border-width) var(--border-style) var(--border-color);
+        border-radius: var(--radius-sm);
+    }
+    #formDatasRow { transition: opacity .15s; }
 </style>
 </head>
 <body>
@@ -770,6 +870,7 @@
         <button class="btn btn-toggle" data-view="semana" onclick="setView('semana')">Semana</button>
         <button class="btn btn-toggle" data-view="dia" onclick="setView('dia')">Dia</button>
         <button class="btn btn-toggle" data-view="lista" onclick="setView('lista')">Lista</button>
+        <button class="btn btn-toggle" data-view="inbox" onclick="setView('inbox')" title="Tarefas sem data">📥 Inbox <span class="inbox-badge" id="inboxBadge" style="display:none;">0</span></button>
         <span class="spacer"></span>
         <button class="btn btn-secondary" onclick="novoEventoHoje()">➕ Novo</button>
         <button class="btn btn-admin" id="btnAdmin" onclick="abrirAdmin()">🔧 Admin</button>
@@ -789,6 +890,11 @@
     <div id="viewContainer"></div>
     <div class="legend" id="legend"></div>
 </div>
+<!-- Dropzone de Inbox (aparece durante o drag) -->
+<div class="inbox-dropzone" id="inboxDropzone"
+     ondragover="onInboxDragOver(event)" ondragleave="onInboxDragLeave(event)" ondrop="onInboxDrop(event)">
+    <span class="icon">📥</span> Soltar aqui para remover a data
+</div>
 
 <!-- Modal do dia -->
 <div class="modal-overlay" id="modalDia" onclick="if(event.target===this) fecharModalDia()">
@@ -807,7 +913,13 @@
     <div class="modal">
         <h2 id="formTituloModal">Novo evento</h2>
         <input type="hidden" id="formId">
-        <div class="row2">
+        <div class="data-toggle-row">
+            <label class="checkbox-label">
+                <input type="checkbox" id="formSemData" onchange="toggleSemData()">
+                <span>📥 Sem data definida (enviar para o Inbox)</span>
+            </label>
+        </div>
+        <div class="row2" id="formDatasRow">
             <div class="field"><label>Data de início</label><input type="date" id="formDataInicio" onchange="atualizarToggleIsolado()"></div>
             <div class="field"><label>Data de término</label><input type="date" id="formDataFim" onchange="atualizarToggleIsolado()" oninput="atualizarToggleIsolado()"></div>
         </div>
@@ -1977,10 +2089,23 @@ function render(){
     if(view === 'mes') c.innerHTML = renderMes();
     else if(view === 'semana') c.innerHTML = renderSemana();
     else if(view === 'dia') c.innerHTML = renderDia();
+    else if(view === 'inbox') c.innerHTML = renderInbox();
     else c.innerHTML = renderLista();
     renderLegend();
     atualizarContadorFiltro();
     atualizarHud();
+    atualizarBadgeInbox();
+}
+function atualizarBadgeInbox(){
+    const badge = document.getElementById('inboxBadge');
+    if(!badge) return;
+    const total = data.eventos.filter(ev => !ev.dataInicio).length;
+    if(total > 0){
+        badge.textContent = total;
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+    }
 }
 function atualizarContadorFiltro(){
     const el = document.getElementById('filterCount');
@@ -1992,6 +2117,15 @@ function atualizarContadorFiltro(){
 function atualizarTitulo(){
     const mt = document.getElementById('monthTitle');
     const yt = document.getElementById('yearTitle');
+    if(view === 'inbox'){
+        mt.textContent = 'INBOX';
+        const total = data.eventos.filter(ev => !ev.dataInicio).length;
+        const visiveis = data.eventos.filter(ev => !ev.dataInicio).filter(passaFiltro).length;
+        yt.textContent = total === 0
+            ? 'Nenhuma tarefa'
+            : `${visiveis} de ${total} tarefa${total>1?'s':''}`;
+        return;
+    }
     if(view === 'dia'){
         const d = currentDate;
         mt.textContent = DIAS_SEMANA_LONGO[d.getDay()].toUpperCase();
@@ -2165,6 +2299,78 @@ function renderDayCard(ev, position, dayKey){
                 <div class="dc-meta"><span style="opacity:.7;font-weight:700;text-transform:uppercase;font-size:11px;">${escapeHtml(t.label)}</span></div>
             </div>`;
 }
+/* ============================================================
+   INBOX
+============================================================ */
+function renderInbox(){
+    const todos = data.eventos
+        .filter(ev => !ev.dataInicio)
+        .sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
+    const evs = todos.filter(passaFiltro);
+
+    let html = '<div class="inbox-view">';
+    html += `<div class="inbox-header">
+                <div>
+                    <h2>📥 Caixa de Entrada</h2>
+                    <div class="sub">${evs.length} de ${todos.length} tarefa${todos.length !== 1 ? 's' : ''} sem data</div>
+                </div>
+                <div class="day-nav">
+                    <button class="btn btn-secondary" onclick="novoEventoInbox()">➕ Nova tarefa sem data</button>
+                </div>
+             </div>`;
+
+    html += `<div class="inbox-list" data-inbox="1"
+                 ondragover="onInboxListDragOver(event, this)"
+                 ondragleave="onInboxListDragLeave(event, this)"
+                 ondrop="onInboxListDrop(event, this)">`;
+    if(evs.length > 0){
+        evs.forEach(ev => { html += renderInboxCard(ev); });
+    }
+    html += '</div></div>';
+    return html;
+}
+
+function renderInboxCard(ev){
+    const t = getTipo(ev.tipo);
+    const header = renderChipHeader(ev, false);
+    const desc = ev.descricao ? `<div class="dc-desc">${escapeHtml(ev.descricao)}</div>` : '';
+    return `<div class="day-card" style="${tipoCss(t.cor)}" draggable="true"
+                 data-event-id="${ev.id}" data-inbox="1"
+                 ondragstart="onChipDragStart(event, ${ev.id}, null)"
+                 ondragend="onChipDragEnd(event)"
+                 onclick="abrirFormEvento(${ev.id})">
+                <div class="dc-header">
+                    <div style="flex:1;min-width:0;">${header}</div>
+                    <div class="dc-actions">
+                        <button class="btn-mini edit" onclick="event.stopPropagation(); agendarEvento(${ev.id})" title="Agendar data">📅</button>
+                        <button class="btn-mini edit" onclick="event.stopPropagation(); abrirFormEvento(${ev.id})" title="Editar">✎</button>
+                        <button class="btn-mini dup" onclick="event.stopPropagation(); duplicarEvento(${ev.id})" title="Duplicar">⎘</button>
+                        <button class="btn-mini del" onclick="event.stopPropagation(); excluirEvento(${ev.id})" title="Excluir">✕</button>
+                    </div>
+                </div>
+                <div class="dc-title">${escapeHtml(ev.titulo)}</div>
+                ${desc}
+                <div class="dc-meta"><span style="opacity:.7;font-weight:700;text-transform:uppercase;font-size:11px;">${escapeHtml(t.label)}</span></div>
+            </div>`;
+}
+
+function novoEventoInbox(){
+    diaSelecionado = '__inbox__';
+    abrirFormEvento();
+}
+
+function agendarEvento(id){
+    const ev = data.eventos.find(e=>e.id===id); if(!ev) return;
+    diaSelecionado = dateKeyFromDate(new Date());
+    abrirFormEvento(id);
+    // Após abrir, desmarca "sem data" e preenche a data de hoje
+    setTimeout(()=>{
+        const chk = document.getElementById('formSemData');
+        if(chk) chk.checked = false;
+        toggleSemData();
+        document.getElementById('formDataInicio').value = dateKeyFromDate(new Date());
+    }, 60);
+}
 
 function renderLista(){
     const ano = currentDate.getFullYear(), mes = currentDate.getMonth();
@@ -2238,10 +2444,12 @@ function onChipDragStart(e, id, dayKey){
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', String(id));
     e.currentTarget.classList.add('dragging');
+    document.body.classList.add('arrastando');
 }
 function onChipDragEnd(e){
     e.currentTarget.classList.remove('dragging');
     document.querySelectorAll('.drop-target').forEach(el=>el.classList.remove('drop-target'));
+    document.body.classList.remove('arrastando');
     dragState.eventId = null; dragState.sourceDay = null;
 }
 function onDayDragOver(e, el){ e.preventDefault(); e.dataTransfer.dropEffect = 'move'; el.classList.add('drop-target'); }
@@ -2254,11 +2462,17 @@ function onDayDrop(e, el){
     if(!srcId) return;
     const dayKey = el.dataset.day; if(!dayKey) return;
     const ev = data.eventos.find(x=>x.id === srcId); if(!ev) return;
-    const jaEstaNoDia = ev.dataInicio <= dayKey && dayKey <= ev.dataFim;
-    if(!jaEstaNoDia){
-        const diff = daysBetween(ev.dataInicio, dayKey);
-        ev.dataInicio = addDays(ev.dataInicio, diff);
-        ev.dataFim = addDays(ev.dataFim, diff);
+    if(!ev.dataInicio){
+        // Veio do Inbox: apenas atribui a data
+        ev.dataInicio = dayKey;
+        ev.dataFim = dayKey;
+    } else {
+        const jaEstaNoDia = ev.dataInicio <= dayKey && dayKey <= ev.dataFim;
+        if(!jaEstaNoDia){
+            const diff = daysBetween(ev.dataInicio, dayKey);
+            ev.dataInicio = addDays(ev.dataInicio, diff);
+            ev.dataFim = addDays(ev.dataFim, diff);
+        }
     }
     const chips = Array.from(el.querySelectorAll('.event-chip')).filter(c => Number(c.dataset.eventId) !== srcId);
     const mouseY = e.clientY;
@@ -2272,6 +2486,72 @@ function onDayDrop(e, el){
     diaEvs.splice(insertBeforeIdx, 0, ev);
     diaEvs.forEach((x,i)=>{ x.ordem = (i+1)*10; });
     dragState.eventId = null; dragState.sourceDay = null;
+    cacheLocal(); render();
+}
+/* ============================================================
+   DROPZONE E INBOX-LIST
+============================================================ */
+function onInboxDragOver(e){
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const dz = document.getElementById('inboxDropzone');
+    if(dz) dz.classList.add('drop-target');
+}
+function onInboxDragLeave(e){
+    const dz = document.getElementById('inboxDropzone');
+    if(dz) dz.classList.remove('drop-target');
+}
+function onInboxDrop(e){
+    e.preventDefault(); e.stopPropagation();
+    const dz = document.getElementById('inboxDropzone');
+    if(dz) dz.classList.remove('drop-target');
+    let srcId = dragState.eventId;
+    if(!srcId){ const raw = e.dataTransfer.getData('text/plain'); srcId = raw ? Number(raw) : null; }
+    if(!srcId) return;
+    const ev = data.eventos.find(x=>x.id === srcId); if(!ev) return;
+    ev.dataInicio = '';
+    ev.dataFim = '';
+    dragState.eventId = null; dragState.sourceDay = null;
+    document.body.classList.remove('arrastando');
+    cacheLocal(); render();
+}
+
+function onInboxListDragOver(e, el){
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    el.classList.add('drop-target');
+}
+function onInboxListDragLeave(e, el){
+    if(!el.contains(e.relatedTarget)) el.classList.remove('drop-target');
+}
+function onInboxListDrop(e, el){
+    e.preventDefault(); e.stopPropagation();
+    el.classList.remove('drop-target');
+    let srcId = dragState.eventId;
+    if(!srcId){ const raw = e.dataTransfer.getData('text/plain'); srcId = raw ? Number(raw) : null; }
+    if(!srcId) return;
+    const ev = data.eventos.find(x=>x.id === srcId); if(!ev) return;
+
+    if(!ev.dataInicio){
+        // Já está no inbox: apenas reordena
+        const cards = Array.from(el.querySelectorAll('.day-card')).filter(c => Number(c.dataset.eventId) !== srcId);
+        const mouseY = e.clientY;
+        let insertBeforeIdx = cards.length;
+        for(let i=0;i<cards.length;i++){
+            const rect = cards[i].getBoundingClientRect();
+            if(mouseY < rect.top + rect.height/2){ insertBeforeIdx = i; break; }
+        }
+        const inboxEvs = data.eventos.filter(x => x.id !== srcId && !x.dataInicio)
+            .sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
+        inboxEvs.splice(insertBeforeIdx, 0, ev);
+        inboxEvs.forEach((x,i)=>{ x.ordem = (i+1)*10; });
+    } else {
+        // Veio do calendário: remove a data
+        ev.dataInicio = '';
+        ev.dataFim = '';
+    }
+    dragState.eventId = null; dragState.sourceDay = null;
+    document.body.classList.remove('arrastando');
     cacheLocal(); render();
 }
 
@@ -2292,7 +2572,7 @@ function abrirModalDia(key){
     document.getElementById('modalDia').classList.add('active');
 }
 function renderListaDia(){
-    const evs = data.eventos.filter(ev => ev.dataInicio <= diaSelecionado && diaSelecionado <= ev.dataFim)
+    const evs = data.eventos.filter(ev => ev.dataInicio && ev.dataFim && ev.dataInicio <= diaSelecionado && diaSelecionado <= ev.dataFim)
         .filter(passaFiltro).sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
     const c = document.getElementById('eventsDayList');
     if(evs.length === 0){ c.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;font-family:var(--font-body);">Nenhum evento neste dia.</p>'; return; }
@@ -2322,11 +2602,30 @@ function fecharModalDia(){ document.getElementById('modalDia').classList.remove(
    FORMULÁRIO
 ============================================================ */
 function novoEventoHoje(){ diaSelecionado = dateKeyFromDate(currentDate); abrirFormEvento(); }
+function toggleSemData(){
+    const semData = document.getElementById('formSemData').checked;
+    const row = document.getElementById('formDatasRow');
+    if(row){
+        row.style.opacity = semData ? '.4' : '1';
+        row.style.pointerEvents = semData ? 'none' : '';
+    }
+    if(semData){
+        document.getElementById('formDataInicio').value = '';
+        document.getElementById('formDataFim').value = '';
+        const wrap = document.getElementById('formIsoladoWrap');
+        if(wrap) wrap.style.display = 'none';
+    } else {
+        atualizarToggleIsolado();
+    }
+}
+
 function atualizarToggleIsolado(){
-    const inicio = document.getElementById('formDataInicio').value;
-    const fim = document.getElementById('formDataFim').value;
+    const semData = document.getElementById('formSemData').checked;
     const wrap = document.getElementById('formIsoladoWrap');
     if(!wrap) return;
+    if(semData){ wrap.style.display = 'none'; return; }
+    const inicio = document.getElementById('formDataInicio').value;
+    const fim = document.getElementById('formDataFim').value;
     if(fim && inicio && fim > inicio){
         wrap.style.display = '';
     } else {
@@ -2338,12 +2637,25 @@ function atualizarToggleIsolado(){
 function abrirFormEvento(id, diaForcado){
     fecharModalDia();
     const ev = id ? data.eventos.find(e=>e.id===id) : null;
-    if(diaForcado) diaSelecionado = diaForcado;
-    else if(!ev && !diaSelecionado) diaSelecionado = dateKeyFromDate(new Date());
+    const semData = (diaForcado === '__inbox__')
+                  || (ev && !ev.dataInicio)
+                  || (!ev && diaSelecionado === '__inbox__');
+    if(diaForcado && diaForcado !== '__inbox__') diaSelecionado = diaForcado;
+
     document.getElementById('formTituloModal').textContent = ev ? 'Editar evento' : 'Novo evento';
     document.getElementById('formId').value = ev ? ev.id : '';
-    document.getElementById('formDataInicio').value = ev ? ev.dataInicio : diaSelecionado;
-    document.getElementById('formDataFim').value = ev ? (ev.dataFim !== ev.dataInicio ? ev.dataFim : '') : '';
+    document.getElementById('formSemData').checked = !!semData;
+
+    if(semData){
+        document.getElementById('formDataInicio').value = '';
+        document.getElementById('formDataFim').value = '';
+    } else {
+        const dataIni = ev ? ev.dataInicio
+                           : (diaSelecionado && diaSelecionado !== '__inbox__' ? diaSelecionado : dateKeyFromDate(new Date()));
+        document.getElementById('formDataInicio').value = dataIni || '';
+        document.getElementById('formDataFim').value = (ev && ev.dataFim && ev.dataFim !== ev.dataInicio) ? ev.dataFim : '';
+    }
+
     document.getElementById('formTitulo').value = ev ? ev.titulo : '';
     document.getElementById('formDescricao').value = ev ? (ev.descricao||'') : '';
     document.getElementById('btnExcluirForm').style.display = ev ? 'inline-block' : 'none';
@@ -2354,9 +2666,11 @@ function abrirFormEvento(id, diaForcado){
     const statusDefault = ev ? (ev.status || '') : ((data.config.status[0] && data.config.status[0].id) || '');
     preencherSelect('formStatus', data.config.status.map(s=>({value:s.id,label:s.label})), statusDefault);
 
-    // Reset do checkbox e mostra/esconde conforme as datas
+    // Reset do checkbox "isolado"
     const chk = document.getElementById('formIsolado');
     if(chk) chk.checked = false;
+
+    toggleSemData();
     atualizarToggleIsolado();
 
     document.getElementById('modalForm').classList.add('active');
@@ -2380,8 +2694,9 @@ function mostrarTeletubies(){
     setTimeout(() => el.classList.remove('active'), 1000);
 }
 function salvarEvento(){
-    const dataInicio = document.getElementById('formDataInicio').value;
-    const dataFimRaw = document.getElementById('formDataFim').value;
+    const semData = document.getElementById('formSemData').checked;
+    const dataInicio = semData ? '' : document.getElementById('formDataInicio').value;
+    const dataFimRaw = semData ? '' : document.getElementById('formDataFim').value;
     const titulo = document.getElementById('formTitulo').value.trim();
     const responsavel = document.getElementById('formResponsavel').value;
     const area = document.getElementById('formArea').value;
@@ -2391,12 +2706,11 @@ function salvarEvento(){
     const id = document.getElementById('formId').value;
     const isolado = document.getElementById('formIsolado').checked;
 
-    if(!dataInicio){ alert('Informe a data de início.'); return; }
     if(!titulo){ alert('Informe o título.'); return; }
-    const dataFim = dataFimRaw && dataFimRaw >= dataInicio ? dataFimRaw : dataInicio;
-    const isMulti = dataFim > dataInicio;
+    if(!semData && !dataInicio){ alert('Informe a data de início ou marque "Sem data definida".'); return; }
+    const dataFim = (!semData && dataFimRaw && dataFimRaw >= dataInicio) ? dataFimRaw : dataInicio;
+    const isMulti = !semData && dataFim > dataInicio;
 
-    // Cria N eventos independentes (um por dia)
     function criarIsolados(){
         const N = daysBetween(dataInicio, dataFim) + 1;
         for(let i=0; i<N; i++){
@@ -2414,11 +2728,11 @@ function salvarEvento(){
         const ev = data.eventos.find(e=>e.id===Number(id));
         if(ev){
             if(isolado && isMulti){
-                // Converte um evento agregado em N isolados
                 data.eventos = data.eventos.filter(e => e.id !== Number(id));
                 criarIsolados();
             } else {
-                ev.dataInicio = dataInicio; ev.dataFim = dataFim;
+                ev.dataInicio = semData ? '' : dataInicio;
+                ev.dataFim    = semData ? '' : dataFim;
                 ev.titulo = titulo; ev.responsavel = responsavel;
                 ev.area = area; ev.descricao = descricao;
                 ev.tipo = tipo; ev.status = status;
@@ -2428,11 +2742,26 @@ function salvarEvento(){
         if(isolado && isMulti){
             criarIsolados();
         } else {
-            data.eventos.push({ id: nextId++, dataInicio, dataFim, titulo, responsavel, area, descricao, tipo, status, ordem: nextId*10 });
+            data.eventos.push({
+                id: nextId++,
+                dataInicio: semData ? '' : dataInicio,
+                dataFim:    semData ? '' : dataFim,
+                titulo, responsavel, area, descricao, tipo, status,
+                ordem: nextId*10
+            });
         }
         mostrarTeletubies();
     }
-    cacheLocal(); fecharForm(); diaSelecionado = dataInicio; render(); abrirModalDia(dataInicio);
+
+    cacheLocal(); fecharForm();
+    if(semData){
+        diaSelecionado = null;
+        setView('inbox');
+    } else {
+        diaSelecionado = dataInicio;
+        render();
+        abrirModalDia(dataInicio);
+    }
 }
 function duplicarEvento(id){
     const ev = data.eventos.find(e=>e.id===id); if(!ev) return;
