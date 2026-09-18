@@ -3,13 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CMA Planner</title>
+<title>Planner FGH</title>
 <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7fa; color: #333; min-height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; }
     .container { margin: 0 auto; background: #fff; box-shadow: 0 4px 16px rgba(22,60,109,.08); border: 1px solid #e6edf5; }
-    body.bg-imagem .container { background: rgba(255,255,255,.93); }
+    body.bg-imagem .container { background: rgba(255,255,255,.80); }
+    body.bg-imagem .toolbar { background: rgba(248,250,252,.85); }
+    body.bg-imagem .filters { background: rgba(255,247,230,.85); }
+    body.bg-imagem .calendar td { background: rgba(255,255,255,.78); }
+    body.bg-imagem .calendar td.other-month { background: rgba(248,250,252,.55); }
+    body.bg-imagem .week-col { background: rgba(255,255,255,.78); }
+    body.bg-imagem .week-col.weekend { background: rgba(248,250,252,.55); }
+    body.bg-imagem .list-day { background: rgba(255,255,255,.80); }
+    body.bg-imagem .day-card { background: rgba(255,255,255,.85); }
 
     /* ================= Cabeçalho ================= */
     .header-wrapper { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
@@ -54,12 +62,15 @@
     .calendar { width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; border:1px solid #dbe0e5; border-radius:8px; overflow:hidden; }
     .calendar thead th { background:#163c6d; color:#fff; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
     .calendar thead th.weekend { background:#1f4d85; }
-    .calendar td { border:1px solid #e6edf5; vertical-align:top; background:#fff; position:relative; cursor:pointer; transition:background .15s; overflow:hidden; }
+    .calendar td {
+        border:1px solid #e6edf5; vertical-align:top; background:#fff; position:relative; cursor:pointer; transition:background .15s; overflow:hidden;
+        display:flex; flex-direction:column;   /* <-- torna a célula um container flex para usar toda a altura */
+    }
     .calendar td:hover { background:#f8fbff; }
     .calendar td.other-month { background:#f8fafc; cursor:default; }
     .calendar td.other-month .day-number { color:#c5cdd6; }
     .calendar td.weekend .day-number { color:#2b6ca3; }
-    .day-number { font-weight:600; color:#163c6d; display:inline-block; text-align:center; }
+    .day-number { font-weight:600; color:#163c6d; display:inline-block; text-align:center; flex-shrink:0; }
     .day-number.hoje { background:#163c6d; color:#fff !important; border-radius:50%; }
     .day-badge { position:absolute; top:6px; right:6px; background:#163c6d; color:#fff; font-weight:700; border-radius:10px; line-height:1.4; }
 
@@ -124,7 +135,7 @@
     .event-chip.dragging { opacity:.4; }
     .chip-title { font-weight:700; display:block; }
     .continuation-mark { display:inline-block; opacity:.6; font-weight:700; }
-    .events-list { display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden; }
+    .events-list { display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden; flex:1 1 auto; min-height:0; max-height:none; }
     .events-list::-webkit-scrollbar { width:5px; }
     .events-list::-webkit-scrollbar-thumb { background:#c8d6e8; border-radius:3px; }
 
@@ -218,7 +229,7 @@
     }
 
     /* ============================================================
-       RESPONSIVIDADE GLOBAL — ajusta o layout a qualquer resolução
+       RESPONSIVIDADE GLOBAL
     ============================================================ */
     *, *::before, *::after { min-width: 0; }
     img, table { max-width: 100%; }
@@ -244,12 +255,12 @@
     .filters .count { font-size: clamp(10px, 0.8vw, 12px); }
     .filters .btn { font-size: clamp(11px, 0.9vw, 13px); padding: clamp(5px, 0.7vw, 9px) clamp(8px, 1vw, 12px); }
 
-    .calendar td { height: clamp(85px, 12vh, 200px); padding: clamp(3px, 0.5vw, 7px); }
+    .calendar td { padding: clamp(3px, 0.5vw, 7px); }
     .calendar thead th { font-size: clamp(9.5px, 0.9vw, 13px); padding: clamp(5px, 0.9vw, 12px) clamp(2px, 0.4vw, 6px); }
     .day-number { font-size: clamp(10.5px, 1.1vw, 16px); line-height: clamp(17px, 1.9vw, 26px); width: clamp(17px, 1.9vw, 26px); margin-bottom: clamp(2px, 0.5vw, 4px); }
     .day-badge { font-size: clamp(8px, 0.75vw, 11px); padding: 1px clamp(4px, 0.6vw, 7px); top: clamp(4px, 0.5vw, 6px); right: clamp(4px, 0.5vw, 6px); }
     .event-chip { font-size: clamp(9.5px, 0.85vw, 12.5px); padding: clamp(3px, 0.45vw, 6px) clamp(4px, 0.6vw, 9px); border-radius: clamp(3px, 0.4vw, 5px); }
-    .events-list { gap: 3px; margin-top: 3px; max-height: clamp(60px, 9vh, 150px); padding-right: 2px; }
+    .events-list { gap: 3px; margin-top: 3px; padding-right: 2px; }
     .badge { font-size: clamp(7.5px, 0.7vw, 10px); padding: 1px clamp(3px, 0.4vw, 6px); }
     .continuation-mark { font-size: clamp(9px, 0.8vw, 11px); }
 
@@ -301,10 +312,54 @@
 
     .teletubies-img { max-width: 60vw; max-height: 60vh; }
 
+    /* ============================================================
+       MÊS CABENDO INTEIRO NA TELA (sem rolagem)
+    ============================================================ */
+    body.view-mes {
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    body.view-mes > .container {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    body.view-mes .header-wrapper,
+    body.view-mes .toolbar,
+    body.view-mes .filters,
+    body.view-mes .legend {
+        flex-shrink: 0;
+    }
+    body.view-mes #viewContainer {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    body.view-mes #viewContainer > .calendar {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: 100%;
+    }
+    body.view-mes .calendar td {
+        height: auto;
+        min-height: 0;
+        overflow: hidden;
+    }
+    body.view-mes .events-list {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: none;
+    }
+
     /* ================= Telas grandes ================= */
     @media (min-width: 1900px) {
         .container { padding: 28px 34px; }
-        .calendar td { height: 210px; }
         .event-chip { font-size: 13px; }
         .week-col { min-height: 480px; }
     }
@@ -319,9 +374,12 @@
         .toolbar, .filters { flex-wrap: wrap; }
         .toolbar .spacer { display: none; }
         .toolbar .btn { flex: 1 1 auto; min-width: 70px; justify-content: center; }
-        .calendar td { height: clamp(80px, 14vw, 130px); }
-        .events-list { max-height: clamp(55px, 12vw, 95px); }
+        .events-list { max-height: none; }
         .day-view-header { flex-wrap: wrap; }
+        body.view-mes { overflow: auto; height: auto; display: block; }
+        body.view-mes > .container { display: block; height: auto; }
+        body.view-mes #viewContainer { display: block; }
+        body.view-mes #viewContainer > .calendar { height: auto; }
     }
 
     @media (max-width: 560px) {
@@ -330,7 +388,7 @@
         .title-block .year-row { font-size: 12px; }
         .logo-block img { height: 42px; }
         .calendar thead th { font-size: 9.5px; padding: 5px 1px; letter-spacing: 0; }
-        .calendar td { height: clamp(66px, 15vw, 100px); padding: 3px; }
+        .calendar td { padding: 3px; }
         .day-number { font-size: 11px; line-height: 16px; width: 16px; }
         .event-chip { font-size: clamp(8.5px, 2vw, 10px); padding: 3px 4px; }
         .badge { font-size: 8px; padding: 0 4px; }
@@ -350,11 +408,9 @@
     }
 
     @media (max-width: 400px) {
-        .calendar td { height: 60px; }
         .day-number { font-size: 10px; width: 15px; line-height: 15px; }
         .event-chip { font-size: 8px; padding: 2px 3px; }
         .day-badge { font-size: 8px; padding: 0 4px; }
-        .events-list { max-height: 50px; }
     }
 </style>
 </head>
@@ -512,7 +568,7 @@
    CONFIG
 ============================================================ */
 const GITHUB_OWNER = 'caiomalbuquerque';
-const GITHUB_REPO = 'calendario';
+const GITHUB_REPO = 'programacao_de_eventos';
 const GITHUB_BRANCH = 'main';
 const GITHUB_FILE_PATH = 'calendario.json';
 const CACHE_KEY = 'planner_fgh';
@@ -572,7 +628,7 @@ function escapeHtml(t){ if(t==null) return ''; return String(t).replace(/&/g,'&a
 function slug(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
 
 /* Cores */
-function hexToRgb(hex){ const m = String(hex).match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i); if(!m) return {r:128,g:128,b:128}; return {r:parseInt(m[1],16),g:parseInt(m[2],16),b:parseInt(m[3],16)}; }
+function hexToRgb(hex){ const m = String(hex).match(/^#?([a-f\d]{2})([a-fd\d]{2})([a-f\d]{2})$/i); if(!m) return {r:128,g:128,b:128}; return {r:parseInt(m[1],16),g:parseInt(m[2],16),b:parseInt(m[3],16)}; }
 function mix(a,b,t){ return {r:Math.round(a.r+(b.r-a.r)*t), g:Math.round(a.g+(b.g-a.g)*t), b:Math.round(a.b+(b.b-a.b)*t)}; }
 function rgbToHex(c){ return '#'+[c.r,c.g,c.b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 function tipoCss(cor){ const base = hexToRgb(cor||'#888'); const bg = rgbToHex(mix(base,{r:255,g:255,b:255},.85)); const txt = rgbToHex(mix(base,{r:0,g:0,b:0},.45)); return `background:${bg};border-left-color:${cor||'#888'};color:${txt};`; }
@@ -636,7 +692,7 @@ function prepararDados(){
 function cacheLocal(){ localStorage.setItem(CACHE_KEY, JSON.stringify(data)); }
 
 /* ============================================================
-   BACKGROUND (fundo do planner)
+   BACKGROUND
 ============================================================ */
 function aplicarBackground(){
     const bg = data.config.background || { tipo:'cor', cor:'#f4f7fa', imagem:'' };
@@ -830,7 +886,6 @@ function editarAreaLabel(i,v){ v=v.trim(); if(!v){ renderAdminListas(); return; 
 function editarAreaCor(i,v){ data.config.areas[i].cor = v; cacheLocal(); renderAdminListas(); render(); }
 function moverArea(i, dir){ moverItem(data.config.areas, i, dir, renderAdminListas); }
 
-/* ---- Helper genérico de reordenação ---- */
 function moverItem(lista, i, dir, rerender){
     const j = i + dir;
     if(j < 0 || j >= lista.length) return;
@@ -904,7 +959,7 @@ function renderBgPreview(){
     if(!el) return;
     const bg = data.config.background || { tipo:'cor', cor:'#f4f7fa', imagem:'' };
     if(bg.tipo === 'imagem' && bg.imagem){
-        el.style.backgroundImage = `url('${BG_FOLDER}/${encodeURI(bg.imagem)}')`;
+        el.style.backgroundImage = '';
         el.style.background = `url('${BG_FOLDER}/${encodeURI(bg.imagem)}') center/cover no-repeat`;
         el.innerHTML = `<span class="preview-tag">${escapeHtml(bg.imagem)}</span>`;
     } else {
@@ -1014,6 +1069,7 @@ function construirMapa(){
    RENDER PRINCIPAL
 ============================================================ */
 function render(){
+    document.body.classList.toggle('view-mes', view === 'mes');
     document.querySelectorAll('.btn-toggle').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
     atualizarTitulo();
     const c = document.getElementById('viewContainer');
@@ -1050,7 +1106,7 @@ function atualizarTitulo(){
 }
 
 /* ============================================================
-   CABEÇALHO DO CARTÃO (badges de responsável + área)
+   CABEÇALHO DO CARTÃO
 ============================================================ */
 function renderChipHeader(ev, isContinuation){
     const parts = [];
@@ -1104,8 +1160,7 @@ function renderMes(){
             html += `<span class="day-number ${hj?'hoje':''}">${cd}</span>`;
             if(evs.length > 0){
                 html += `<span class="day-badge">${evs.length}</span><div class="events-list">`;
-                evs.slice(0,8).forEach(({ev, position})=>{ html += renderChip(ev, position, key); });
-                if(evs.length>8) html += `<div style="font-size:10.5px;text-align:center;color:#163c6d;font-weight:600;">+${evs.length-8} mais</div>`;
+                evs.forEach(({ev, position})=>{ html += renderChip(ev, position, key); });
                 html += '</div>';
             }
         } else {
@@ -1166,7 +1221,7 @@ function renderDia(){
                     <button class="btn btn-nav" onclick="navDiaPrev()" title="Dia anterior (←)">‹</button>
                     <button class="btn btn-today" onclick="irHoje()" title="Ir para hoje">📅 Hoje</button>
                     <button class="btn btn-nav" onclick="navDiaNext()" title="Próximo dia (→)">›</button>
-                    <button class="btn btn-secondary" onclick="abrirFormEvento()">➕ Novo evento</button>
+                    <button class="btn btn-secondary" onclick="novoEventoDiaAtual()">➕ Novo evento</button>
                 </div>
              </div>`;
     html += renderDayStrip();
@@ -1258,7 +1313,7 @@ function renderLista(){
 }
 
 /* ============================================================
-   CHIP (mês/semana/lista)
+   CHIP
 ============================================================ */
 function renderChip(ev, position, dayKey, expandido){
     const t = getTipo(ev.tipo);
@@ -1416,12 +1471,20 @@ function fecharModalDia(){ document.getElementById('modalDia').classList.remove(
 /* ============================================================
    FORMULÁRIO
 ============================================================ */
-function novoEventoHoje(){ diaSelecionado = dateKeyFromDate(currentDate); abrirFormEvento(); }
+function novoEventoHoje(){
+    diaSelecionado = dateKeyFromDate(currentDate);
+    abrirFormEvento();
+}
+/* Usado na view "Dia": sempre usa o dia atualmente exibido como data de início */
+function novoEventoDiaAtual(){
+    diaSelecionado = dateKeyFromDate(currentDate);
+    abrirFormEvento();
+}
 
 function abrirFormEvento(id){
     fecharModalDia();
     const ev = id ? data.eventos.find(e=>e.id===id) : null;
-    if(!ev && !diaSelecionado) diaSelecionado = dateKeyFromDate(new Date());
+    if(!ev && !diaSelecionado) diaSelecionado = dateKeyFromDate(currentDate);
 
     document.getElementById('formTituloModal').textContent = ev ? 'Editar evento' : 'Novo evento';
     document.getElementById('formId').value = ev ? ev.id : '';
@@ -1433,7 +1496,6 @@ function abrirFormEvento(id){
 
     preencherSelect('formResponsavel', data.config.responsaveis.map(r => r.label), ev ? ev.responsavel : '');
     preencherSelect('formArea', data.config.areas.map(a => a.label), ev ? ev.area : '');
-    // Tipo default = PRIMEIRO da lista configurada
     const tipoDefault = (data.config.tipos[0] && data.config.tipos[0].id) || '';
     preencherSelect('formTipo', data.config.tipos.map(t=>({value:t.id,label:t.label})), ev ? ev.tipo : tipoDefault);
 
@@ -1445,97 +1507,4 @@ function preencherSelect(id, opcoes, valorAtual){
     const normalizadas = opcoes.map(o => (typeof o === 'string' ? {value:o,label:o} : o));
     let html = '<option value="">— Nenhum —</option>';
     html += normalizadas.map(o => `<option value="${escapeHtml(o.value)}" ${o.value===valorAtual?'selected':''}>${escapeHtml(o.label)}</option>`).join('');
-    if(valorAtual && !normalizadas.find(o=>o.value===valorAtual)){
-        html += `<option value="${escapeHtml(valorAtual)}" selected>${escapeHtml(valorAtual)} (removido)</option>`;
-    }
-    sel.innerHTML = html;
-}
-function fecharForm(){ document.getElementById('modalForm').classList.remove('active'); }
-
-function mostrarTeletubies(){
-    const el = document.getElementById('teletubiesOverlay');
-    if(!el) return;
-    el.classList.add('active');
-    setTimeout(() => el.classList.remove('active'), 1000);
-}
-
-function salvarEvento(){
-    const dataInicio = document.getElementById('formDataInicio').value;
-    const dataFimRaw = document.getElementById('formDataFim').value;
-    const titulo = document.getElementById('formTitulo').value.trim();
-    const responsavel = document.getElementById('formResponsavel').value;
-    const area = document.getElementById('formArea').value;
-    const descricao = document.getElementById('formDescricao').value.trim();
-    const tipo = document.getElementById('formTipo').value;
-    const id = document.getElementById('formId').value;
-
-    if(!dataInicio){ alert('Informe a data de início.'); return; }
-    if(!titulo){ alert('Informe o título.'); return; }
-    const dataFim = dataFimRaw && dataFimRaw >= dataInicio ? dataFimRaw : dataInicio;
-
-    if(id){
-        const ev = data.eventos.find(e=>e.id===Number(id));
-        if(ev){
-            ev.dataInicio = dataInicio; ev.dataFim = dataFim;
-            ev.titulo = titulo; ev.responsavel = responsavel;
-            ev.area = area; ev.descricao = descricao; ev.tipo = tipo;
-        }
-    } else {
-        data.eventos.push({ id: nextId++, dataInicio, dataFim, titulo, responsavel, area, descricao, tipo, ordem: nextId*10 });
-        mostrarTeletubies();
-    }
-    cacheLocal(); fecharForm(); diaSelecionado = dataInicio; render(); abrirModalDia(dataInicio);
-}
-function duplicarEvento(id){
-    const ev = data.eventos.find(e=>e.id===id); if(!ev) return;
-    const novo = JSON.parse(JSON.stringify(ev));
-    novo.id = nextId++; novo.ordem = nextId*10; novo.titulo = ev.titulo + ' (cópia)';
-    data.eventos.push(novo);
-    cacheLocal(); render(); renderListaDia();
-}
-function excluirEvento(id){
-    if(!confirm('Excluir este evento?')) return;
-    data.eventos = data.eventos.filter(e=>e.id!==id);
-    cacheLocal(); renderListaDia(); render();
-}
-function excluirEventoForm(){
-    const id = Number(document.getElementById('formId').value);
-    if(!id){ return; }
-    if(!confirm('Excluir este evento?')) return;
-    data.eventos = data.eventos.filter(e=>e.id!==id);
-    cacheLocal();
-    fecharForm();
-    if(document.getElementById('modalDia').classList.contains('active')) renderListaDia();
-    render();
-}
-
-/* ============================================================
-   INICIALIZAÇÃO
-============================================================ */
-document.addEventListener('DOMContentLoaded', async ()=>{
-    await loadData();
-    aplicarBackground();
-    const pref = localStorage.getItem(VIEW_KEY);
-    if(pref) view = pref;
-    else if(window.innerWidth < 560) view = 'lista';
-    initSelects();
-    sincronizarSelects();
-    popularFiltros();
-    render();
-
-    document.addEventListener('keydown', e=>{
-        if(e.key === 'Escape'){ fecharForm(); fecharModalDia(); fecharAdmin(); return; }
-
-        if(view === 'dia'){
-            const tag = (e.target.tagName || '').toLowerCase();
-            const digitando = (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable);
-            const modalAberto = document.querySelector('.modal-overlay.active');
-            if(digitando || modalAberto) return;
-            if(e.key === 'ArrowLeft'){ e.preventDefault(); navDiaPrev(); }
-            if(e.key === 'ArrowRight'){ e.preventDefault(); navDiaNext(); }
-        }
-    });
-});
-</script>
-</body>
-</html>
+    if(valorAtual && !normalizadas.find(o
