@@ -701,6 +701,18 @@
         .theme-field { flex-wrap: wrap; }
         .theme-field input[type=text], .theme-field input[type=number], .theme-field select { width: 100%; }
     }
+        /* Checkbox "tarefas isoladas" */
+    .checkbox-label {
+        display: flex; align-items: center; gap: 8px;
+        cursor: pointer; text-transform: none; letter-spacing: 0;
+        color: var(--text-heading); font-weight: 600; font-size: 14px;
+        margin-bottom: 0;
+    }
+    .checkbox-label input[type=checkbox] {
+        width: 18px; height: 18px; margin: 0; cursor: pointer;
+        accent-color: var(--primary);
+        flex-shrink: 0;
+    }
 </style>
 </head>
 <body>
@@ -796,8 +808,18 @@
         <h2 id="formTituloModal">Novo evento</h2>
         <input type="hidden" id="formId">
         <div class="row2">
-            <div class="field"><label>Data de início</label><input type="date" id="formDataInicio"></div>
-            <div class="field"><label>Data de término</label><input type="date" id="formDataFim"></div>
+            <div class="field"><label>Data de início</label><input type="date" id="formDataInicio" onchange="atualizarToggleIsolado()"></div>
+            <div class="field"><label>Data de término</label><input type="date" id="formDataFim" onchange="atualizarToggleIsolado()" oninput="atualizarToggleIsolado()"></div>
+        </div>
+                <div class="field" id="formIsoladoWrap" style="display:none;">
+            <label class="checkbox-label">
+                <input type="checkbox" id="formIsolado">
+                <span>Criar tarefas isoladas por dia</span>
+            </label>
+            <span class="hint">
+                <b>Desmarcado (padrão):</b> tarefa em cadeia — editar um dia afeta todos os dias do período.<br>
+                <b>Marcado:</b> cria um evento independente para cada dia — editar um não afeta os demais.
+            </span>
         </div>
         <div class="field"><label>Título</label><input type="text" id="formTitulo" placeholder="Ex.: Disponibilização da planilha"></div>
         <div class="row2">
@@ -2300,6 +2322,19 @@ function fecharModalDia(){ document.getElementById('modalDia').classList.remove(
    FORMULÁRIO
 ============================================================ */
 function novoEventoHoje(){ diaSelecionado = dateKeyFromDate(currentDate); abrirFormEvento(); }
+function atualizarToggleIsolado(){
+    const inicio = document.getElementById('formDataInicio').value;
+    const fim = document.getElementById('formDataFim').value;
+    const wrap = document.getElementById('formIsoladoWrap');
+    if(!wrap) return;
+    if(fim && inicio && fim > inicio){
+        wrap.style.display = '';
+    } else {
+        wrap.style.display = 'none';
+        const chk = document.getElementById('formIsolado');
+        if(chk) chk.checked = false;
+    }
+}
 function abrirFormEvento(id, diaForcado){
     fecharModalDia();
     const ev = id ? data.eventos.find(e=>e.id===id) : null;
@@ -2318,6 +2353,12 @@ function abrirFormEvento(id, diaForcado){
     preencherSelect('formTipo', data.config.tipos.map(t=>({value:t.id,label:t.label})), ev ? ev.tipo : tipoDefault);
     const statusDefault = ev ? (ev.status || '') : ((data.config.status[0] && data.config.status[0].id) || '');
     preencherSelect('formStatus', data.config.status.map(s=>({value:s.id,label:s.label})), statusDefault);
+
+    // Reset do checkbox e mostra/esconde conforme as datas
+    const chk = document.getElementById('formIsolado');
+    if(chk) chk.checked = false;
+    atualizarToggleIsolado();
+
     document.getElementById('modalForm').classList.add('active');
     setTimeout(()=>document.getElementById('formTitulo').focus(), 100);
 }
@@ -2348,19 +2389,47 @@ function salvarEvento(){
     const tipo = document.getElementById('formTipo').value;
     const status = document.getElementById('formStatus').value;
     const id = document.getElementById('formId').value;
+    const isolado = document.getElementById('formIsolado').checked;
+
     if(!dataInicio){ alert('Informe a data de início.'); return; }
     if(!titulo){ alert('Informe o título.'); return; }
     const dataFim = dataFimRaw && dataFimRaw >= dataInicio ? dataFimRaw : dataInicio;
+    const isMulti = dataFim > dataInicio;
+
+    // Cria N eventos independentes (um por dia)
+    function criarIsolados(){
+        const N = daysBetween(dataInicio, dataFim) + 1;
+        for(let i=0; i<N; i++){
+            const d = addDays(dataInicio, i);
+            data.eventos.push({
+                id: nextId++,
+                dataInicio: d, dataFim: d,
+                titulo, responsavel, area, descricao, tipo, status,
+                ordem: nextId*10
+            });
+        }
+    }
+
     if(id){
         const ev = data.eventos.find(e=>e.id===Number(id));
         if(ev){
-            ev.dataInicio = dataInicio; ev.dataFim = dataFim;
-            ev.titulo = titulo; ev.responsavel = responsavel;
-            ev.area = area; ev.descricao = descricao;
-            ev.tipo = tipo; ev.status = status;
+            if(isolado && isMulti){
+                // Converte um evento agregado em N isolados
+                data.eventos = data.eventos.filter(e => e.id !== Number(id));
+                criarIsolados();
+            } else {
+                ev.dataInicio = dataInicio; ev.dataFim = dataFim;
+                ev.titulo = titulo; ev.responsavel = responsavel;
+                ev.area = area; ev.descricao = descricao;
+                ev.tipo = tipo; ev.status = status;
+            }
         }
     } else {
-        data.eventos.push({ id: nextId++, dataInicio, dataFim, titulo, responsavel, area, descricao, tipo, status, ordem: nextId*10 });
+        if(isolado && isMulti){
+            criarIsolados();
+        } else {
+            data.eventos.push({ id: nextId++, dataInicio, dataFim, titulo, responsavel, area, descricao, tipo, status, ordem: nextId*10 });
+        }
         mostrarTeletubies();
     }
     cacheLocal(); fecharForm(); diaSelecionado = dataInicio; render(); abrirModalDia(dataInicio);
