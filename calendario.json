@@ -1,0 +1,265 @@
+{
+  "eventos": [
+    {
+      "id": 1,
+      "dataInicio": "2026-09-18",
+      "dataFim": "2026-09-18",
+      "titulo": "Censo Diário",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
+      "tipo": "tarefa",
+      "ordem": 10,
+      "status": "finalizado"
+    },
+    {
+      "id": 2,
+      "dataInicio": "2026-09-18",
+      "dataFim": "2026-09-18",
+      "titulo": "Atendimentos Médicos",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
+      "tipo": "tarefa",
+      "ordem": 20,
+      "status": "finalizado"
+    },
+    {
+      "id": 3,
+      "dataInicio": "2026-09-18",
+      "dataFim": "2026-09-18",
+      "titulo": "Incluir a parte de RH para o HCR",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "Comunicar Assessoria por E-mail",
+      "tipo": "tarefa",
+      "ordem": 30,
+      "status": "finalizado"
+    },
+    {
+      "id": 4,
+      "dataInicio": "2026-09-18",
+      "dataFim": "2026-09-18",
+      "titulo": "Revisar Metas Contratuais",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "tipo": "tarefa",
+      "ordem": 50,
+      "status": "nao-iniciado"
+    },
+    {
+      "id": 5,
+      "dataInicio": "2026-09-18",
+      "dataFim": "2026-09-18",
+      "titulo": "Metas para tempo médio de permanência",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "tipo": "tarefa",
+      "ordem": 60,
+      "status": "nao-iniciado"
+    },
+    {
+      "id": 6,
+      "dataInicio": "2026-09-18",
+      "dataFim": "2026-09-18",
+      "titulo": "Pedido do Alfa para colocar quantidade de demitidos ao invés de valor",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "tipo": "tarefa",
+      "ordem": 70,
+      "status": "nao-iniciado"
+    },
+    {
+      "id": 7,
+      "dataInicio": "2026-09-18",
+      "dataFim": "2026-09-18",
+      "titulo": "Avisar sobre a extensão do prazo do swot",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "",
+      "tipo": "lembrete",
+      "ordem": 40,
+      "status": "em-andamento"
+    },
+    {
+      "id": 10,
+      "dataInicio": "2026-09-21",
+      "dataFim": "2026-09-25",
+      "titulo": "Censo Diário",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
+      "tipo": "tarefa",
+      "ordem": 10,
+      "status": "nao-iniciado"
+    },
+    {
+      "id": 11,
+      "dataInicio": "2026-09-21",
+      "dataFim": "2026-09-25",
+      "titulo": "Atendimentos Médicos",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
+      "tipo": "tarefa",
+      "ordem": 20,
+      "status": "nao-iniciado"
+    },
+    {
+      "id": 12,
+      "dataInicio": "2026-09-21",
+      "dataFim": "2026-09-21",
+      "titulo": "Colocar a Criticidade nos Painéis do Monitoramento Geral e da Contratante",
+      "responsavel": "Caio Albuquerque",
+      "area": "Diretoria de Atendimento",
+      "descricao": "Avisar Ruthelcy para divulgação",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 30
+    },
+    {
+      "id": 13,
+      "dataInicio": "2026-09-21",
+      "dataFim": "2026-09-21",
+      "titulo": "Resultados OKR",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 40
+    },
+    {
+      "id": 14,
+      "dataInicio": "2026-09-22",
+      "dataFim": "2026-09-22",
+      "titulo": "Painel de Metas",
+      "responsavel": "Caio Albuquerque",
+      "area": "SG",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 150
+    },
+    {
+      "id": 15,
+      "dataInicio": "2026-09-22",
+      "dataFim": "2026-09-22",
+      "titulo": "Criar planilhas 4º ciclo para cada Unidade",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 160
+    },
+    {
+      "id": 16,
+      "dataInicio": "2026-09-23",
+      "dataFim": "2026-09-23",
+      "titulo": "Painel de Metas",
+      "responsavel": "Caio Albuquerque",
+      "area": "SG",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 170
+    },
+    {
+      "id": 17,
+      "dataInicio": "2026-09-24",
+      "dataFim": "2026-09-24",
+      "titulo": "Painel - Exames de Imagem",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 180
+    },
+    {
+      "id": 18,
+      "dataInicio": "2026-09-25",
+      "dataFim": "2026-09-25",
+      "titulo": "Bloquear planilha de montagem 4º Ciclo OKR",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "",
+      "tipo": "lembrete",
+      "status": "nao-iniciado",
+      "ordem": 190
+    }
+  ],
+  "config": {
+    "tipos": [
+      {
+        "id": "tarefa",
+        "label": "Tarefa",
+        "cor": "#1f86db"
+      },
+      {
+        "id": "lembrete",
+        "label": "Lembrete",
+        "cor": "#feed2f"
+      },
+      {
+        "id": "prazo",
+        "label": "Prazo",
+        "cor": "#c72323"
+      }
+    ],
+    "responsaveis": [
+      {
+        "label": "Caio Albuquerque",
+        "cor": "#f00000"
+      }
+    ],
+    "areas": [
+      {
+        "label": "Planejamento Estratégico",
+        "cor": "#34e5a1"
+      },
+      {
+        "label": "OKR",
+        "cor": "#8bc34a"
+      },
+      {
+        "label": "SAS",
+        "cor": "#066c8e"
+      },
+      {
+        "label": "SG",
+        "cor": "#e53935"
+      },
+      {
+        "label": "Diretoria de Atendimento",
+        "cor": "#d151f5"
+      }
+    ],
+    "background": {
+      "tipo": "imagem",
+      "cor": "#0582ff",
+      "imagem": "ebdd04fccd1b465eae0d03a99b9e0cb8.jpg"
+    },
+    "status": [
+      {
+        "id": "nao-iniciado",
+        "label": "Não iniciado",
+        "cor": "#9e9e9e"
+      },
+      {
+        "id": "em-andamento",
+        "label": "Em andamento",
+        "cor": "#2462f5"
+      },
+      {
+        "id": "finalizado",
+        "label": "Finalizado",
+        "cor": "#1a9c4a"
+      }
+    ]
+  }
+}
