@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planner FGH</title>
+<title>CMA Planner</title>
 <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7fa; color: #333; min-height: 100vh; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7fa; color: #333; min-height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; }
     .container { margin: 0 auto; background: #fff; box-shadow: 0 4px 16px rgba(22,60,109,.08); border: 1px solid #e6edf5; }
+    body.bg-imagem .container { background: rgba(255,255,255,.93); }
 
     /* ================= Cabeçalho ================= */
     .header-wrapper { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
@@ -36,6 +37,7 @@
     .btn-primary { background:#163c6d; color:#fff; } .btn-primary:hover { background:#0e2b4f; }
     .btn-secondary { background:#2b6ca3; color:#fff; } .btn-secondary:hover { background:#1f5280; }
     .btn-success { background:#1a9c4a; color:#fff; } .btn-success:hover { background:#13803b; }
+    .btn-danger { background:#dc3545; color:#fff; } .btn-danger:hover { background:#a71d2a; }
     .btn-nav { background:#e9edf2; color:#163c6d; }
     .btn-nav:hover { background:#d3dde8; }
     .btn-toggle { background:#eef3f9; color:#163c6d; border:1px solid #d1d8e2; }
@@ -44,6 +46,9 @@
     .btn-mini { border-radius:4px; border:none; cursor:pointer; font-weight:600; }
     .btn-mini.edit { background:#2b6ca3; color:#fff; } .btn-mini.del { background:#dc3545; color:#fff; }
     .btn-mini.dup { background:#1a9c4a; color:#fff; }
+    .btn-mini.up, .btn-mini.down { background:#e9edf2; color:#163c6d; }
+    .btn-mini.up:hover, .btn-mini.down:hover { background:#d3dde8; }
+    .btn-mini.up:disabled, .btn-mini.down:disabled { opacity:.3; cursor:not-allowed; }
 
     /* ================= Calendário (Mês) ================= */
     .calendar { width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; border:1px solid #dbe0e5; border-radius:8px; overflow:hidden; }
@@ -72,14 +77,12 @@
     .day-view-header h2 { margin:0; }
     .day-view-header .sub { opacity:.85; }
 
-    /* Barra de navegação do dia */
     .day-view-header .day-nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     .day-view-header .day-nav .btn { font-size: clamp(11px, .95vw, 14px); padding: clamp(6px, .8vw, 10px) clamp(10px, 1.2vw, 16px); }
     .day-nav .btn-nav { min-width: clamp(34px, 3.2vw, 46px); font-size: clamp(18px, 1.8vw, 24px); line-height:1; font-weight:900; }
     .day-nav .btn-today { background:#2b6ca3; color:#fff; }
     .day-nav .btn-today:hover { background:#1f5280; }
 
-    /* Faixa da semana clicável */
     .day-strip { display:grid; grid-template-columns:repeat(7,1fr); gap: clamp(4px, .6vw, 8px); margin-bottom: clamp(8px, 1.2vw, 14px); }
     .day-strip-item {
         display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
@@ -190,6 +193,19 @@
     .admin-add input[type=color] { cursor:pointer; border:1px solid #d1d8e2; border-radius:6px; }
     .admin-empty { color:#888; text-align:center; border:1px dashed #dbe0e5; border-radius:6px; margin-bottom:12px; }
 
+    /* Aparência */
+    .bg-lista { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px; margin-top:6px; }
+    .bg-item { border:2px solid #e6edf5; border-radius:8px; overflow:hidden; cursor:pointer; transition:.15s; background:#fff; position:relative; }
+    .bg-item:hover { border-color:#2b6ca3; }
+    .bg-item.selected { border-color:#163c6d; box-shadow:0 0 0 3px rgba(22,60,109,.15); }
+    .bg-item img { display:block; width:100%; height:80px; object-fit:cover; }
+    .bg-item .bg-nome { font-size:10.5px; padding:5px 6px; color:#163c6d; font-weight:600; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bg-item .bg-check { position:absolute; top:5px; right:5px; background:#163c6d; color:#fff; border-radius:50%; width:20px; height:20px; display:none; align-items:center; justify-content:center; font-size:12px; }
+    .bg-item.selected .bg-check { display:flex; }
+    .bg-vazio { color:#888; font-size:12.5px; padding:10px; text-align:center; border:1px dashed #dbe0e5; border-radius:6px; }
+    .bg-preview { height:90px; border:1px solid #d1d8e2; border-radius:8px; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:#163c6d; font-weight:600; font-size:12px; }
+    .bg-preview .preview-tag { background:rgba(255,255,255,.85); padding:4px 10px; border-radius:20px; }
+
     /* ================= Popup Teletubies ================= */
     .teletubies-overlay { position:fixed; inset:0; background:rgba(22,60,109,.35); display:none; align-items:center; justify-content:center; z-index:2000; pointer-events:none; animation: fadeInTubies .15s ease-out; }
     .teletubies-overlay.active { display:flex; }
@@ -272,7 +288,7 @@
     .legend { font-size: clamp(10.5px, 0.85vw, 12.5px); gap: clamp(6px, 1vw, 12px); margin-top: clamp(10px, 1.2vw, 16px); padding-top: clamp(8px, 1vw, 14px); }
     .legend .dot { width: clamp(10px, 0.9vw, 13px); height: clamp(10px, 0.9vw, 13px); }
 
-    .admin-tabs { margin-bottom: clamp(10px, 1.2vw, 16px); }
+    .admin-tabs { margin-bottom: clamp(10px, 1.2vw, 16px); flex-wrap:wrap; }
     .admin-tab { padding: clamp(7px, 1vw, 10px) clamp(10px, 1.2vw, 16px); font-size: clamp(12px, 1vw, 14px); }
     .admin-list li { padding: clamp(6px, 0.8vw, 8px) clamp(8px, 1vw, 10px); }
     .admin-list li .item-color { width: clamp(18px, 1.6vw, 22px); height: clamp(18px, 1.6vw, 22px); }
@@ -327,7 +343,6 @@
         .modal .row2 { grid-template-columns: 1fr; }
         .teletubies-img { max-width: 80vw; max-height: 50vh; }
 
-        /* Navegação do dia no mobile */
         .day-view-header .day-nav { width:100%; justify-content:center; }
         .day-view-header .day-nav .btn-nav { width:auto; flex:0 0 auto; }
         .day-strip-item .ds-num { font-size:14px; }
@@ -415,6 +430,7 @@
         <div class="field"><label>Descrição (opcional)</label><textarea id="formDescricao" placeholder="Detalhes do evento..."></textarea></div>
         <div class="field"><label>Tipo</label><select id="formTipo"></select></div>
         <div class="actions">
+            <button class="btn btn-danger left" id="btnExcluirForm" style="display:none;" onclick="excluirEventoForm()">🗑 Excluir</button>
             <button class="btn btn-primary" onclick="salvarEvento()">Salvar</button>
             <button class="btn btn-secondary" onclick="fecharForm()">Cancelar</button>
         </div>
@@ -429,7 +445,9 @@
             <button class="admin-tab active" data-pane="tipos" onclick="switchAdminTab('tipos')">Tipos</button>
             <button class="admin-tab" data-pane="responsaveis" onclick="switchAdminTab('responsaveis')">Responsáveis</button>
             <button class="admin-tab" data-pane="areas" onclick="switchAdminTab('areas')">Áreas</button>
+            <button class="admin-tab" data-pane="aparencia" onclick="switchAdminTab('aparencia')">Aparência</button>
         </div>
+
         <div class="admin-pane active" id="pane-tipos">
             <ul class="admin-list" id="listaTipos"></ul>
             <div class="admin-add">
@@ -438,6 +456,7 @@
                 <button class="btn btn-primary" onclick="addTipo()">Adicionar tipo</button>
             </div>
         </div>
+
         <div class="admin-pane" id="pane-responsaveis">
             <ul class="admin-list" id="listaResponsaveis"></ul>
             <div class="admin-add">
@@ -445,6 +464,7 @@
                 <button class="btn btn-primary" onclick="addResponsavel()">Adicionar</button>
             </div>
         </div>
+
         <div class="admin-pane" id="pane-areas">
             <ul class="admin-list" id="listaAreas"></ul>
             <div class="admin-add">
@@ -452,6 +472,29 @@
                 <button class="btn btn-primary" onclick="addArea()">Adicionar</button>
             </div>
         </div>
+
+        <div class="admin-pane" id="pane-aparencia">
+            <div class="field">
+                <label>Tipo de fundo</label>
+                <select id="bgTipoSelect" onchange="trocarBgTipo()">
+                    <option value="cor">🎨 Cor sólida</option>
+                    <option value="imagem">🖼️ Imagem do repositório (img/background)</option>
+                </select>
+            </div>
+            <div class="field" id="bgCorWrap">
+                <label>Cor de fundo</label>
+                <input type="color" id="bgCor" onchange="salvarBgCor()" style="max-width:120px;">
+            </div>
+            <div class="field" id="bgImagemWrap" style="display:none;">
+                <label>Imagens disponíveis</label>
+                <div id="bgLista" class="bg-lista"></div>
+            </div>
+            <div class="field">
+                <label>Pré-visualização</label>
+                <div id="bgPreview" class="bg-preview"></div>
+            </div>
+        </div>
+
         <div class="actions">
             <button class="btn btn-secondary left" onclick="fazerLogout()">Sair</button>
             <button class="btn btn-primary" onclick="fecharAdmin()">Fechar</button>
@@ -469,7 +512,7 @@
    CONFIG
 ============================================================ */
 const GITHUB_OWNER = 'caiomalbuquerque';
-const GITHUB_REPO = 'programacao_de_eventos';
+const GITHUB_REPO = 'calendario';
 const GITHUB_BRANCH = 'main';
 const GITHUB_FILE_PATH = 'calendario.json';
 const CACHE_KEY = 'planner_fgh';
@@ -477,6 +520,7 @@ const CACHE_TIME_KEY = 'planner_fgh_time';
 const TOKEN_KEY = 'planner_fgh_token';
 const VIEW_KEY = 'planner_fgh_view';
 const CACHE_DURATION = 5 * 60 * 1000;
+const BG_FOLDER = 'img/background';
 
 const MESES = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
 const MESES_CURTOS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -496,7 +540,8 @@ const DEFAULT_CONFIG = {
         { id:'feriado',    label:'Feriado',     cor:'#e53935' }
     ],
     responsaveis: [],
-    areas: []
+    areas: [],
+    background: { tipo: 'cor', cor: '#f4f7fa', imagem: '' }
 };
 
 /* ============================================================
@@ -510,6 +555,8 @@ let diaSelecionado = null;
 let authToken = sessionStorage.getItem(TOKEN_KEY) || '';
 let filtros = { tipo:'', responsavel:'', area:'' };
 let dragState = { eventId: null, sourceDay: null };
+let backgroundsDisponiveis = [];
+let backgroundsCarregados = false;
 
 /* ============================================================
    HELPERS
@@ -566,6 +613,7 @@ function prepararDados(){
     if(!data.eventos) data.eventos = [];
     if(!data.config) data.config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     if(!data.config.tipos) data.config.tipos = JSON.parse(JSON.stringify(DEFAULT_CONFIG.tipos));
+    if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
 
     data.config.responsaveis = (data.config.responsaveis || []).map(r =>
         typeof r === 'string' ? { label: r, cor: corAutomatica(r) } : r
@@ -586,6 +634,53 @@ function prepararDados(){
     nextId = max+1;
 }
 function cacheLocal(){ localStorage.setItem(CACHE_KEY, JSON.stringify(data)); }
+
+/* ============================================================
+   BACKGROUND (fundo do planner)
+============================================================ */
+function aplicarBackground(){
+    const bg = data.config.background || { tipo:'cor', cor:'#f4f7fa', imagem:'' };
+    document.body.classList.toggle('bg-imagem', bg.tipo === 'imagem' && !!bg.imagem);
+    if(bg.tipo === 'imagem' && bg.imagem){
+        document.body.style.backgroundImage = `url('${BG_FOLDER}/${encodeURIComponent(bg.imagem).replace(/%2F/g,'/')}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundAttachment = 'fixed';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundColor = '';
+    } else {
+        document.body.style.backgroundImage = '';
+        document.body.style.backgroundAttachment = '';
+        document.body.style.backgroundSize = '';
+        document.body.style.backgroundPosition = '';
+        document.body.style.background = bg.cor || '#f4f7fa';
+    }
+}
+
+async function listarBackgrounds(){
+    const caminhos = [BG_FOLDER, 'calendario/' + BG_FOLDER];
+    for(const p of caminhos){
+        try{
+            const r = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${p}?ref=${GITHUB_BRANCH}`);
+            if(!r.ok) continue;
+            const lista = await r.json();
+            if(Array.isArray(lista)){
+                const imgs = lista
+                    .filter(f => f.type === 'file' && /\.(png|jpe?g|gif|webp|svg|bmp)$/i.test(f.name))
+                    .map(f => f.name)
+                    .sort((a,b)=>a.localeCompare(b, 'pt-BR', {numeric:true}));
+                if(imgs.length) return imgs;
+            }
+        }catch(e){ /* tenta próximo */ }
+    }
+    return [];
+}
+
+async function carregarBackgroundsSeNecessario(){
+    if(backgroundsCarregados) return;
+    backgroundsCarregados = true;
+    backgroundsDisponiveis = await listarBackgrounds();
+    renderBgLista();
+}
 
 /* ============================================================
    SALVAR NO GITHUB
@@ -628,7 +723,9 @@ async function abrirAdmin(){
         sessionStorage.setItem(TOKEN_KEY, t);
     }
     renderAdminListas();
+    renderBgAdmin();
     document.getElementById('modalAdmin').classList.add('active');
+    carregarBackgroundsSeNecessario();
 }
 function fecharAdmin(){ document.getElementById('modalAdmin').classList.remove('active'); }
 function fazerLogout(){ if(!confirm('Sair do modo admin?')) return; authToken = ''; sessionStorage.removeItem(TOKEN_KEY); fecharAdmin(); }
@@ -639,7 +736,9 @@ function fazerLogout(){ if(!confirm('Sair do modo admin?')) return; authToken = 
 function switchAdminTab(pane){
     document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active', b.dataset.pane===pane));
     document.querySelectorAll('.admin-pane').forEach(p=>p.classList.toggle('active', p.id==='pane-'+pane));
+    if(pane === 'aparencia') renderBgAdmin();
 }
+
 function renderAdminListas(){
     const lt = document.getElementById('listaTipos');
     lt.innerHTML = data.config.tipos.length === 0
@@ -649,7 +748,11 @@ function renderAdminListas(){
                 <div class="item-color" style="background:${escapeHtml(t.cor)}"></div>
                 <input type="text" class="item-label" value="${escapeHtml(t.label)}" onchange="editarTipoLabel(${i}, this.value)" style="border:1px solid transparent;background:transparent;font-weight:600;color:#163c6d;font-size:14px;">
                 <input type="color" value="${escapeHtml(t.cor)}" onchange="editarTipoCor(${i}, this.value)">
-                <div class="item-actions"><button class="btn-mini del" onclick="delTipo(${i})">✕</button></div>
+                <div class="item-actions">
+                    <button class="btn-mini up" onclick="moverTipo(${i}, -1)" title="Subir" ${i===0?'disabled':''}>↑</button>
+                    <button class="btn-mini down" onclick="moverTipo(${i}, 1)" title="Descer" ${i===data.config.tipos.length-1?'disabled':''}>↓</button>
+                    <button class="btn-mini del" onclick="delTipo(${i})" title="Excluir">✕</button>
+                </div>
             </li>`).join('');
 
     const lr = document.getElementById('listaResponsaveis');
@@ -660,7 +763,11 @@ function renderAdminListas(){
                 <span class="badge badge-resp" style="${badgeStyle(r.cor)}">@${escapeHtml(r.label)}</span>
                 <input type="text" class="item-label" value="${escapeHtml(r.label)}" onchange="editarRespLabel(${i}, this.value)" style="border:1px solid transparent;background:transparent;font-weight:600;color:#163c6d;font-size:14px;">
                 <input type="color" value="${escapeHtml(r.cor)}" onchange="editarRespCor(${i}, this.value)">
-                <div class="item-actions"><button class="btn-mini del" onclick="delResponsavel(${i})">✕</button></div>
+                <div class="item-actions">
+                    <button class="btn-mini up" onclick="moverResponsavel(${i}, -1)" title="Subir" ${i===0?'disabled':''}>↑</button>
+                    <button class="btn-mini down" onclick="moverResponsavel(${i}, 1)" title="Descer" ${i===data.config.responsaveis.length-1?'disabled':''}>↓</button>
+                    <button class="btn-mini del" onclick="delResponsavel(${i})" title="Excluir">✕</button>
+                </div>
             </li>`).join('');
 
     const la = document.getElementById('listaAreas');
@@ -671,9 +778,15 @@ function renderAdminListas(){
                 <span class="badge badge-area" style="${badgeStyle(a.cor)}">${escapeHtml(a.label)}</span>
                 <input type="text" class="item-label" value="${escapeHtml(a.label)}" onchange="editarAreaLabel(${i}, this.value)" style="border:1px solid transparent;background:transparent;font-weight:600;color:#163c6d;font-size:14px;">
                 <input type="color" value="${escapeHtml(a.cor)}" onchange="editarAreaCor(${i}, this.value)">
-                <div class="item-actions"><button class="btn-mini del" onclick="delArea(${i})">✕</button></div>
+                <div class="item-actions">
+                    <button class="btn-mini up" onclick="moverArea(${i}, -1)" title="Subir" ${i===0?'disabled':''}>↑</button>
+                    <button class="btn-mini down" onclick="moverArea(${i}, 1)" title="Descer" ${i===data.config.areas.length-1?'disabled':''}>↓</button>
+                    <button class="btn-mini del" onclick="delArea(${i})" title="Excluir">✕</button>
+                </div>
             </li>`).join('');
 }
+
+/* ---- Tipos ---- */
 function addTipo(){
     const label = document.getElementById('novoTipoLabel').value.trim();
     const cor = document.getElementById('novoTipoCor').value;
@@ -686,33 +799,120 @@ function addTipo(){
 }
 function editarTipoLabel(i,v){ data.config.tipos[i].label = v.trim()||data.config.tipos[i].label; cacheLocal(); renderLegend(); popularFiltros(); }
 function editarTipoCor(i,v){ data.config.tipos[i].cor = v; cacheLocal(); renderAdminListas(); renderLegend(); }
-function delTipo(i){ const t=data.config.tipos[i]; if(!confirm(`Remover o tipo "${t.label}"?`)) return; data.config.tipos.splice(i,1); cacheLocal(); renderAdminListas(); renderLegend(); popularFiltros(); }
+function delTipo(i){ const t=data.config.tipos[i]; if(!confirm(`Remover o tipo "${t.label}"?`)) return; data.config.tipos.splice(i,1); cacheLocal(); renderAdminListas(); renderLegend(); popularFiltros(); render(); }
+function moverTipo(i, dir){ moverItem(data.config.tipos, i, dir, renderAdminListas); }
 
+/* ---- Responsáveis ---- */
 function addResponsavel(){
     const v = document.getElementById('novoResponsavel').value.trim();
     if(!v) return;
     if(data.config.responsaveis.find(r => r.label === v)){ alert('Já cadastrado.'); return; }
     data.config.responsaveis.push({ label: v, cor: corAutomatica(v) });
-    data.config.responsaveis.sort((a,b)=>a.label.localeCompare(b.label));
     document.getElementById('novoResponsavel').value = '';
     cacheLocal(); renderAdminListas(); popularFiltros();
 }
-function delResponsavel(i){ if(!confirm(`Remover "${data.config.responsaveis[i].label}"?`)) return; data.config.responsaveis.splice(i,1); cacheLocal(); renderAdminListas(); popularFiltros(); }
-function editarRespLabel(i,v){ v=v.trim(); if(!v){ renderAdminListas(); return; } data.config.responsaveis[i].label = v; cacheLocal(); renderAdminListas(); popularFiltros(); }
-function editarRespCor(i,v){ data.config.responsaveis[i].cor = v; cacheLocal(); renderAdminListas(); }
+function delResponsavel(i){ if(!confirm(`Remover "${data.config.responsaveis[i].label}"?`)) return; data.config.responsaveis.splice(i,1); cacheLocal(); renderAdminListas(); popularFiltros(); render(); }
+function editarRespLabel(i,v){ v=v.trim(); if(!v){ renderAdminListas(); return; } data.config.responsaveis[i].label = v; cacheLocal(); renderAdminListas(); popularFiltros(); render(); }
+function editarRespCor(i,v){ data.config.responsaveis[i].cor = v; cacheLocal(); renderAdminListas(); render(); }
+function moverResponsavel(i, dir){ moverItem(data.config.responsaveis, i, dir, renderAdminListas); }
 
+/* ---- Áreas ---- */
 function addArea(){
     const v = document.getElementById('novaArea').value.trim();
     if(!v) return;
     if(data.config.areas.find(a => a.label === v)){ alert('Já cadastrada.'); return; }
     data.config.areas.push({ label: v, cor: corAutomatica(v) });
-    data.config.areas.sort((a,b)=>a.label.localeCompare(b.label));
     document.getElementById('novaArea').value = '';
     cacheLocal(); renderAdminListas(); popularFiltros();
 }
-function delArea(i){ if(!confirm(`Remover "${data.config.areas[i].label}"?`)) return; data.config.areas.splice(i,1); cacheLocal(); renderAdminListas(); popularFiltros(); }
-function editarAreaLabel(i,v){ v=v.trim(); if(!v){ renderAdminListas(); return; } data.config.areas[i].label = v; cacheLocal(); renderAdminListas(); popularFiltros(); }
-function editarAreaCor(i,v){ data.config.areas[i].cor = v; cacheLocal(); renderAdminListas(); }
+function delArea(i){ if(!confirm(`Remover "${data.config.areas[i].label}"?`)) return; data.config.areas.splice(i,1); cacheLocal(); renderAdminListas(); popularFiltros(); render(); }
+function editarAreaLabel(i,v){ v=v.trim(); if(!v){ renderAdminListas(); return; } data.config.areas[i].label = v; cacheLocal(); renderAdminListas(); popularFiltros(); render(); }
+function editarAreaCor(i,v){ data.config.areas[i].cor = v; cacheLocal(); renderAdminListas(); render(); }
+function moverArea(i, dir){ moverItem(data.config.areas, i, dir, renderAdminListas); }
+
+/* ---- Helper genérico de reordenação ---- */
+function moverItem(lista, i, dir, rerender){
+    const j = i + dir;
+    if(j < 0 || j >= lista.length) return;
+    const tmp = lista[i]; lista[i] = lista[j]; lista[j] = tmp;
+    cacheLocal();
+    if(rerender) rerender();
+    popularFiltros();
+    render();
+}
+
+/* ============================================================
+   BACKGROUND — painel admin
+============================================================ */
+function renderBgAdmin(){
+    const bg = data.config.background || { tipo:'cor', cor:'#f4f7fa', imagem:'' };
+    document.getElementById('bgTipoSelect').value = bg.tipo || 'cor';
+    document.getElementById('bgCor').value = bg.cor || '#f4f7fa';
+    document.getElementById('bgCorWrap').style.display = (bg.tipo === 'cor') ? '' : 'none';
+    document.getElementById('bgImagemWrap').style.display = (bg.tipo === 'imagem') ? '' : 'none';
+    renderBgLista();
+    renderBgPreview();
+}
+function trocarBgTipo(){
+    const tipo = document.getElementById('bgTipoSelect').value;
+    if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
+    data.config.background.tipo = tipo;
+    cacheLocal();
+    renderBgAdmin();
+    aplicarBackground();
+}
+function salvarBgCor(){
+    const cor = document.getElementById('bgCor').value;
+    if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
+    data.config.background.cor = cor;
+    data.config.background.tipo = 'cor';
+    cacheLocal();
+    renderBgPreview();
+    aplicarBackground();
+}
+function selecionarBgImagem(nome){
+    if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
+    data.config.background.tipo = 'imagem';
+    data.config.background.imagem = nome;
+    cacheLocal();
+    renderBgLista();
+    renderBgPreview();
+    aplicarBackground();
+}
+function renderBgLista(){
+    const el = document.getElementById('bgLista');
+    if(!el) return;
+    if(!backgroundsCarregados){
+        el.innerHTML = '<div class="bg-vazio">Carregando imagens…</div>';
+        return;
+    }
+    if(backgroundsDisponiveis.length === 0){
+        el.innerHTML = '<div class="bg-vazio">Nenhuma imagem encontrada em <b>img/background</b>.</div>';
+        return;
+    }
+    const atual = (data.config.background && data.config.background.imagem) || '';
+    el.innerHTML = backgroundsDisponiveis.map(nome => `
+        <div class="bg-item ${nome===atual?'selected':''}" onclick="selecionarBgImagem('${escapeHtml(nome).replace(/'/g,"\\'")}')" title="${escapeHtml(nome)}">
+            <span class="bg-check">✓</span>
+            <img src="${BG_FOLDER}/${encodeURI(nome)}" alt="${escapeHtml(nome)}" onerror="this.style.opacity=.25;">
+            <div class="bg-nome">${escapeHtml(nome)}</div>
+        </div>
+    `).join('');
+}
+function renderBgPreview(){
+    const el = document.getElementById('bgPreview');
+    if(!el) return;
+    const bg = data.config.background || { tipo:'cor', cor:'#f4f7fa', imagem:'' };
+    if(bg.tipo === 'imagem' && bg.imagem){
+        el.style.backgroundImage = `url('${BG_FOLDER}/${encodeURI(bg.imagem)}')`;
+        el.style.background = `url('${BG_FOLDER}/${encodeURI(bg.imagem)}') center/cover no-repeat`;
+        el.innerHTML = `<span class="preview-tag">${escapeHtml(bg.imagem)}</span>`;
+    } else {
+        el.style.backgroundImage = '';
+        el.style.background = bg.cor || '#f4f7fa';
+        el.innerHTML = `<span class="preview-tag">Cor sólida: ${escapeHtml(bg.cor||'#f4f7fa')}</span>`;
+    }
+}
 
 /* ============================================================
    FILTROS
@@ -775,7 +975,6 @@ function initSelects(){
 }
 function setView(v){ view = v; localStorage.setItem(VIEW_KEY, v); render(); }
 
-/* Navegação dia-a-dia (usada na view "Dia") */
 function navDiaPrev(){
     currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1);
     sincronizarSelects(); render();
@@ -977,7 +1176,6 @@ function renderDia(){
     return html;
 }
 
-/* Faixa com os 7 dias da semana atual (clicável) */
 function renderDayStrip(){
     const ini = new Date(currentDate);
     ini.setDate(currentDate.getDate() - currentDate.getDay());
@@ -1231,10 +1429,13 @@ function abrirFormEvento(id){
     document.getElementById('formDataFim').value = ev ? (ev.dataFim !== ev.dataInicio ? ev.dataFim : '') : '';
     document.getElementById('formTitulo').value = ev ? ev.titulo : '';
     document.getElementById('formDescricao').value = ev ? (ev.descricao||'') : '';
+    document.getElementById('btnExcluirForm').style.display = ev ? 'inline-block' : 'none';
 
     preencherSelect('formResponsavel', data.config.responsaveis.map(r => r.label), ev ? ev.responsavel : '');
     preencherSelect('formArea', data.config.areas.map(a => a.label), ev ? ev.area : '');
-    preencherSelect('formTipo', data.config.tipos.map(t=>({value:t.id,label:t.label})), ev ? ev.tipo : (data.config.tipos[0]?data.config.tipos[0].id:''));
+    // Tipo default = PRIMEIRO da lista configurada
+    const tipoDefault = (data.config.tipos[0] && data.config.tipos[0].id) || '';
+    preencherSelect('formTipo', data.config.tipos.map(t=>({value:t.id,label:t.label})), ev ? ev.tipo : tipoDefault);
 
     document.getElementById('modalForm').classList.add('active');
     setTimeout(()=>document.getElementById('formTitulo').focus(), 100);
@@ -1255,7 +1456,7 @@ function mostrarTeletubies(){
     const el = document.getElementById('teletubiesOverlay');
     if(!el) return;
     el.classList.add('active');
-    setTimeout(() => el.classList.remove('active'), 1500);
+    setTimeout(() => el.classList.remove('active'), 1000);
 }
 
 function salvarEvento(){
@@ -1297,12 +1498,23 @@ function excluirEvento(id){
     data.eventos = data.eventos.filter(e=>e.id!==id);
     cacheLocal(); renderListaDia(); render();
 }
+function excluirEventoForm(){
+    const id = Number(document.getElementById('formId').value);
+    if(!id){ return; }
+    if(!confirm('Excluir este evento?')) return;
+    data.eventos = data.eventos.filter(e=>e.id!==id);
+    cacheLocal();
+    fecharForm();
+    if(document.getElementById('modalDia').classList.contains('active')) renderListaDia();
+    render();
+}
 
 /* ============================================================
    INICIALIZAÇÃO
 ============================================================ */
 document.addEventListener('DOMContentLoaded', async ()=>{
     await loadData();
+    aplicarBackground();
     const pref = localStorage.getItem(VIEW_KEY);
     if(pref) view = pref;
     else if(window.innerWidth < 560) view = 'lista';
@@ -1314,7 +1526,6 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     document.addEventListener('keydown', e=>{
         if(e.key === 'Escape'){ fecharForm(); fecharModalDia(); fecharAdmin(); return; }
 
-        // Setas ← → navegam apenas na view "Dia" e quando não estiver digitando
         if(view === 'dia'){
             const tag = (e.target.tagName || '').toLowerCase();
             const digitando = (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable);
