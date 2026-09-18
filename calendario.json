@@ -46,7 +46,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "ordem": 50,
-      "status": "nao-iniciado"
+      "status": "finalizado"
     },
     {
       "id": 5,
