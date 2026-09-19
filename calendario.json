@@ -85,18 +85,6 @@
       "status": "finalizado"
     },
     {
-      "id": 11,
-      "dataInicio": "2026-09-21",
-      "dataFim": "2026-09-25",
-      "titulo": "Atendimentos Médicos",
-      "responsavel": "Caio Albuquerque",
-      "area": "SAS",
-      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
-      "tipo": "tarefa",
-      "ordem": 20,
-      "status": "nao-iniciado"
-    },
-    {
       "id": 12,
       "dataInicio": "2026-09-21",
       "dataFim": "2026-09-21",
@@ -130,7 +118,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 150
+      "ordem": 30
     },
     {
       "id": 15,
@@ -142,7 +130,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 160
+      "ordem": 40
     },
     {
       "id": 16,
@@ -154,7 +142,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 170
+      "ordem": 30
     },
     {
       "id": 17,
@@ -190,7 +178,7 @@
       "descricao": "Assistência: Infecções Hospitalares relacionadas à assistência - No operacional não há um gráfico específico para isso. Ao todo, são 6 gráficos que compõem a seção de Infecções hospitalares relacionadas à assistência. Decidir o que deve ser considerado; \n\nFinanceiro: Acuracidade: Acuracidade de quê? \n\nPerda por Vencimento: o que considerar: R$?",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 200
+      "ordem": 50
     },
     {
       "id": 20,
@@ -334,7 +322,7 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 330
+      "ordem": 10
     },
     {
       "id": 33,
@@ -346,7 +334,7 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 340
+      "ordem": 10
     },
     {
       "id": 34,
@@ -358,7 +346,7 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 350
+      "ordem": 20
     },
     {
       "id": 35,
@@ -370,7 +358,7 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 360
+      "ordem": 10
     },
     {
       "id": 36,
@@ -382,7 +370,67 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 370
+      "ordem": 10
+    },
+    {
+      "id": 37,
+      "dataInicio": "2026-09-21",
+      "dataFim": "2026-09-21",
+      "titulo": "Atendimentos Médicos",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 380
+    },
+    {
+      "id": 38,
+      "dataInicio": "2026-09-22",
+      "dataFim": "2026-09-22",
+      "titulo": "Atendimentos Médicos",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 390
+    },
+    {
+      "id": 39,
+      "dataInicio": "2026-09-23",
+      "dataFim": "2026-09-23",
+      "titulo": "Atendimentos Médicos",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 400
+    },
+    {
+      "id": 40,
+      "dataInicio": "2026-09-24",
+      "dataFim": "2026-09-24",
+      "titulo": "Atendimentos Médicos",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 410
+    },
+    {
+      "id": 41,
+      "dataInicio": "2026-09-25",
+      "dataFim": "2026-09-25",
+      "titulo": "Atendimentos Médicos",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 420
     }
   ],
   "config": {
