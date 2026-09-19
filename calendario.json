@@ -615,7 +615,7 @@
         }
       }
     ],
-    "temaAtivo": "doom",
+    "temaAtivo": "default",
     "autosave": {
       "ativo": true,
       "debounceMs": 3000,
