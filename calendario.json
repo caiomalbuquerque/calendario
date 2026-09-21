@@ -717,5 +717,15 @@
       "debounceMs": 3000,
       "dragImediato": true
     }
-  }
+  },
+  "notas": [
+    {
+      "id": 1789991653386,
+      "titulo": "NIO + SG",
+      "conteudo": "<div class=\"checklist-item\"><input type=\"checkbox\" data-listener-attached=\"1\"><span class=\"check-text\">Apresentação do Painel de Gestão à Vista</span></div>",
+      "cor": "#ffffff",
+      "criadoEm": "2026-09-21T11:54:13.385Z",
+      "atualizadoEm": "2026-09-21T11:55:54.506Z"
+    }
+  ]
 }
