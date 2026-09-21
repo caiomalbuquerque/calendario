@@ -91,15 +91,15 @@
       "titulo": "Colocar a Criticidade nos Painéis do Monitoramento Geral e da Contratante",
       "responsavel": "Caio Albuquerque",
       "area": "Diretoria de Atendimento",
-      "descricao": "Avisar Ruthelcy para divulgação",
+      "descricao": "Entender melhor com Ruthelcy",
       "tipo": "tarefa",
-      "status": "nao-iniciado",
+      "status": "em-andamento",
       "ordem": 30
     },
     {
       "id": 13,
-      "dataInicio": "2026-09-21",
-      "dataFim": "2026-09-21",
+      "dataInicio": "2026-09-23",
+      "dataFim": "2026-09-23",
       "titulo": "Resultados OKR",
       "responsavel": "Caio Albuquerque",
       "area": "OKR",
@@ -118,7 +118,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 30
+      "ordem": 40
     },
     {
       "id": 15,
@@ -130,7 +130,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 40
+      "ordem": 30
     },
     {
       "id": 16,
@@ -175,10 +175,10 @@
       "titulo": "Dúvidas: Gestão à Vista",
       "responsavel": "Caio Albuquerque",
       "area": "SG",
-      "descricao": "Assistência: Infecções Hospitalares relacionadas à assistência - No operacional não há um gráfico específico para isso. Ao todo, são 6 gráficos que compõem a seção de Infecções hospitalares relacionadas à assistência. Decidir o que deve ser considerado; \n\nFinanceiro: Acuracidade: Acuracidade de quê? \n\nPerda por Vencimento: o que considerar: R$?",
+      "descricao": "Assistência: Infecções Hospitalares relacionadas à assistência - No operacional não há um gráfico específico para isso. Ao todo, são 6 gráficos que compõem a seção de Infecções hospitalares relacionadas à assistência. Decidir o que deve ser considerado; OK\n\nFinanceiro: Acuracidade: Acuracidade de quê? Enviado para Sormane, aguardar retorno\n\nPerda por Vencimento: o que considerar: R$? OK",
       "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 50
+      "status": "em-andamento",
+      "ordem": 40
     },
     {
       "id": 20,
@@ -321,7 +321,7 @@
       "area": "SAS",
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
-      "status": "nao-iniciado",
+      "status": "finalizado",
       "ordem": 20
     },
     {
@@ -714,7 +714,7 @@
     "temaAtivo": "default",
     "autosave": {
       "ativo": false,
-      "debounceMs": 3000,
+      "debounceMs": 30000,
       "dragImediato": true
     }
   },
@@ -725,7 +725,7 @@
       "conteudo": "<div class=\"checklist-item\"><input type=\"checkbox\" data-listener-attached=\"1\"><span class=\"check-text\">Apresentação do Painel de Gestão à Vista</span></div>",
       "cor": "#ffffff",
       "criadoEm": "2026-09-21T11:54:13.385Z",
-      "atualizadoEm": "2026-09-21T11:55:54.506Z"
+      "atualizadoEm": "2026-09-21T13:34:40.354Z"
     }
   ]
 }
