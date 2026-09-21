@@ -713,7 +713,7 @@
     ],
     "temaAtivo": "default",
     "autosave": {
-      "ativo": true,
+      "ativo": false,
       "debounceMs": 3000,
       "dragImediato": true
     }
