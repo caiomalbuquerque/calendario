@@ -431,6 +431,18 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 20
+    },
+    {
+      "id": 42,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Colocar a responsabilidade de Cálculo no Painel do OKR",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "Para o Painel OKR e Painel Estratégico",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 430
     }
   ],
   "config": {
