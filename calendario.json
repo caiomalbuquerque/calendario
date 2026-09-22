@@ -127,9 +127,9 @@
       "titulo": "OKR - Organização de arquivos para o Ciclo 4",
       "responsavel": "Caio Albuquerque",
       "area": "OKR",
-      "descricao": "Criar planilhas 4º ciclo para cada Unidade - OK\nFazer a Conexão com o Power BI -",
+      "descricao": "Criar planilhas 4º ciclo para cada Unidade - OK\nFazer a Conexão com o Power BI, Planilha de Tarefas -",
       "tipo": "tarefa",
-      "status": "em-andamento",
+      "status": "finalizado",
       "ordem": 30
     },
     {
@@ -154,7 +154,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 20
+      "ordem": 30
     },
     {
       "id": 18,
@@ -170,15 +170,15 @@
     },
     {
       "id": 19,
-      "dataInicio": "2026-09-22",
-      "dataFim": "2026-09-22",
+      "dataInicio": "2026-09-23",
+      "dataFim": "2026-09-23",
       "titulo": "Dúvidas: Gestão à Vista",
       "responsavel": "Caio Albuquerque",
       "area": "SG",
       "descricao": "Assistência: Infecções Hospitalares relacionadas à assistência - No operacional não há um gráfico específico para isso. Ao todo, são 6 gráficos que compõem a seção de Infecções hospitalares relacionadas à assistência. Decidir o que deve ser considerado; OK\n\nFinanceiro: Acuracidade: Acuracidade de quê? Enviado para Sormane, aguardar retorno\n\nPerda por Vencimento: o que considerar: R$? OK",
       "tipo": "tarefa",
       "status": "em-andamento",
-      "ordem": 40
+      "ordem": 50
     },
     {
       "id": 20,
@@ -190,7 +190,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 30
+      "ordem": 40
     },
     {
       "id": 21,
@@ -202,7 +202,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 40
+      "ordem": 50
     },
     {
       "id": 22,
@@ -214,7 +214,7 @@
       "descricao": "Colocar a estrutura de tabelas da Ouvidoria no PE;\nColocar Estrutura do Multiatendimento no PE",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 50
+      "ordem": 60
     },
     {
       "id": 23,
@@ -226,7 +226,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 60
+      "ordem": 70
     },
     {
       "id": 24,
@@ -238,7 +238,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 70
+      "ordem": 80
     },
     {
       "id": 25,
@@ -250,7 +250,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 80
+      "ordem": 90
     },
     {
       "id": 26,
@@ -262,7 +262,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 90
+      "ordem": 100
     },
     {
       "id": 28,
@@ -274,7 +274,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 100
+      "ordem": 110
     },
     {
       "id": 29,
@@ -286,7 +286,7 @@
       "descricao": "Gostaria de solicitar alguns ajustes no BI do Planejamento Estratégico.\n\nNa planilha \"Indicadores\", especificamente na aba \"Assistência\", seria possível detalhar os dados por especialidade, ofertadas e agendadas, contemplando:\nConsultas médicas;\nConsultas multiprofissionais;\nSessões multiprofissionais; e\nCentro de Especialidades Odontológicas (CEO).\n\nAlém disso, peço que essas informações sejam refletidas no BI, permitindo a visualização da perda primária e do absenteísmo por especialidade/categoria (médica, multiprofissional e CEO), mantendo também os indicadores consolidados de perda primária e absenteísmo geral.\n\nQuanto aos exames, não há necessidade de ajustes, pois já estão detalhados por tipo de exame.\n\nPor solicitação do Samuel, peço ainda que seja incluído no BI de Tempo de Espera do Planejamento Estratégico o acompanhamento do tempo de espera dos atendimentos multiprofissionais e odontológicos.",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 110
+      "ordem": 120
     },
     {
       "id": 30,
@@ -442,7 +442,7 @@
       "descricao": "Para o Painel OKR e Painel Estratégico",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 120
+      "ordem": 130
     },
     {
       "id": 43,
@@ -455,6 +455,18 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 10
+    },
+    {
+      "id": 44,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Organizar planilha de resultados 4º Ciclo",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "Trocar o nome do arquivo\nfazer conexão com o fluxo de dados",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "ordem": 20
     }
   ],
   "config": {
@@ -746,10 +758,10 @@
     {
       "id": 1789991653386,
       "titulo": "Anotações Gerais",
-      "conteudo": "",
+      "conteudo": "Neurocirurgia HPS - Agosto: Indagação à respeito do total da Neurocirurgia estar dando 23,83 em agosto (muito alto comparando com cada item)",
       "cor": "#ffffff",
       "criadoEm": "2026-09-21T11:54:13.385Z",
-      "atualizadoEm": "2026-09-22T11:31:22.028Z"
+      "atualizadoEm": "2026-09-22T19:24:50.796Z"
     }
   ]
 }
