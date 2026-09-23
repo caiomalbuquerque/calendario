@@ -629,6 +629,32 @@
         .notas-toolbar { gap: 4px; }
         .notas-toolbar .fmt-btn { min-width: 28px; padding: 5px 6px !important; font-size: 13px !important; }
     }
+        /* Anexo em estado de "será excluído" */
+    .notas-editor .anexo-link.removendo {
+        opacity: .4;
+        text-decoration: line-through;
+    }
+    /* Pequeno aviso flutuante dentro da nota */
+    .notas-aviso {
+        background: #fff3a3;
+        color: #7a4b00;
+        border: 1px solid #e8c98c;
+        padding: 6px 10px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-body);
+        font-size: 13px;
+        margin-bottom: 8px;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .notas-aviso button {
+        background: var(--danger); color: #fff;
+        border: none; border-radius: 4px;
+        padding: 3px 8px; cursor: pointer;
+        font-family: var(--font-body); font-size: 12px; font-weight: 700;
+    }
+    .notas-aviso .manter {
+        background: var(--secondary);
+    }
 </style>
 </head>
 <body>
@@ -1070,6 +1096,8 @@ let backgroundsCarregados = false;
 let userPhotosDisponiveis = [];
 let userPhotosCarregadas = false;
 let notaAtivaId = null;
+let notaCheckTimer = null;
+let notaAnexosProcessando = false;
 let notaTextoSelecionado = '';
 
 /* ============================================================
@@ -1496,6 +1524,9 @@ function prepararDados(){
     if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
     if(data.config.userPhoto === undefined) data.config.userPhoto = '';
     if(!data.notas) data.notas = [];
+    data.notas.forEach(n => {
+        if(!n.anexos) n.anexos = [];
+    });
     if(!data.config.autosave) data.config.autosave = { ativo: true, debounceMs: 3000, dragImediato: true };
     if(!data.config.temas || !Array.isArray(data.config.temas) || data.config.temas.length === 0){
         data.config.temas = [
@@ -2278,6 +2309,7 @@ function novaNota(){
         titulo: '',
         conteudo: '',
         cor: '#ffffff',
+        anexos: [],
         criadoEm: agora,
         atualizadoEm: agora
     };
@@ -2290,10 +2322,121 @@ function novaNota(){
         if(t) t.focus();
     }, 50);
 }
-
-function notaExcluir(){
+/* Remove um arquivo do repositório GitHub */
+async function githubDeleteFile(path){
+    if(!authToken) return false;
+    const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+    try {
+        const r = await fetch(apiUrl + `?ref=${GITHUB_BRANCH}`, {
+            headers: { Authorization: `Bearer ${authToken}` }
+        });
+        if(!r.ok){
+            // Arquivo já não existe — considera sucesso
+            if(r.status === 404) return true;
+            return false;
+        }
+        const info = await r.json();
+        const del = await fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `Remove anexo: ${path}`,
+                sha: info.sha,
+                branch: GITHUB_BRANCH
+            })
+        });
+        return del.ok;
+    } catch(e){
+        console.warn('Erro ao remover arquivo:', e);
+        return false;
+    }
+}
+/* Detecta anexos que o usuário removeu do editor e oferece para excluir do GitHub */
+async function detectarAnexosRemovidos(){
+    if(notaAnexosProcessando) return;
     if(!notaAtivaId) return;
-    if(!confirm('Excluir esta nota?')) return;
+    const nota = data.notas.find(n => n.id === notaAtivaId);
+    if(!nota || !nota.anexos || nota.anexos.length === 0) return;
+
+    const editor = document.getElementById('notaEditor');
+    if(!editor) return;
+    const html = editor.innerHTML;
+
+    // Considera presente se o nome (ou sua versão encoded) aparecer no HTML
+    const aindaNoEditor = nota.anexos.filter(f => {
+        const fEnc = encodeURIComponent(f);
+        return html.includes(f) || html.includes(fEnc) ||
+               html.includes(escapeHtml(f)) || html.includes(escapeHtml(fEnc));
+    });
+
+    const removidos = nota.anexos.filter(f => !aindaNoEditor.includes(f));
+    if(removidos.length === 0) return;
+
+    notaAnexosProcessando = true;
+    const nomes = removidos.map(n => '• ' + n).join('\n');
+    const pergunta =
+        `Você removeu ${removidos.length} anexo(s) desta nota:\n\n${nomes}\n\n` +
+        `Deseja também EXCLUIR do repositório GitHub?\n\n` +
+        `OK = excluir do GitHub (recomendado)\n` +
+        `Cancelar = manter o arquivo no GitHub, mas parar de rastreá-lo`;
+
+    const excluir = confirm(pergunta);
+
+    if(excluir){
+        const progress = document.getElementById('uploadProgress');
+        const progressText = document.getElementById('uploadProgressText');
+        if(progress && progressText){
+            progressText.textContent = `Excluindo ${removidos.length} anexo(s)…`;
+            progress.style.display = 'flex';
+        }
+        try {
+            for(const f of removidos){
+                await githubDeleteFile(`img/notas-anexos/${f}`);
+            }
+        } finally {
+            if(progress) progress.style.display = 'none';
+        }
+    }
+
+    // Em ambos os casos, remove do tracking da nota
+    nota.anexos = aindaNoEditor;
+    marcarAlterado();
+    notaAnexosProcessando = false;
+}
+async function notaExcluir(){
+    if(!notaAtivaId) return;
+    const nota = data.notas.find(n => n.id === notaAtivaId);
+    if(!nota) return;
+
+    let msg = 'Excluir esta nota?';
+    const temAnexos = nota.anexos && nota.anexos.length > 0;
+    if(temAnexos){
+        msg += `\n\nTambém serão excluídos ${nota.anexos.length} anexo(s) do repositório GitHub.`;
+    }
+    if(!confirm(msg)) return;
+
+    // Deleta os anexos do GitHub (se estiver logado)
+    if(temAnexos && authToken){
+        const progress = document.getElementById('uploadProgress');
+        const progressText = document.getElementById('uploadProgressText');
+        if(progress && progressText){
+            progressText.textContent = `Excluindo ${nota.anexos.length} anexo(s)…`;
+            progress.style.display = 'flex';
+        }
+        try {
+            for(const f of nota.anexos){
+                await githubDeleteFile(`img/notas-anexos/${f}`);
+            }
+        } finally {
+            if(progress) progress.style.display = 'none';
+        }
+    } else if(temAnexos && !authToken){
+        console.warn('Sem token: anexos não foram removidos do GitHub.');
+    }
+
     data.notas = data.notas.filter(n => n.id !== notaAtivaId);
     notaAtivaId = data.notas.length > 0 ? data.notas[0].id : null;
     marcarAlterado();
@@ -2323,6 +2466,10 @@ function notaOnInput(){
     // Atualiza o título na lista lateral (sem re-renderizar tudo)
     const tituloLista = document.getElementById(`nota-lista-titulo-${nota.id}`);
     if(tituloLista) tituloLista.textContent = nota.titulo || 'Sem título';
+
+    // Verifica se algum anexo foi removido (com debounce)
+    if(notaCheckTimer) clearTimeout(notaCheckTimer);
+    notaCheckTimer = setTimeout(detectarAnexosRemovidos, 1500);
 }
 
 function notaOnKeydown(e){
@@ -2500,41 +2647,109 @@ function fmt(cmd, value){
 }
 
 /* Marca-texto (highlight) — alterna entre aplicar e remover */
+/* Marca-texto — alterna ligar/desligar. Usa <mark> como padrão. */
 function fmtHighlight(){
     const editor = document.getElementById('notaEditor');
     if(!editor) return;
     editor.focus();
 
-    // Se já está com highlight aplicado, remove
     const sel = window.getSelection();
     if(!sel || sel.rangeCount === 0) return;
 
-    // Verifica se a seleção está dentro de um <mark>
-    let node = sel.anchorNode;
+    // Verifica se o cursor/seleção está dentro de um <mark>
     let dentro = false;
+    let node = sel.anchorNode;
     while(node && node !== editor){
         if(node.nodeName === 'MARK'){ dentro = true; break; }
+        // Compatibilidade com highlights antigos feitos via style
+        if(node.style && node.style.backgroundColor &&
+           node.style.backgroundColor !== 'transparent' &&
+           node.style.backgroundColor !== 'rgba(0, 0, 0, 0)'){
+            dentro = true; break;
+        }
         node = node.parentNode;
+    }
+    // Também checa o focusNode (o fim da seleção)
+    if(!dentro){
+        node = sel.focusNode;
+        while(node && node !== editor){
+            if(node.nodeName === 'MARK'){ dentro = true; break; }
+            if(node.style && node.style.backgroundColor &&
+               node.style.backgroundColor !== 'transparent' &&
+               node.style.backgroundColor !== 'rgba(0, 0, 0, 0)'){
+                dentro = true; break;
+            }
+            node = node.parentNode;
+        }
     }
 
     if(dentro){
-        document.execCommand('hiliteColor', false, 'transparent');
-        // Fallback: remove <mark> envolvente
-        try {
-            document.execCommand('removeFormat', false, null);
-        } catch(e){}
+        // === DESMARCAR ===
+        if(sel.isCollapsed){
+            // Só o cursor: desembrulha o <mark> que o contém
+            let mark = sel.anchorNode;
+            while(mark && mark !== editor && mark.nodeName !== 'MARK'){
+                mark = mark.parentNode;
+            }
+            if(mark && mark.nodeName === 'MARK'){
+                unwrapElement(mark);
+            } else {
+                // Fallback: remove o background style
+                try { document.execCommand('hiliteColor', false, 'transparent'); } catch(e){}
+            }
+        } else {
+            // Tem texto selecionado: remove apenas os <mark> que tocam a seleção
+            const range = sel.getRangeAt(0);
+            const marks = Array.from(editor.querySelectorAll('mark'));
+            let removeu = false;
+            marks.forEach(mark => {
+                try {
+                    if(range.intersectsNode(mark)){
+                        unwrapElement(mark);
+                        removeu = true;
+                    }
+                } catch(e){}
+            });
+            // Se não havia <mark>, tenta remover o estilo de fundo
+            if(!removeu){
+                try { document.execCommand('hiliteColor', false, 'transparent'); } catch(e){}
+            }
+        }
     } else {
-        // Aplica highlight amarelo
+        // === MARCAR ===
+        if(sel.isCollapsed) return; // nada selecionado, nada a fazer
+
+        const range = sel.getRangeAt(0);
+        const mark = document.createElement('mark');
         try {
-            document.execCommand('hiliteColor', false, '#fff3a3');
-        } catch(e){}
-        // Fallback com <mark>
+            range.surroundContents(mark);
+        } catch(e){
+            // Fallback para seleções que cruzam elementos
+            const frag = range.extractContents();
+            mark.appendChild(frag);
+            range.insertNode(mark);
+        }
+        // Restaura a seleção para o usuário continuar vendo
         try {
-            document.execCommand('insertHTML', false, '<mark>' + escapeHtml(sel.toString()) + '</mark>');
+            const novaRange = document.createRange();
+            novaRange.selectNodeContents(mark);
+            sel.removeAllRanges();
+            sel.addRange(novaRange);
         } catch(e){}
     }
+
     fmtAtualizarEstado();
     notaOnInput();
+}
+
+/* Desembrulha um elemento, mantendo os filhos no lugar */
+function unwrapElement(el){
+    const parent = el.parentNode;
+    if(!parent) return;
+    while(el.firstChild){
+        parent.insertBefore(el.firstChild, el);
+    }
+    parent.removeChild(el);
 }
 
 /* Atualiza o estado visual dos botões conforme a posição do cursor */
@@ -2643,28 +2858,32 @@ async function notaUploadAnexoGitHub(file){
         }
 
         // Insere no editor
+        // Registra o anexo na nota (para podermos excluir depois)
+        const nota = data.notas.find(n => n.id === notaAtivaId);
+        if(nota){
+            if(!nota.anexos) nota.anexos = [];
+            if(!nota.anexos.includes(nomeFinal)) nota.anexos.push(nomeFinal);
+        }
+
+        // Insere no editor
         const editor = document.getElementById('notaEditor');
         if(editor){
             editor.focus();
             const isImg = file.type.startsWith('image/');
-            const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${caminho}`;
-            // Usa caminho relativo para funcionar tanto no GitHub Pages quanto localmente
-            const urlRelativa = `img/notas-anexos/${encodeURIComponent(nomeFinal)}`;
+            // URL absoluta do raw — funciona imediatamente após o upload,
+            // sem depender do CDN do GitHub Pages.
+            const urlRaw = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${caminho}`;
 
             let html;
             if(isImg){
-                html = `<img src="${urlRelativa}" alt="${escapeHtml(file.name)}" data-anexo="${escapeHtml(nomeFinal)}">`;
+                html = `<img src="${urlRaw}" alt="${escapeHtml(file.name)}" data-anexo="${escapeHtml(nomeFinal)}">`;
             } else {
-                html = `<a class="anexo-link" href="${urlRelativa}" target="_blank" download="${escapeHtml(file.name)}">📎 ${escapeHtml(file.name)}</a> `;
+                // Link sem download (não funciona cross-origin); abre em nova aba
+                html = `<a class="anexo-link" href="${urlRaw}" target="_blank" rel="noopener" data-anexo="${escapeHtml(nomeFinal)}">📎 ${escapeHtml(file.name)}</a> `;
             }
             document.execCommand('insertHTML', false, html);
             notaOnInput();
         }
-    } catch(e){
-        alert('Erro ao anexar: ' + e.message);
-    } finally {
-        if(progress){ progress.style.display = 'none'; }
-    }
 }
 
 /* ============================================================
