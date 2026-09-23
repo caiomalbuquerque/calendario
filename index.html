@@ -2056,7 +2056,8 @@ function atualizarTitulo(){
         const visiveis = data.eventos.filter(ev => !ev.dataInicio).filter(passaFiltro).length;
         yt.textContent = total === 0 ? 'Nenhuma tarefa' : `${visiveis} de ${total} tarefa${total>1?'s':''}`;
         return;
-        if(view === 'notas'){
+    }
+    if(view === 'notas'){
         mt.textContent = 'NOTAS';
         const total = (data.notas || []).length;
         yt.textContent = total === 0 ? 'Nenhuma nota' : `${total} nota${total>1?'s':''}`;
@@ -2473,8 +2474,9 @@ function notaOnInput(){
 }
 
 function notaOnKeydown(e){
-        // Deixa o handler global de Ctrl+B/I/U agir
-    if((e.ctrlKey || e.metaKey) && ['b','i','u','h'].includes(e.key.toLowerCase())) return;
+    // Deixa o handler global de Ctrl+B/I/U agir (com proteção contra e.key undefined)
+    const k = (e.key || '').toLowerCase();
+    if((e.ctrlKey || e.metaKey) && ['b','i','u','h'].includes(k)) return;
     // Enter dentro de um check-text cria um novo item de checklist
     if(e.key === 'Enter'){
         const checkText = e.target.closest('.check-text');
@@ -2884,6 +2886,12 @@ async function notaUploadAnexoGitHub(file){
             document.execCommand('insertHTML', false, html);
             notaOnInput();
         }
+    } catch(e){
+        console.error('Erro no upload:', e);
+        alert('Erro ao enviar o arquivo: ' + (e.message || 'desconhecido'));
+    } finally {
+        if(progress) progress.style.display = 'none';
+    }
 }
 
 /* ============================================================
