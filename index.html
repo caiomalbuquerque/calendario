@@ -655,6 +655,22 @@
     .notas-aviso .manter {
         background: var(--secondary);
     }
+        /* Links clicáveis dentro de notas e descrições */
+    .notas-editor a,
+    .dc-desc a,
+    .events-day-list .desc a,
+    .event-chip a {
+        color: var(--secondary);
+        text-decoration: underline;
+        font-weight: 600;
+        word-break: break-all;
+    }
+    .notas-editor a:hover,
+    .dc-desc a:hover,
+    .events-day-list .desc a:hover,
+    .event-chip a:hover {
+        color: var(--primary);
+    }
 </style>
 </head>
 <body>
@@ -2204,8 +2220,7 @@ function renderDayCard(ev, position, dayKey){
     const isCont = isMulti && position !== 'start' && position !== 'single';
     const header = renderChipHeader(ev, isCont);
     const periodo = isMulti ? `<div class="dc-meta">📅 ${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</div>` : '';
-    const desc = ev.descricao ? `<div class="dc-desc">${escapeHtml(ev.descricao)}</div>` : '';
-    return `<div class="day-card" style="${tipoCss(t.cor)}" draggable="true"
+    const desc = ev.descricao ? `<div class="dc-desc">${linkifyText(ev.descricao)}</div>` : '';    return `<div class="day-card" style="${tipoCss(t.cor)}" draggable="true"
                  data-event-id="${ev.id}" data-day="${dayKey}"
                  ondragstart="onChipDragStart(event, ${ev.id}, '${dayKey}')"
                  ondragend="onChipDragEnd(event)"
@@ -2282,7 +2297,8 @@ function renderNotas(){
                          onchange="notaOnInput()"
                          onpaste="notaOnPaste(event)"
                          onkeyup="fmtAtualizarEstado()"
-                         onmouseup="fmtAtualizarEstado()">${nota.conteudo || ''}</div>
+                         onmouseup="fmtAtualizarEstado()"
+                         onblur="linkificarNota()">${nota.conteudo || ''}</div>
                 ` : `
                     <div class="notas-vazio" style="margin:auto;">
                         <p>📝</p>
@@ -2567,6 +2583,11 @@ function notaOnPaste(e){
     e.preventDefault();
     const texto = cd.getData('text/plain');
     document.execCommand('insertText', false, texto);
+    // Após colar, transforma URLs em links
+    setTimeout(() => {
+        const editor = document.getElementById('notaEditor');
+        if(editor && linkifyEditorDOM(editor)) notaOnInput();
+    }, 30);
 }
 
 function notaAddChecklist(){
@@ -3006,6 +3027,108 @@ function mostrarToast(msg){
     setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; }, 1600);
     setTimeout(() => el.remove(), 2000);
 }
+    /* ============================================================
+   DETECÇÃO AUTOMÁTICA DE LINKS
+============================================================ */
+
+/* Regex para encontrar URLs no texto */
+const URL_REGEX = /(^|[\s(>])((?:https?:\/\/|www\.)[^\s<>"')\]]+)/gi;
+
+/* Escapa HTML e ao mesmo tempo transforma URLs em <a> */
+function linkifyText(texto){
+    if(!texto) return '';
+    // 1) Escapa tudo
+    const escapado = String(texto)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    // 2) Transforma URLs em links
+    return escapado.replace(URL_REGEX, function(match, prefixo, url){
+        const href = url.startsWith('http') ? url : 'https://' + url;
+        return prefixo + '<a href="' + href + '" target="_blank" rel="noopener">' + url + '</a>';
+    });
+}
+
+/* Percorre o DOM do editor e transforma URLs soltas em <a> (sem mexer
+   em links já existentes, nem em código). Roda em blur/paste. */
+function linkifyEditorDOM(editor){
+    if(!editor) return false;
+    let alterou = false;
+
+    // Percorre apenas os nós de texto que NÃO estão dentro de <a>, <code>, <mark>, <img>
+    const walker = document.createTreeWalker(
+        editor,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: function(node){
+                // Ignora se estiver em tags que não devem virar link
+                let p = node.parentNode;
+                while(p && p !== editor){
+                    const tag = (p.nodeName || '').toLowerCase();
+                    if(tag === 'a' || tag === 'code' || tag === 'pre' || tag === 'mark'){
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    p = p.parentNode;
+                }
+                // Só testa se o texto tiver URL
+                if(!/https?:\/\/|www\./i.test(node.nodeValue || '')) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+
+    const alvos = [];
+    let n;
+    while((n = walker.nextNode())) alvos.push(n);
+
+    alvos.forEach(textNode => {
+        const texto = textNode.nodeValue;
+        const frag = document.createDocumentFragment();
+        let ultimo = 0, m;
+        URL_REGEX.lastIndex = 0;
+        while((m = URL_REGEX.exec(texto)) !== null){
+            const prefixo = m[1];
+            const url = m[2];
+            const inicio = m.index;
+            const fim = m.index + m[0].length;
+
+            // Texto antes do prefixo
+            const antes = texto.slice(ultimo, inicio + prefixo.length);
+            if(antes) frag.appendChild(document.createTextNode(antes));
+
+            // <a>
+            const a = document.createElement('a');
+            a.href = url.startsWith('http') ? url : ('https://' + url);
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = url;
+            frag.appendChild(a);
+
+            ultimo = fim;
+        }
+        if(ultimo < texto.length){
+            frag.appendChild(document.createTextNode(texto.slice(ultimo)));
+        }
+        if(frag.childNodes.length > 0){
+            textNode.parentNode.replaceChild(frag, textNode);
+            alterou = true;
+        }
+    });
+
+    return alterou;
+}
+    /* Roda o linkify no editor de notas (sem mexer no cursor se possível) */
+function linkificarNota(){
+    const editor = document.getElementById('notaEditor');
+    if(!editor) return;
+    // Não rodar durante formatação ativa
+    const alterou = linkifyEditorDOM(editor);
+    if(alterou){
+        notaOnInput();
+    }
+}
 /* === INBOX === */
 function renderInbox(){
     const todos = data.eventos.filter(ev => !ev.dataInicio).sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
@@ -3027,7 +3150,7 @@ function renderInbox(){
 function renderInboxCard(ev){
     const t = getTipo(ev.tipo);
     const header = renderChipHeader(ev, false);
-    const desc = ev.descricao ? `<div class="dc-desc">${escapeHtml(ev.descricao)}</div>` : '';
+    const desc = ev.descricao ? `<div class="dc-desc">${linkifyText(ev.descricao)}</div>` : '';
     return `<div class="day-card" style="${tipoCss(t.cor)}" draggable="true"
                  data-event-id="${ev.id}" data-inbox="1"
                  ondragstart="onChipDragStart(event, ${ev.id}, null)"
@@ -3093,7 +3216,7 @@ function renderChip(ev, position, dayKey, expandido){
     const isCont = isMulti && position !== 'start' && position !== 'single';
     const header = renderChipHeader(ev, isCont);
     const periodo = (expandido && isMulti) ? `<div style="font-size:13px;opacity:.75;margin-top:3px;font-style:italic;">📅 ${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</div>` : '';
-    const desc = (expandido && ev.descricao) ? `<div style="font-size:14px;opacity:.85;margin-top:3px;">${escapeHtml(ev.descricao)}</div>` : '';
+    const desc = (expandido && ev.descricao) ? `<div style="font-size:14px;opacity:.85;margin-top:3px;">${linkifyText(ev.descricao)}</div>` : '';
     const tipoLabel = expandido ? `<div style="font-size:11px;font-weight:700;text-transform:uppercase;opacity:.7;margin-top:3px;">${escapeHtml(t.label)}</div>` : '';
     const statusLabel = ev.status ? (getStatus(ev.status) ? getStatus(ev.status).label : ev.status) : '';
     const tooltip = [statusLabel?'Status: '+statusLabel:'', ev.responsavel?'Resp: '+ev.responsavel:'', ev.area?'Área: '+ev.area:'', ev.titulo, isMulti?`${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}`:'', ev.descricao||''].filter(Boolean).join(' • ');
@@ -3286,7 +3409,7 @@ function renderListaDia(){
                         ${header}
                         <strong>${escapeHtml(ev.titulo)}</strong>
                         ${periodo}
-                        ${ev.descricao ? `<span class="desc">${escapeHtml(ev.descricao)}</span>` : ''}
+                        ${ev.descricao ? `<span class="desc">${linkifyText(ev.descricao)}</span>` : ''}
                     </div>
                     <div class="row-actions">
                         <button class="btn-mini edit" onclick="abrirFormEvento(${ev.id})">Editar</button>
