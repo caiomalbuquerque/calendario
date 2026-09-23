@@ -535,6 +535,100 @@
     .nota-context-menu .separator {
         height: 1px; background: var(--border-color); margin: 4px 8px;
     }
+        /* === Formatação de texto (estilo OneNote) === */
+    .notas-toolbar .fmt-group {
+        display: flex; gap: 2px; align-items: center;
+        padding: 2px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+    }
+    .notas-toolbar .fmt-btn {
+        min-width: 32px;
+        padding: 6px 8px !important;
+        font-size: 14px !important;
+        font-weight: 700;
+        line-height: 1;
+        background: transparent !important;
+        border: none !important;
+        color: var(--text-heading) !important;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+    }
+    .notas-toolbar .fmt-btn:hover { background: var(--bg-panel-dark) !important; }
+    .notas-toolbar .fmt-btn.ativo { background: var(--primary) !important; color: var(--text-on-primary) !important; }
+    .notas-toolbar .fmt-btn.fmt-b { font-weight: 900; font-family: Georgia, serif; }
+    .notas-toolbar .fmt-btn.fmt-i { font-style: italic; font-family: Georgia, serif; }
+    .notas-toolbar .fmt-btn.fmt-u { text-decoration: underline; }
+    .notas-toolbar .fmt-btn.fmt-s { text-decoration: line-through; }
+    .notas-toolbar .fmt-btn.fmt-sup { vertical-align: super; font-size: 11px !important; }
+    .notas-toolbar .fmt-btn.fmt-sub { vertical-align: sub; font-size: 11px !important; }
+    .notas-toolbar .fmt-btn.fmt-hl {
+        background: #fff3a3 !important;
+        border-radius: 3px;
+    }
+    .notas-toolbar .fmt-btn.fmt-hl.ativo {
+        background: #ffd400 !important;
+        color: #000 !important;
+    }
+    .notas-toolbar .fmt-btn.fmt-code {
+        font-family: 'Courier New', monospace !important;
+        font-size: 12px !important;
+    }
+
+    /* Marca-texto dentro do editor */
+    .notas-editor mark,
+    .notas-editor .destaque {
+        background: #fff3a3;
+        color: #000;
+        padding: 1px 2px;
+        border-radius: 2px;
+    }
+    .notas-editor code {
+        background: rgba(0,0,0,.08);
+        padding: 1px 4px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.92em;
+    }
+    .notas-editor sup { font-size: 0.75em; vertical-align: super; }
+    .notas-editor sub { font-size: 0.75em; vertical-align: sub; }
+    .notas-editor a.anexo-link {
+        color: var(--secondary);
+        text-decoration: underline;
+        cursor: pointer;
+        background: rgba(43,108,163,.08);
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    .notas-editor a.anexo-link:hover { background: rgba(43,108,163,.18); }
+
+    /* Dica de upload em andamento */
+    .upload-progress {
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%,-50%);
+        background: var(--primary); color: var(--text-on-primary);
+        padding: 18px 32px; border-radius: var(--radius);
+        font-family: var(--font-body); font-weight: 700; font-size: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.4);
+        z-index: 5000;
+        display: flex; align-items: center; gap: 12px;
+    }
+    .upload-progress .spinner {
+        width: 18px; height: 18px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Barra de formatação responsiva */
+    @media (max-width: 900px) {
+        .notas-toolbar { gap: 4px; }
+        .notas-toolbar .fmt-btn { min-width: 28px; padding: 5px 6px !important; font-size: 13px !important; }
+    }
 </style>
 </head>
 <body>
@@ -816,7 +910,11 @@
         </div>
     </div>
 </div>
-
+<!-- Overlay de upload -->
+<div class="upload-progress" id="uploadProgress" style="display:none;">
+    <div class="spinner"></div>
+    <span id="uploadProgressText">Enviando…</span>
+</div>
 <!-- Popup Teletubies -->
 <div class="teletubies-overlay" id="teletubiesOverlay">
     <img src="img/teletubies.png" alt="Teletubies" class="teletubies-img">
@@ -2127,9 +2225,21 @@ function renderNotas(){
                 ${nota ? `
                     <div class="notas-toolbar">
                         <input type="text" id="notaTitulo" placeholder="Título da nota" value="${escapeHtml(nota.titulo || '')}" oninput="notaOnInput()">
-                        <button onclick="notaAddChecklist()" title="Inserir item de checklist">☑ Checklist</button>
-                        <button onclick="notaAddImagem()" title="Anexar imagem">🖼 Imagem</button>
-                        <button onclick="notaAddTexto()" title="Inserir linha de texto">📝 Texto</button>
+                        <div class="fmt-group" title="Formatação">
+                            <button class="fmt-btn fmt-b" onmousedown="event.preventDefault(); fmt('bold')" title="Negrito (Ctrl+B)">B</button>
+                            <button class="fmt-btn fmt-i" onmousedown="event.preventDefault(); fmt('italic')" title="Itálico (Ctrl+I)">I</button>
+                            <button class="fmt-btn fmt-u" onmousedown="event.preventDefault(); fmt('underline')" title="Sublinhado (Ctrl+U)">U</button>
+                            <button class="fmt-btn fmt-s" onmousedown="event.preventDefault(); fmt('strikeThrough')" title="Riscado">S</button>
+                            <button class="fmt-btn fmt-sup" onmousedown="event.preventDefault(); fmt('superscript')" title="Sobrescrito">X²</button>
+                            <button class="fmt-btn fmt-sub" onmousedown="event.preventDefault(); fmt('subscript')" title="Subscrito">X₂</button>
+                            <button class="fmt-btn fmt-hl" onmousedown="event.preventDefault(); fmtHighlight()" title="Marca-texto">🖍</button>
+                            <button class="fmt-btn fmt-code" onmousedown="event.preventDefault(); fmt('formatBlock', '<code>')" title="Código">{" "}</button>
+                        </div>
+                        <div class="fmt-group">
+                            <button class="fmt-btn" onmousedown="event.preventDefault(); notaAddChecklist()" title="Checklist">☑</button>
+                            <button class="fmt-btn" onmousedown="event.preventDefault(); notaAddImagem()" title="Imagem (ou cole com Ctrl+V)">🖼</button>
+                            <button class="fmt-btn" onmousedown="event.preventDefault(); notaAnexarArquivo()" title="Anexar arquivo">📎</button>
+                        </div>
                         <input type="color" id="notaCor" value="${escapeHtml(nota.cor || '#ffffff')}" onchange="notaTrocarCor(this.value)" title="Cor da nota">
                         <button class="danger" onclick="notaExcluir()" title="Excluir nota">🗑 Excluir</button>
                     </div>
@@ -2138,7 +2248,9 @@ function renderNotas(){
                          oncontextmenu="notaContextMenu(event)"
                          onkeydown="notaOnKeydown(event)"
                          onchange="notaOnInput()"
-                         onpaste="notaOnPaste(event)">${nota.conteudo || ''}</div>
+                         onpaste="notaOnPaste(event)"
+                         onkeyup="fmtAtualizarEstado()"
+                         onmouseup="fmtAtualizarEstado()">${nota.conteudo || ''}</div>
                 ` : `
                     <div class="notas-vazio" style="margin:auto;">
                         <p>📝</p>
@@ -2214,6 +2326,8 @@ function notaOnInput(){
 }
 
 function notaOnKeydown(e){
+        // Deixa o handler global de Ctrl+B/I/U agir
+    if((e.ctrlKey || e.metaKey) && ['b','i','u','h'].includes(e.key.toLowerCase())) return;
     // Enter dentro de um check-text cria um novo item de checklist
     if(e.key === 'Enter'){
         const checkText = e.target.closest('.check-text');
@@ -2250,9 +2364,59 @@ function notaOnKeydown(e){
 }
 
 /* Evita colar HTML externo (mantém só texto e imagens data-url) */
+/* Paste inteligente: detecta imagens da área de transferência e converte texto */
 function notaOnPaste(e){
+    const cd = e.clipboardData || window.clipboardData;
+    if(!cd) return;
+
+    // Procura por imagem no clipboard (print de tela, cópia de imagem etc.)
+    const items = cd.items || [];
+    for(const item of items){
+        if(item.type && item.type.startsWith('image/')){
+            e.preventDefault();
+            const file = item.getAsFile();
+            if(!file) continue;
+            // Lê como dataURL e insere
+            const reader = new FileReader();
+            reader.onload = function(ev){
+                const editor = document.getElementById('notaEditor');
+                if(!editor) return;
+                editor.focus();
+                const html = `<img src="${ev.target.result}" alt="Imagem colada">`;
+                document.execCommand('insertHTML', false, html);
+                notaOnInput();
+            };
+            reader.readAsDataURL(file);
+            return;
+        }
+    }
+
+    // Colar arquivo (arrastar do desktop, ou clipboard com files)
+    const files = cd.files;
+    if(files && files.length > 0){
+        e.preventDefault();
+        for(const f of files){
+            if(f.type && f.type.startsWith('image/')){
+                const reader = new FileReader();
+                reader.onload = function(ev){
+                    const editor = document.getElementById('notaEditor');
+                    if(!editor) return;
+                    editor.focus();
+                    document.execCommand('insertHTML', false, `<img src="${ev.target.result}" alt="${escapeHtml(f.name)}">`);
+                    notaOnInput();
+                };
+                reader.readAsDataURL(f);
+            } else {
+                // Arquivo não-imagem: envia para o GitHub
+                notaUploadAnexoGitHub(f);
+            }
+        }
+        return;
+    }
+
+    // Fallback: cola como texto puro
     e.preventDefault();
-    const texto = (e.clipboardData || window.clipboardData).getData('text/plain');
+    const texto = cd.getData('text/plain');
     document.execCommand('insertText', false, texto);
 }
 
@@ -2275,26 +2439,37 @@ function notaAddTexto(){
 }
 
 function notaAddImagem(){
+    const opcao = confirm(
+        'Como deseja inserir a imagem?\n\n' +
+        'OK = Escolher do computador (até 500 KB, embutida na nota)\n' +
+        'Cancelar = Enviar para o repositório GitHub (recomendado para imagens grandes)'
+    );
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
     input.onchange = function(){
         const file = input.files && input.files[0];
         if(!file) return;
-        if(file.size > 500 * 1024){
-            alert('Imagem muito grande (máx. 500 KB).\nA imagem será salva no calendario.json, então imagens grandes deixam o arquivo pesado.');
-            return;
+        if(opcao){
+            // Embutir como data-url (só imagens pequenas)
+            if(file.size > 500 * 1024){
+                alert('Imagem muito grande para embutir (máx. 500 KB).\nVou enviar para o GitHub.');
+                notaUploadAnexoGitHub(file);
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(ev){
+                const editor = document.getElementById('notaEditor');
+                if(!editor) return;
+                editor.focus();
+                document.execCommand('insertHTML', false, `<img src="${ev.target.result}" alt="${escapeHtml(file.name)}">`);
+                notaOnInput();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Enviar para o GitHub
+            notaUploadAnexoGitHub(file);
         }
-        const reader = new FileReader();
-        reader.onload = function(ev){
-            const editor = document.getElementById('notaEditor');
-            if(!editor) return;
-            editor.focus();
-            const html = `<img src="${ev.target.result}" alt="${escapeHtml(file.name)}">`;
-            document.execCommand('insertHTML', false, html);
-            notaOnInput();
-        };
-        reader.readAsDataURL(file);
     };
     input.click();
 }
@@ -2313,7 +2488,203 @@ function notaAjustarCheckboxes(){
         });
     });
 }
+/* ============================================================
+   FORMATAÇÃO DE TEXTO (estilo OneNote)
+============================================================ */
+function fmt(cmd, value){
+    document.execCommand(cmd, false, value || null);
+    const editor = document.getElementById('notaEditor');
+    if(editor) editor.focus();
+    fmtAtualizarEstado();
+    notaOnInput();
+}
 
+/* Marca-texto (highlight) — alterna entre aplicar e remover */
+function fmtHighlight(){
+    const editor = document.getElementById('notaEditor');
+    if(!editor) return;
+    editor.focus();
+
+    // Se já está com highlight aplicado, remove
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount === 0) return;
+
+    // Verifica se a seleção está dentro de um <mark>
+    let node = sel.anchorNode;
+    let dentro = false;
+    while(node && node !== editor){
+        if(node.nodeName === 'MARK'){ dentro = true; break; }
+        node = node.parentNode;
+    }
+
+    if(dentro){
+        document.execCommand('hiliteColor', false, 'transparent');
+        // Fallback: remove <mark> envolvente
+        try {
+            document.execCommand('removeFormat', false, null);
+        } catch(e){}
+    } else {
+        // Aplica highlight amarelo
+        try {
+            document.execCommand('hiliteColor', false, '#fff3a3');
+        } catch(e){}
+        // Fallback com <mark>
+        try {
+            document.execCommand('insertHTML', false, '<mark>' + escapeHtml(sel.toString()) + '</mark>');
+        } catch(e){}
+    }
+    fmtAtualizarEstado();
+    notaOnInput();
+}
+
+/* Atualiza o estado visual dos botões conforme a posição do cursor */
+function fmtAtualizarEstado(){
+    const botoes = {
+        bold: document.querySelector('.fmt-btn.fmt-b'),
+        italic: document.querySelector('.fmt-btn.fmt-i'),
+        underline: document.querySelector('.fmt-btn.fmt-u'),
+        strikeThrough: document.querySelector('.fmt-btn.fmt-s'),
+        superscript: document.querySelector('.fmt-btn.fmt-sup'),
+        subscript: document.querySelector('.fmt-btn.fmt-sub')
+    };
+    for(const [cmd, btn] of Object.entries(botoes)){
+        if(!btn) continue;
+        try {
+            if(document.queryCommandState(cmd)) btn.classList.add('ativo');
+            else btn.classList.remove('ativo');
+        } catch(e){}
+    }
+}
+
+/* ============================================================
+   ANEXAR ARQUIVO — upload para o GitHub
+============================================================ */
+function notaAnexarArquivo(){
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '*/*';
+    input.onchange = function(){
+        const file = input.files && input.files[0];
+        if(!file) return;
+        if(file.size > 5 * 1024 * 1024){
+            alert('Arquivo muito grande (máx. 5 MB).\nO GitHub aceita até ~25 MB via API, mas valores altos deixam o repositório pesado.');
+            return;
+        }
+        notaUploadAnexoGitHub(file);
+    };
+    input.click();
+}
+
+async function notaUploadAnexoGitHub(file){
+    if(!authToken){
+        alert('Para anexar arquivos é preciso estar logado como admin (🔧 Admin).\nSem o token, os arquivos não podem ser enviados para o repositório.');
+        return;
+    }
+
+    const pasta = 'img/notas-anexos';
+    // Sanitiza o nome do arquivo
+    const agora = Date.now();
+    const nomeLimpo = file.name
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .replace(/[^a-zA-Z0-9._-]+/g,'-')
+        .replace(/^-+|-+$/g,'');
+    const nomeFinal = `${agora}-${nomeLimpo}`;
+    const caminho = `${pasta}/${nomeFinal}`;
+
+    // Mostra o overlay
+    const progress = document.getElementById('uploadProgress');
+    const progressText = document.getElementById('uploadProgressText');
+    if(progress){ progress.style.display = 'flex'; }
+    if(progressText){ progressText.textContent = `Enviando "${file.name}"…`; }
+
+    try {
+        // Lê o arquivo como base64
+        const base64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const result = reader.result;
+                // Remove o prefixo "data:...;base64,"
+                const b64 = result.split(',')[1];
+                resolve(b64);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+        // PUT para o GitHub
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${caminho}`;
+        const body = {
+            message: `Anexa arquivo na nota: ${nomeFinal}`,
+            content: base64,
+            branch: GITHUB_BRANCH
+        };
+
+        // Verifica se já existe (improvável, mas seguro)
+        try {
+            const r = await fetch(apiUrl + `?ref=${GITHUB_BRANCH}`, {headers:{Authorization:`Bearer ${authToken}`}});
+            if(r.ok){
+                const info = await r.json();
+                if(info && info.sha) body.sha = info.sha;
+            }
+        } catch(e){}
+
+        const put = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if(!put.ok){
+            const err = await put.json().catch(()=>({}));
+            throw new Error(err.message || ('HTTP ' + put.status));
+        }
+
+        // Insere no editor
+        const editor = document.getElementById('notaEditor');
+        if(editor){
+            editor.focus();
+            const isImg = file.type.startsWith('image/');
+            const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${caminho}`;
+            // Usa caminho relativo para funcionar tanto no GitHub Pages quanto localmente
+            const urlRelativa = `img/notas-anexos/${encodeURIComponent(nomeFinal)}`;
+
+            let html;
+            if(isImg){
+                html = `<img src="${urlRelativa}" alt="${escapeHtml(file.name)}" data-anexo="${escapeHtml(nomeFinal)}">`;
+            } else {
+                html = `<a class="anexo-link" href="${urlRelativa}" target="_blank" download="${escapeHtml(file.name)}">📎 ${escapeHtml(file.name)}</a> `;
+            }
+            document.execCommand('insertHTML', false, html);
+            notaOnInput();
+        }
+    } catch(e){
+        alert('Erro ao anexar: ' + e.message);
+    } finally {
+        if(progress){ progress.style.display = 'none'; }
+    }
+}
+
+/* ============================================================
+   ATALHOS DE TECLADO (Ctrl+B, Ctrl+I, Ctrl+U)
+============================================================ */
+document.addEventListener('keydown', function(e){
+    // Só age se o foco estiver dentro do editor de notas
+    const editor = document.getElementById('notaEditor');
+    if(!editor) return;
+    const ativo = document.activeElement;
+    if(!editor.contains(ativo) && ativo !== editor) return;
+
+    if(e.ctrlKey || e.metaKey){
+        const k = e.key.toLowerCase();
+        if(k === 'b'){ e.preventDefault(); fmt('bold'); return; }
+        if(k === 'i'){ e.preventDefault(); fmt('italic'); return; }
+        if(k === 'u'){ e.preventDefault(); fmt('underline'); return; }
+        if(k === 'h'){ e.preventDefault(); fmtHighlight(); return; }
+    }
+});
 /* ============================================================
    MENU DE CONTEXTO (botão direito) — Encaminhar para o Inbox
 ============================================================ */
