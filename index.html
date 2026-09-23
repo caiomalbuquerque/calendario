@@ -2799,7 +2799,6 @@ async function notaUploadAnexoGitHub(file){
     }
 
     const pasta = 'img/notas-anexos';
-    // Sanitiza o nome do arquivo
     const agora = Date.now();
     const nomeLimpo = file.name
         .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
@@ -2808,19 +2807,16 @@ async function notaUploadAnexoGitHub(file){
     const nomeFinal = `${agora}-${nomeLimpo}`;
     const caminho = `${pasta}/${nomeFinal}`;
 
-    // Mostra o overlay
     const progress = document.getElementById('uploadProgress');
     const progressText = document.getElementById('uploadProgressText');
     if(progress){ progress.style.display = 'flex'; }
     if(progressText){ progressText.textContent = `Enviando "${file.name}"…`; }
 
     try {
-        // Lê o arquivo como base64
         const base64 = await new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
                 const result = reader.result;
-                // Remove o prefixo "data:...;base64,"
                 const b64 = result.split(',')[1];
                 resolve(b64);
             };
@@ -2828,7 +2824,6 @@ async function notaUploadAnexoGitHub(file){
             reader.readAsDataURL(file);
         });
 
-        // PUT para o GitHub
         const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${caminho}`;
         const body = {
             message: `Anexa arquivo na nota: ${nomeFinal}`,
@@ -2836,7 +2831,6 @@ async function notaUploadAnexoGitHub(file){
             branch: GITHUB_BRANCH
         };
 
-        // Verifica se já existe (improvável, mas seguro)
         try {
             const r = await fetch(apiUrl + `?ref=${GITHUB_BRANCH}`, {headers:{Authorization:`Bearer ${authToken}`}});
             if(r.ok){
@@ -2859,8 +2853,7 @@ async function notaUploadAnexoGitHub(file){
             throw new Error(err.message || ('HTTP ' + put.status));
         }
 
-        // Insere no editor
-        // Registra o anexo na nota (para podermos excluir depois)
+        // Registra o anexo na nota
         const nota = data.notas.find(n => n.id === notaAtivaId);
         if(nota){
             if(!nota.anexos) nota.anexos = [];
@@ -2872,15 +2865,12 @@ async function notaUploadAnexoGitHub(file){
         if(editor){
             editor.focus();
             const isImg = file.type.startsWith('image/');
-            // URL absoluta do raw — funciona imediatamente após o upload,
-            // sem depender do CDN do GitHub Pages.
             const urlRaw = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${caminho}`;
 
             let html;
             if(isImg){
                 html = `<img src="${urlRaw}" alt="${escapeHtml(file.name)}" data-anexo="${escapeHtml(nomeFinal)}">`;
             } else {
-                // Link sem download (não funciona cross-origin); abre em nova aba
                 html = `<a class="anexo-link" href="${urlRaw}" target="_blank" rel="noopener" data-anexo="${escapeHtml(nomeFinal)}">📎 ${escapeHtml(file.name)}</a> `;
             }
             document.execCommand('insertHTML', false, html);
