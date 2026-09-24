@@ -755,6 +755,9 @@
     .pop-list { display: flex; flex-direction: column; gap: 4px; padding: 8px; overflow-y: auto; }
     .pop-item { cursor: pointer; }
     .pop-add { margin: 0 8px 8px; padding: 8px; border: 0; border-radius: var(--radius); background: var(--bg-panel-dark); color: var(--text-heading); font: 600 13px var(--font-body); cursor: pointer; }
+
+    /* respiro entre o cabeçalho e a barra de filtros */
+    .appbar + .filters { margin-top: 16px; }
 </style>
 </head>
 <body>
@@ -3074,7 +3077,7 @@ function renderLegendMes(){
     const l = document.getElementById('legend');
     const tipos = (data.config.tipos || []).map(t => `<div class="item"><div class="dot" style="background:${rgbToHex(mix(hexToRgb(t.cor), {r:255,g:255,b:255}, .85))};border-left-color:${escapeHtml(t.cor)}"></div>${escapeHtml(t.label)}</div>`).join('');
     const grupo = (nome, arr) => arr.length ? `<div class="sep"></div><span class="lg-t">${nome}</span>` + arr.map(x => `<div class="item"><span class="dot-badge" style="background:${escapeHtml(x.cor)}"></span>${escapeHtml(x.label)}</div>`).join('') : '';
-    l.innerHTML = (tipos ? '<span class="lg-t">Tipo</span>' + tipos : '') + grupo('Status', data.config.status || []) + grupo('Resp.', data.config.responsaveis || []) + grupo('Área', data.config.areas || []);
+    l.innerHTML = (tipos ? '<span class="lg-t">Tipo</span>' + tipos : '') + grupo('Status', data.config.status || []);
 }
 
 /* ============================================================
