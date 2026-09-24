@@ -666,6 +666,34 @@
     .rte-bar .fmt-u { text-decoration: underline; } .rte-bar .fmt-s { text-decoration: line-through; }
     .rte-bar .fmt-hl { background: #fff3a3; }
     .rte-form { min-height: 130px; max-height: 38vh; }
+
+    /* ===== Checklist das tarefas (separado das Notas) ===== */
+    .task-checklist { margin: 12px 0 4px; padding: 12px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: var(--radius); }
+    .task-checklist-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .task-checklist-title { display: flex; align-items: center; gap: 8px; color: var(--text-heading); font-weight: 800; font-size: 14px; }
+    .task-checklist-title .pct { color: var(--text-muted); font-size: 12px; font-weight: 700; }
+    .checklist-add { border: 1px solid var(--border-color-strong); background: var(--bg-panel-alt); color: var(--text-heading); border-radius: var(--radius-sm); padding: 6px 9px; cursor: pointer; font: 700 12px var(--font-body); }
+    .checklist-add:hover { background: var(--bg-panel-dark); }
+    .task-checklist-progress { height: 5px; background: var(--border-color); border-radius: 99px; overflow: hidden; margin: 4px 0 10px; }
+    .task-checklist-progress > span { display: block; height: 100%; width: 0; background: var(--secondary); transition: width .15s; }
+    .task-checklist-items { display: flex; flex-direction: column; gap: 6px; }
+    .task-checklist-item { display: grid; grid-template-columns: 20px minmax(0, 1fr) 145px 30px; align-items: center; gap: 7px; padding: 5px 6px; background: var(--bg-container); border: 1px solid var(--border-color); border-radius: var(--radius-sm); }
+    .task-checklist-item input[type=checkbox] { width: 16px; height: 16px; margin: 0; accent-color: var(--secondary); cursor: pointer; }
+    .task-checklist-item .check-text-input { min-width: 0; width: 100%; padding: 6px 7px; border: 1px solid transparent; background: transparent; color: var(--text-color); font: 500 14px var(--font-body); border-radius: 4px; }
+    .task-checklist-item .check-text-input:focus { outline: 2px solid var(--primary); outline-offset: -1px; background: var(--bg-panel-alt); border-color: var(--border-color-strong); }
+    .task-checklist-item.done .check-text-input { text-decoration: line-through; color: var(--text-muted); opacity: .75; }
+    .task-checklist-item .check-date { width: 100%; padding: 6px 6px; border: 1px solid var(--border-color-strong); background: var(--bg-panel-alt); color: var(--text-color); font: 500 12px var(--font-body); border-radius: 4px; }
+    .task-checklist-item .check-delete { width: 28px; height: 28px; padding: 0; border: 0; background: transparent; color: var(--danger); border-radius: 4px; cursor: pointer; font-size: 17px; line-height: 1; }
+    .task-checklist-item .check-delete:hover { background: rgba(220,53,69,.10); }
+    .task-checklist-empty { color: var(--text-muted); font-size: 13px; padding: 4px 2px 2px; }
+    .checklist-summary { display: flex; align-items: center; gap: 5px; margin-top: 5px; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+    .checklist-summary .mini-bar { width: 54px; height: 4px; background: var(--border-color); border-radius: 99px; overflow: hidden; }
+    .checklist-summary .mini-bar span { display: block; height: 100%; background: var(--secondary); }
+    @media (max-width: 620px) {
+        .task-checklist-item { grid-template-columns: 20px minmax(0,1fr) 30px; }
+        .task-checklist-item .check-date { grid-column: 2 / 3; }
+        .task-checklist-item .check-delete { grid-column: 3 / 4; grid-row: 1 / span 2; }
+    }
     .notas-editor:empty::before { content: attr(data-placeholder); color: var(--text-muted); pointer-events: none; }
     .notas-editor ul, .notas-editor ol, .rte-view ul, .rte-view ol { margin: 4px 0 4px 22px; padding: 0; }
     .rte-view { white-space: normal; }
@@ -896,7 +924,19 @@
         </div>
         <div class="field"><label>Descrição (opcional)</label>
             <div class="rte-wrap"><div id="rteBarraForm"></div>
-            <div id="formDescricao" class="notas-editor rte rte-form" contenteditable="true" data-placeholder="Detalhes, anotações ou checklist…" onkeydown="rteKeydown(event)" onpaste="rtePaste(event)" onkeyup="fmtAtualizarEstado()" onmouseup="fmtAtualizarEstado()"></div></div></div>
+            <div id="formDescricao" class="notas-editor rte rte-form" contenteditable="true" data-placeholder="Detalhes, anotações…" onkeydown="rteKeydown(event)" onpaste="rtePaste(event)" onkeyup="fmtAtualizarEstado()" onmouseup="fmtAtualizarEstado()"></div></div></div>
+
+        <div class="task-checklist" id="formChecklist">
+            <div class="task-checklist-head">
+                <div class="task-checklist-title">
+                    <span data-ic="check"></span><span>Checklist</span> <span class="pct" id="formChecklistPct"></span>
+                </div>
+                <button type="button" class="checklist-add" onclick="adicionarChecklistItem()">Checklist +</button>
+            </div>
+            <div class="task-checklist-progress" id="formChecklistProgressWrap" style="display:none;"><span id="formChecklistProgress"></span></div>
+            <div class="task-checklist-items" id="formChecklistItems"></div>
+        </div>
+
         <div class="row2 row3">
             <div class="field"><label>Tipo</label><select id="formTipo"></select></div>
             <div class="field"><label>Status</label><select id="formStatus"></select></div>
@@ -904,8 +944,7 @@
         </div>
         <div class="actions">
             <button class="btn btn-danger left" id="btnExcluirForm" style="display:none;" onclick="excluirEventoForm()">Excluir</button>
-            <button class="btn btn-primary" onclick="salvarEvento()">Salvar</button>
-            <button class="btn btn-secondary" onclick="fecharForm()">Cancelar</button>
+            <button class="btn btn-secondary" onclick="fecharForm()">Fechar</button>
         </div>
     </div>
 </div>
@@ -1218,7 +1257,8 @@ let autosave = {
     timer: null,
     alteracoesPendentes: false,
     ultimoErro: null,
-    timerRetentativa: null
+    timerRetentativa: null,
+    versao: 0
 };
 
 /* ============================================================
@@ -1265,6 +1305,7 @@ function getAutosaveConfig(){
    - Se autosave ativo: agenda salvamento (debounce) */
 function marcarAlterado(opts){
     opts = opts || {};
+    autosave.versao++;
     cacheLocal();
     if(!getAutosaveConfig().ativo) return;
     if(!authToken) return; // sem login, não tenta salvar no GitHub
@@ -1296,11 +1337,19 @@ async function salvarAutomatico(){
 
     autosave.estado = 'salvando';
     atualizarBotaoSalvar();
+    const versaoSalva = autosave.versao;
 
     const sucesso = await executarSalvamento();
     if(sucesso){
         autosave.estado = 'salvo';
-        autosave.alteracoesPendentes = false;
+        // Se algo mudou enquanto o PUT estava em andamento, mantém a pendência
+        // e dispara outro salvamento em vez de considerar a alteração perdida.
+        if(autosave.versao === versaoSalva){
+            autosave.alteracoesPendentes = false;
+        } else {
+            autosave.alteracoesPendentes = true;
+            setTimeout(() => { if(autosave.alteracoesPendentes) salvarAutomatico(); }, 0);
+        }
         autosave.ultimoErro = null;
         atualizarBotaoSalvar();
         // Volta ao normal depois de 2s
@@ -1637,6 +1686,13 @@ function prepararDados(){
         if(ev.area === undefined) ev.area = '';
         if(ev.status === undefined) ev.status = '';
         if(ev.ordem === undefined) ev.ordem = ev.id*10;
+        if(!Array.isArray(ev.checklist)) ev.checklist = [];
+        ev.checklist = ev.checklist.map((item, idx) => ({
+            id: item && item.id ? item.id : `ck_${ev.id}_${idx + 1}`,
+            texto: item && item.texto != null ? String(item.texto) : String(item && (item.titulo || item.title) || ''),
+            concluido: !!(item && (item.concluido || item.done || item.checked)),
+            data: item && (item.data || item.dataVencimento || item.dueDate) ? String(item.data || item.dataVencimento || item.dueDate) : ''
+        }));
     });
     let max = 0;
     data.eventos.forEach(e=>{ if(e.id > max) max = e.id; });
@@ -2209,6 +2265,13 @@ function renderDayStrip(){
     html += '</div>';
     return html;
 }
+function checklistResumo(ev){
+    const itens = Array.isArray(ev.checklist) ? ev.checklist : [];
+    if(!itens.length) return '';
+    const concluidos = itens.filter(i => i.concluido).length;
+    const pct = Math.round((concluidos / itens.length) * 100);
+    return `<div class="checklist-summary" title="Checklist: ${concluidos} de ${itens.length} concluídos">${ic('check', 13)}<span>${concluidos}/${itens.length}</span><span class="mini-bar"><span style="width:${pct}%"></span></span></div>`;
+}
 function renderDayCard(ev, position, dayKey){
     const t = getTipo(ev.tipo);
     const isMulti = ev.dataInicio !== ev.dataFim;
@@ -2229,7 +2292,7 @@ function renderDayCard(ev, position, dayKey){
                     </div>
                 </div>
                 <div class="dc-title">${escapeHtml(ev.titulo)}</div>
-                ${periodo}${desc}
+                ${periodo}${desc}${checklistResumo(ev)}
                 <div class="dc-meta"><span style="opacity:.7;font-weight:700;text-transform:uppercase;font-size:11px;">${escapeHtml(t.label)}</span></div>
             </div>`;
 }
@@ -3051,7 +3114,7 @@ function renderInboxCard(ev){
                     </div>
                 </div>
                 <div class="dc-title">${escapeHtml(ev.titulo)}</div>
-                ${desc}
+                ${desc}${checklistResumo(ev)}
                 <div class="dc-meta"><span style="opacity:.7;font-weight:700;text-transform:uppercase;font-size:11px;">${escapeHtml(t.label)}</span></div>
             </div>`;
 }
@@ -3266,6 +3329,7 @@ function renderListaDia(){
                         <strong>${escapeHtml(ev.titulo)}</strong>
                         ${periodo}
                         ${ev.descricao ? `<div class="desc">${descHtml(ev)}</div>` : ''}
+                        ${checklistResumo(ev)}
                     </div>
                     <div class="row-actions">
                         <button class="btn-mini edit" onclick="abrirFormEvento(${ev.id})">Editar</button>
@@ -3313,6 +3377,124 @@ function atualizarToggleIsolado(){
         if(chk) chk.checked = false;
     }
 }
+function novoChecklistId(){
+    if(window.crypto && crypto.randomUUID) return 'ck_' + crypto.randomUUID();
+    return 'ck_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9);
+}
+function clonarChecklist(lista){
+    return (Array.isArray(lista) ? lista : []).map(item => ({
+        id: item && item.id ? String(item.id) : novoChecklistId(),
+        texto: item && item.texto != null ? String(item.texto) : '',
+        concluido: !!(item && item.concluido),
+        data: item && item.data ? String(item.data) : ''
+    }));
+}
+function checklistPct(lista){
+    const itens = Array.isArray(lista) ? lista : [];
+    if(!itens.length) return 0;
+    return Math.round((itens.filter(i => i.concluido).length / itens.length) * 100);
+}
+function checklistAtualizarProgresso(){
+    const pct = checklistPct(formChecklistDraft);
+    const pctEl = document.getElementById('formChecklistPct');
+    const wrap = document.getElementById('formChecklistProgressWrap');
+    const bar = document.getElementById('formChecklistProgress');
+    if(pctEl) pctEl.textContent = formChecklistDraft.length ? `${pct}%` : '';
+    if(wrap) wrap.style.display = formChecklistDraft.length ? '' : 'none';
+    if(bar) bar.style.width = pct + '%';
+}
+function checklistSincronizarDoDOM(){
+    const root = document.getElementById('formChecklistItems');
+    if(!root) return;
+    const itens = [];
+    root.querySelectorAll('.task-checklist-item').forEach(row => {
+        const texto = row.querySelector('.check-text-input');
+        const dataEl = row.querySelector('.check-date');
+        const cb = row.querySelector('input[type=checkbox]');
+        itens.push({
+            id: row.dataset.checkId || novoChecklistId(),
+            texto: texto ? texto.value : '',
+            concluido: !!(cb && cb.checked),
+            data: dataEl ? dataEl.value : ''
+        });
+    });
+    formChecklistDraft = itens;
+    checklistAtualizarProgresso();
+}
+function checklistPersistirSeEventoExistente(){
+    checklistSincronizarDoDOM();
+    const id = Number(document.getElementById('formId')?.value || 0);
+    if(!id) return;
+    const ev = data.eventos.find(e => e.id === id);
+    if(!ev) return;
+    ev.checklist = clonarChecklist(formChecklistDraft);
+    marcarAlterado();
+}
+function renderChecklistForm(){
+    const root = document.getElementById('formChecklistItems');
+    if(!root) return;
+    const itens = clonarChecklist(formChecklistDraft);
+    if(!itens.length){
+        root.innerHTML = '<div class="task-checklist-empty">Nenhum item. Clique em <b>Checklist +</b> para criar o primeiro.</div>';
+        checklistAtualizarProgresso();
+        return;
+    }
+    root.innerHTML = itens.map(item => `
+        <div class="task-checklist-item ${item.concluido ? 'done' : ''}" data-check-id="${escapeHtml(item.id)}">
+            <input type="checkbox" ${item.concluido ? 'checked' : ''} aria-label="Concluir item do checklist">
+            <input type="text" class="check-text-input" value="${escapeHtml(item.texto)}" placeholder="Item do checklist">
+            <input type="date" class="check-date" value="${escapeHtml(item.data || '')}" title="Data do item">
+            <button type="button" class="check-delete" title="Excluir item">×</button>
+        </div>`).join('');
+    checklistAtualizarProgresso();
+}
+function adicionarChecklistItem(){
+    checklistSincronizarDoDOM();
+    formChecklistDraft.push({ id: novoChecklistId(), texto: '', concluido: false, data: '' });
+    renderChecklistForm();
+    checklistPersistirSeEventoExistente();
+    setTimeout(() => {
+        const root = document.getElementById('formChecklistItems');
+        const last = root && root.querySelector('.task-checklist-item:last-child .check-text-input');
+        if(last){ last.focus(); last.select(); }
+    }, 0);
+}
+function removerChecklistItem(id){
+    checklistSincronizarDoDOM();
+    formChecklistDraft = formChecklistDraft.filter(item => item.id !== id);
+    renderChecklistForm();
+    checklistPersistirSeEventoExistente();
+}
+function checklistAlterarItem(){
+    checklistPersistirSeEventoExistente();
+    checklistAtualizarProgresso();
+    const row = event && event.target && event.target.closest ? event.target.closest('.task-checklist-item') : null;
+    if(row){
+        const cb = row.querySelector('input[type=checkbox]');
+        row.classList.toggle('done', !!(cb && cb.checked));
+    }
+}
+function sincronizarFormularioEmEdicao(){
+    const id = Number(document.getElementById('formId')?.value || 0);
+    if(!id) return; // novas tarefas são persistidas ao fechar
+    const ev = data.eventos.find(e => e.id === id);
+    if(!ev) return;
+    ev.titulo = document.getElementById('formTitulo').value.trim();
+    ev.responsavel = document.getElementById('formResponsavel').value;
+    ev.area = document.getElementById('formArea').value;
+    const ed = document.getElementById('formDescricao');
+    if(ed){
+        const descricao = ed.textContent.trim();
+        ev.descricao = descricao;
+        ev.descricaoHtml = descricao ? sanitizarHtml(ed.innerHTML).trim() : '';
+    }
+    ev.tipo = document.getElementById('formTipo').value;
+    ev.status = document.getElementById('formStatus').value;
+    ev.complexidade = document.getElementById('formComplexidade').value;
+    checklistSincronizarDoDOM();
+    ev.checklist = clonarChecklist(formChecklistDraft);
+    marcarAlterado();
+}
 function abrirFormEvento(id, diaForcado){
     formVoltarDia = document.getElementById('modalDia').classList.contains('active');
     fecharModalDia();
@@ -3343,6 +3525,9 @@ function abrirFormEvento(id, diaForcado){
     preencherSelect('formStatus', data.config.status.map(s=>({value:s.id,label:s.label})), statusDefault);
     preencherSelect('formComplexidade', [{value:'',label:'Não definida'}].concat(COMPLEXIDADES.map(c=>({value:c.id,label:c.label}))), ev ? (ev.complexidade || '') : '');
 
+    formChecklistDraft = clonarChecklist(ev ? ev.checklist : []);
+    renderChecklistForm();
+
     const chk = document.getElementById('formIsolado');
     if(chk) chk.checked = false;
     toggleSemData();
@@ -3361,9 +3546,8 @@ function preencherSelect(id, opcoes, valorAtual){
     }
     sel.innerHTML = html;
 }
-function fecharForm(){ document.getElementById('modalForm').classList.remove('active'); }
 
-function salvarEvento(){
+function persistirFormulario(){
     const semData = document.getElementById('formSemData').checked;
     const dataInicio = semData ? '' : document.getElementById('formDataInicio').value;
     const dataFimRaw = semData ? '' : document.getElementById('formDataFim').value;
@@ -3379,8 +3563,13 @@ function salvarEvento(){
     const id = document.getElementById('formId').value;
     const isolado = document.getElementById('formIsolado').checked;
 
-    if(!titulo){ alert('Informe o título.'); return; }
-    if(!semData && !dataInicio){ alert('Informe a data de início ou marque "Sem data definida".'); return; }
+    checklistSincronizarDoDOM();
+    const checklist = clonarChecklist(formChecklistDraft);
+
+    if(!titulo){ alert('Informe o título.'); return false; }
+    if(!semData && !dataInicio){ alert('Informe a data de início ou marque "Sem data definida".'); return false; }
+    if(!semData && dataFimRaw && dataFimRaw < dataInicio){ alert('A data de término não pode ser anterior à data de início.'); return false; }
+
     const dataFim = (!semData && dataFimRaw && dataFimRaw >= dataInicio) ? dataFimRaw : dataInicio;
     const isMulti = !semData && dataFim > dataInicio;
 
@@ -3391,6 +3580,7 @@ function salvarEvento(){
             data.eventos.push({
                 id: nextId++, dataInicio: d, dataFim: d,
                 titulo, responsavel, area, descricao, descricaoHtml, tipo, status, complexidade,
+                checklist: clonarChecklist(checklist),
                 ordem: nextId*10
             });
         }
@@ -3407,7 +3597,7 @@ function salvarEvento(){
                 ev.dataFim    = semData ? '' : dataFim;
                 ev.titulo = titulo; ev.responsavel = responsavel;
                 ev.area = area; ev.descricao = descricao; ev.descricaoHtml = descricaoHtml; ev.complexidade = complexidade;
-                ev.tipo = tipo; ev.status = status;
+                ev.tipo = tipo; ev.status = status; ev.checklist = clonarChecklist(checklist);
             }
         }
     } else {
@@ -3419,13 +3609,14 @@ function salvarEvento(){
                 dataInicio: semData ? '' : dataInicio,
                 dataFim:    semData ? '' : dataFim,
                 titulo, responsavel, area, descricao, descricaoHtml, tipo, status, complexidade,
+                checklist: clonarChecklist(checklist),
                 ordem: nextId*10
             });
         }
         mostrarToast('Evento criado');
     }
 
-    marcarAlterado(); fecharForm();
+    marcarAlterado({ imediato: true });
     if(semData){
         diaSelecionado = null;
         setView('inbox');
@@ -3434,7 +3625,20 @@ function salvarEvento(){
         render();
         if(formVoltarDia) abrirModalDia(dataInicio);
     }
+    return true;
 }
+function salvarEvento(){
+    if(persistirFormulario()) fecharForm({ salvar:false });
+}
+function fecharForm(opcoes){
+    opcoes = opcoes || {};
+    const salvar = opcoes.salvar !== false;
+    const modal = document.getElementById('modalForm');
+    if(!modal || !modal.classList.contains('active')) return;
+    if(salvar && !persistirFormulario()) return;
+    modal.classList.remove('active');
+}
+
 function duplicarEvento(id){
     const ev = data.eventos.find(e=>e.id===id); if(!ev) return;
     const novo = JSON.parse(JSON.stringify(ev));
@@ -3452,8 +3656,8 @@ function excluirEventoForm(){
     if(!id) return;
     if(!confirm('Excluir este evento?')) return;
     data.eventos = data.eventos.filter(e=>e.id!==id);
-    marcarAlterado();
-    fecharForm();
+    marcarAlterado({ imediato: true });
+    fecharForm({ salvar:false });
     if(document.getElementById('modalDia').classList.contains('active')) renderListaDia();
     render();
 }
@@ -3529,7 +3733,7 @@ function rteBarra(){
         <select onchange="rteSel('fontSize', this)" title="Tamanho"><option value="">Tamanho</option>${RTE_TAMANHOS.map(t => `<option value="${t[1]}">${t[0]}</option>`).join('')}</select>
         <div class="fmt-group">${b('bold','B','Negrito (Ctrl+B)','fmt-b')}${b('italic','I','Itálico (Ctrl+I)','fmt-i')}${b('underline','U','Sublinhado (Ctrl+U)','fmt-u')}${b('strikeThrough','S','Riscado','fmt-s')}${b('superscript','X²','Sobrescrito','fmt-sup')}${b('subscript','X₂','Subscrito','fmt-sub')}</div>
         <div class="fmt-group"><input type="color" value="#0b2a4a" onchange="rteCor(this.value)" title="Cor da fonte">${b('mark',ic('marker'),'Marca-texto (liga/desliga)','fmt-hl')}</div>
-        <div class="fmt-group">${b('insertUnorderedList',ic('ul'),'Lista com marcadores')}${b('insertOrderedList','1.','Lista numerada')}${b('check',ic('check'),'Checklist')}</div>
+        <div class="fmt-group">${b('insertUnorderedList',ic('ul'),'Lista com marcadores')}${b('insertOrderedList','1.','Lista numerada')}</div>
         <div class="fmt-group">${al('justifyLeft','M1 1h12M1 4.5h8M1 8h12M1 11.5h8','Alinhar à esquerda')}${al('justifyCenter','M1 1h12M3 4.5h8M1 8h12M3 11.5h8','Centralizar')}${al('justifyRight','M1 1h12M5 4.5h8M1 8h12M5 11.5h8','Alinhar à direita')}</div>
         <div class="fmt-group">${b('createLink',ic('link'),'Inserir link')}${b('removeFormat','Tx','Limpar formatação')}${b('undo','↶','Desfazer')}${b('redo','↷','Refazer')}</div>
     </div>`;
@@ -3666,7 +3870,7 @@ function renderQuadroCard(ev){
     const dt = ev.dataInicio ? `<div class="qdate">${ic('calendar', 13)}${fmtBR(ev.dataInicio)}${ev.dataFim && ev.dataFim !== ev.dataInicio ? ' → ' + fmtBR(ev.dataFim) : ''}</div>` : '';
     return `<div class="event-chip qcard" style="${cardCss(ev)}" draggable="true" data-event-id="${ev.id}"
                  ondragstart="onChipDragStart(event, ${ev.id}, null)" ondragend="onChipDragEnd(event)" onclick="abrirFormEvento(${ev.id})">
-                ${hdr}<span class="chip-title">${escapeHtml(ev.titulo)}</span>${desc}${dt}</div>`;
+                ${hdr}<span class="chip-title">${escapeHtml(ev.titulo)}</span>${desc}${dt}${checklistResumo(ev)}</div>`;
 }
 function onQuadroDrop(e, el){
     e.preventDefault(); e.stopPropagation(); el.classList.remove('drop-target');
@@ -3796,7 +4000,43 @@ document.addEventListener('mousedown', e => {
 });
 document.addEventListener('input', e => { const ed = e.target.closest && e.target.closest('.rte'); if(ed) mencaoVerificar(ed); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharPopDia(); });
-document.addEventListener('DOMContentLoaded', () => { const v = document.getElementById('viewContainer'); if(v) v.addEventListener('scroll', fecharPopDia); });
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('modalForm');
+    if(!form) return;
+    form.addEventListener('input', e => {
+        if(e.target.closest && e.target.closest('#formChecklistItems')){
+            const row = e.target.closest('.task-checklist-item');
+            if(row && e.target.classList.contains('check-text-input')) checklistPersistirSeEventoExistente();
+            return;
+        }
+        if(['formTitulo','formResponsavel','formArea','formDescricao','formTipo','formStatus','formComplexidade'].includes(e.target.id)){
+            sincronizarFormularioEmEdicao();
+        }
+    });
+    form.addEventListener('change', e => {
+        if(e.target.closest && e.target.closest('#formChecklistItems')){
+            const row = e.target.closest('.task-checklist-item');
+            if(row){
+                row.classList.toggle('done', !!(row.querySelector('input[type=checkbox]')?.checked));
+                checklistPersistirSeEventoExistente();
+            }
+            return;
+        }
+        if(['formResponsavel','formArea','formTipo','formStatus','formComplexidade'].includes(e.target.id)){
+            sincronizarFormularioEmEdicao();
+        }
+        // Datas e o modo isolado são aplicados de forma estrutural ao fechar o cartão.
+        // Isso evita criar/remover várias tarefas enquanto o usuário ainda está editando.
+    });
+    form.addEventListener('click', e => {
+        const del = e.target.closest && e.target.closest('.check-delete');
+        if(del){
+            e.preventDefault();
+            const row = del.closest('.task-checklist-item');
+            if(row) removerChecklistItem(row.dataset.checkId);
+        }
+    });
+});
 
 /* @menções: digite @ e escolha o responsável */
 let mencaoSel = 0, mencaoLista = [], mencaoAlvo = null;
