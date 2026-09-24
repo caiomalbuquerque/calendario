@@ -141,7 +141,9 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 70,
-      "checklist": []
+      "checklist": [],
+      "descricaoHtml": "",
+      "complexidade": ""
     },
     {
       "id": 18,
@@ -206,19 +208,6 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 10,
-      "checklist": []
-    },
-    {
-      "id": 23,
-      "dataInicio": "",
-      "dataFim": "",
-      "titulo": "Agrupar exames de imagem pelo nome do exame",
-      "responsavel": "Caio Albuquerque",
-      "area": "Planejamento Estratégico",
-      "descricao": "",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 100,
       "checklist": []
     },
     {
@@ -518,13 +507,71 @@
       "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
       "responsavel": "Caio Albuquerque",
       "area": "Planejamento Estratégico",
-      "descricao": "Incluir bases do multiatendimentoIncluir bases da ouvidoriaImportar visuais do painel do multiatendimentoImportar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico @Lisiane Soares  Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidadesIncluir categoria de profissionais no pagamento por folha: @Jefferson Souza irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
-      "descricaoHtml": "<div class=\"chk\">Incluir bases do multiatendimento</div><div class=\"chk\">Incluir bases da ouvidoria</div><div class=\"chk\">Importar visuais do painel do multiatendimento</div><div class=\"chk\">Importar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico <span class=\"mention\" data-resp=\"Lisiane Soares\" style=\"background-color:#9c27b033\">@Lisiane Soares</span></div><div class=\"chk\"> &nbsp;Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades</div><div class=\"chk\">Incluir categoria de profissionais no pagamento por folha: <span class=\"mention\" data-resp=\"Jefferson Souza\" style=\"background-color:#d2d52033\">@Jefferson Souza</span>&nbsp;irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico</div>",
+      "descricao": "",
+      "descricaoHtml": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "complexidade": "alta",
       "ordem": 20,
-      "checklist": []
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico @Lisiane Soares",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: @Jefferson Souza irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Setup de Sala: HMA",
+      "responsavel": "Caio Albuquerque",
+      "area": "SAS",
+      "descricao": "Aline solicitou tempo de início e fim de higienização de sala",
+      "descricaoHtml": "Aline solicitou tempo de início e fim de higienização de sala",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "",
+      "checklist": [],
+      "ordem": 520
     }
   ],
   "config": {
