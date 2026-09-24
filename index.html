@@ -938,6 +938,47 @@
         .row2.row3 .field:last-child { grid-column: 1 / -1; }
         #popDia { width: min(300px, 100% - 16px); }
     }
+        /* ===== Responsável do item do checklist ===== */
+    .check-resp-btn {
+        width: 26px; height: 26px; padding: 0;
+        border: 1px solid var(--border-color-strong); border-radius: 50%;
+        background: var(--bg-panel-alt); cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 700; color: var(--text-muted);
+        flex-shrink: 0;
+    }
+    .check-resp-btn:hover { border-color: var(--secondary); }
+    .check-resp-btn .resp-dot-inner {
+        width: 16px; height: 16px; border-radius: 50%;
+        border: 1px solid rgba(0,0,0,.15); display: block;
+    }
+    .checklist-resp-menu {
+        position: fixed; z-index: 3600; min-width: 190px; max-height: 260px; overflow-y: auto;
+        padding: 5px; background: var(--bg-container); border: 1px solid var(--border-color-strong);
+        border-radius: var(--radius); box-shadow: var(--shadow); font-size: 13px; font-family: var(--font-body);
+    }
+    .checklist-resp-menu .ctx-opt {
+        display: flex; align-items: center; gap: 8px;
+        padding: 7px 10px; border-radius: 6px; cursor: pointer; color: var(--text-color);
+    }
+    .checklist-resp-menu .ctx-opt:hover { background: var(--bg-panel-dark); }
+    .checklist-resp-menu .resp-dot {
+        width: 12px; height: 12px; border-radius: 50%;
+        border: 1px solid rgba(0,0,0,.15); flex-shrink: 0;
+    }
+    .checklist-resp-menu .resp-empty { width: 12px; text-align: center; color: var(--text-muted); }
+    .checklist-resp-menu .sem-resp { color: var(--text-muted); padding: 8px 10px; font-size: 12px; }
+
+    /* Grid atualizado do checklist (com responsável) */
+    .task-checklist-item { grid-template-columns: 16px 20px minmax(0, 1fr) 145px 28px 30px; }
+
+    @media (max-width: 620px) {
+        .task-checklist-item { grid-template-columns: 16px 20px minmax(0, 1fr) 28px 30px; }
+        .task-checklist-item .check-date { grid-column: 3 / 4; grid-row: 2 / 3; margin-top: 4px; }
+        .task-checklist-item .check-resp-btn { grid-column: 4 / 5; grid-row: 1 / 2; }
+        .task-checklist-item .check-delete { grid-column: 5 / 6; grid-row: 1 / span 2; }
+        .check-handle { grid-row: 1 / span 2; }
+    }
 </style>
 </head>
 <body>
@@ -979,6 +1020,7 @@
         <select id="filterStatus" onchange="aplicarFiltros()"></select>
         <select id="filterResp" onchange="aplicarFiltros()"></select>
         <select id="filterArea" onchange="aplicarFiltros()"></select>
+        <select id="filterComplexidade" onchange="aplicarFiltros()"></select>
         <button class="btn btn-mini" style="background:var(--filter-text);color:var(--filter-bg);" onclick="limparFiltros()">Limpar</button>
         <span class="count" id="filterCount"></span>
         <div class="datenav" id="dateNav">
@@ -1361,7 +1403,7 @@ let currentDate = new Date();
 let view = 'mes';
 let diaSelecionado = null;
 let authToken = sessionStorage.getItem(TOKEN_KEY) || '';
-let filtros = { tipo:'', status:'', responsavel:'', area:'' };
+let filtros = { tipo:'', status:'', responsavel:'', area:'', complexidade:'' };
 let dragState = { eventId: null, sourceDay: null };
 let backgroundsDisponiveis = [];
 let backgroundsCarregados = false;
@@ -2160,28 +2202,32 @@ function popularFiltros(){
     const fs = document.getElementById('filterStatus');
     const fr = document.getElementById('filterResp');
     const fa = document.getElementById('filterArea');
+    const fc = document.getElementById('filterComplexidade');
     ft.innerHTML = '<option value="">Tipo: todos</option>' + (data.config.tipos||[]).map(t=>`<option value="${escapeHtml(t.id)}">${escapeHtml(t.label)}</option>`).join('');
     fs.innerHTML = '<option value="">Status: todos</option>' + (data.config.status||[]).map(s=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.label)}</option>`).join('');
     fr.innerHTML = '<option value="">Resp: todos</option>' + (data.config.responsaveis||[]).map(r=>`<option value="${escapeHtml(r.label)}">${escapeHtml(r.label)}</option>`).join('');
     fa.innerHTML = '<option value="">Área: todas</option>' + (data.config.areas||[]).map(a=>`<option value="${escapeHtml(a.label)}">${escapeHtml(a.label)}</option>`).join('');
-    ft.value = filtros.tipo; fs.value = filtros.status; fr.value = filtros.responsavel; fa.value = filtros.area;
+    fc.innerHTML = '<option value="">Complexidade: todas</option>' + COMPLEXIDADES.map(c=>`<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`).join('');
+    ft.value = filtros.tipo; fs.value = filtros.status; fr.value = filtros.responsavel; fa.value = filtros.area; fc.value = filtros.complexidade;
 }
 function aplicarFiltros(){
     filtros.tipo = document.getElementById('filterTipo').value;
     filtros.status = document.getElementById('filterStatus').value;
     filtros.responsavel = document.getElementById('filterResp').value;
     filtros.area = document.getElementById('filterArea').value;
+    filtros.complexidade = document.getElementById('filterComplexidade').value;
     render();
 }
-function limparFiltros(){ filtros = {tipo:'',status:'',responsavel:'',area:''}; popularFiltros(); render(); }
+function limparFiltros(){ filtros = {tipo:'',status:'',responsavel:'',area:'',complexidade:''}; popularFiltros(); render(); }
 function passaFiltro(ev){
     if(filtros.tipo && ev.tipo !== filtros.tipo) return false;
     if(filtros.status && ev.status !== filtros.status) return false;
     if(filtros.responsavel && ev.responsavel !== filtros.responsavel) return false;
     if(filtros.area && ev.area !== filtros.area) return false;
+    if(filtros.complexidade && (ev.complexidade || '') !== filtros.complexidade) return false;
     return true;
 }
-function temFiltroAtivo(){ return filtros.tipo || filtros.status || filtros.responsavel || filtros.area; }
+function temFiltroAtivo(){ return filtros.tipo || filtros.status || filtros.responsavel || filtros.area || filtros.complexidade; }
 
 /* ============================================================
    NAVEGAÇÃO
@@ -3510,7 +3556,8 @@ function clonarChecklist(lista){
         id: item && item.id ? String(item.id) : novoChecklistId(),
         texto: item && item.texto != null ? String(item.texto) : '',
         concluido: !!(item && item.concluido),
-        data: item && item.data ? String(item.data) : ''
+        data: item && item.data ? String(item.data) : '',
+        responsavel: item && item.responsavel ? String(item.responsavel) : ''
     }));
 }
 function checklistPct(lista){
@@ -3535,11 +3582,13 @@ function checklistSincronizarDoDOM(){
         const texto = row.querySelector('.check-text-input');
         const dataEl = row.querySelector('.check-date');
         const cb = row.querySelector('input[type=checkbox]');
+        const respBtn = row.querySelector('.check-resp-btn');
         itens.push({
             id: row.dataset.checkId || novoChecklistId(),
             texto: texto ? texto.value : '',
             concluido: !!(cb && cb.checked),
-            data: dataEl ? dataEl.value : ''
+            data: dataEl ? dataEl.value : '',
+            responsavel: respBtn ? (respBtn.dataset.resp || '') : ''
         });
     });
     formChecklistDraft = itens;
@@ -3563,20 +3612,28 @@ function renderChecklistForm(){
         checklistAtualizarProgresso();
         return;
     }
-    root.innerHTML = itens.map(item => `
+    root.innerHTML = itens.map(item => {
+        const cor = item.responsavel ? getRespCor(item.responsavel) : '';
+        const respHtml = item.responsavel
+            ? `<span class="resp-dot-inner" style="background:${escapeHtml(cor)}"></span>`
+            : '<span>?</span>';
+        const respTitle = item.responsavel ? `Responsável: ${escapeHtml(item.responsavel)}` : 'Sem responsável';
+        return `
         <div class="task-checklist-item ${item.concluido ? 'done' : ''}" data-check-id="${escapeHtml(item.id)}">
             <span class="check-handle" title="Arraste para reordenar">${ic('grip', 14)}</span>
             <input type="checkbox" ${item.concluido ? 'checked' : ''} aria-label="Concluir item do checklist">
             <textarea class="check-text-input" rows="1" placeholder="Item do checklist">${escapeHtml(item.texto)}</textarea>
             <input type="date" class="check-date" value="${escapeHtml(item.data || '')}" title="Data do item">
+            <button type="button" class="check-resp-btn" data-resp="${escapeHtml(item.responsavel || '')}" title="${respTitle}" onclick="checklistAbrirMenuResp(event, '${escapeHtml(item.id)}')">${respHtml}</button>
             <button type="button" class="check-delete" title="Excluir item">×</button>
-        </div>`).join('');
+        </div>`;
+    }).join('');
     checklistAtualizarProgresso();
 }
 function adicionarChecklistItem(){
     secaoExpandir('check');
     checklistSincronizarDoDOM();
-    formChecklistDraft.push({ id: novoChecklistId(), texto: '', concluido: false, data: '' });
+    formChecklistDraft.push({ id: novoChecklistId(), texto: '', concluido: false, data: '', responsavel: '' });
     renderChecklistForm();
     checklistPersistirSeEventoExistente();
     setTimeout(() => {
@@ -3659,6 +3716,7 @@ function abrirFormEvento(id, diaForcado){
     toggleSemData();
     atualizarToggleIsolado();
 
+    formSecEventKey = ev ? 'ev_' + ev.id : '__novo__';
     secoesAplicar();
     document.getElementById('modalForm').classList.add('active');
     checklistAjustarTodos();
@@ -3899,7 +3957,62 @@ function rteEstilo(cmd, v){
 }
 function rteSel(cmd, sel){ const v = sel.value; sel.selectedIndex = 0; if(v) rteEstilo(cmd, v); }
 function rteCor(v){ rteEstilo('foreColor', v); }
-function rtePaste(e){ e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain')); }
+function rtePaste(e){
+    const cd = e.clipboardData || window.clipboardData;
+    if(!cd) return;
+
+    // 1) Imagem no clipboard (print de tela, cópia de imagem etc.)
+    const items = cd.items || [];
+    for(let i = 0; i < items.length; i++){
+        const item = items[i];
+        if(item.type && item.type.indexOf('image/') === 0){
+            e.preventDefault();
+            const file = item.getAsFile();
+            if(file) rteInserirImagem(file);
+            return;
+        }
+    }
+
+    // 2) Arquivos colados (Ctrl+C de arquivo no explorador)
+    const files = cd.files;
+    if(files && files.length > 0){
+        let handled = false;
+        for(let i = 0; i < files.length; i++){
+            const f = files[i];
+            if(f.type && f.type.indexOf('image/') === 0){
+                e.preventDefault();
+                rteInserirImagem(f);
+                handled = true;
+            }
+        }
+        if(handled) return;
+    }
+
+    // 3) Texto puro
+    e.preventDefault();
+    document.execCommand('insertText', false, cd.getData('text/plain'));
+}
+
+async function rteInserirImagem(file){
+    const ed = edAtivo();
+    if(!ed) return;
+    // Imagens muito grandes (> 1MB) são avisadas, mas seguem embutidas.
+    if(file.size > 1024 * 1024){
+        if(!confirm(`Imagem grande (${Math.round(file.size/1024)} KB). Isso vai aumentar o tamanho do arquivo salvo no GitHub. Continuar?`)) return;
+    }
+    const reader = new FileReader();
+    reader.onload = ev => {
+        ed.focus();
+        if(rteRange){
+            const s = getSelection();
+            s.removeAllRanges();
+            s.addRange(rteRange);
+        }
+        document.execCommand('insertHTML', false, `<img src="${ev.target.result}" alt="${escapeHtml(file.name || 'Imagem colada')}" style="max-width:100%;">`);
+        rteMudou(ed);
+    };
+    reader.readAsDataURL(file);
+}
 
 function fmt(cmd, value){ const ed = edAtivo(); if(!ed) return; ed.focus(); document.execCommand(cmd, false, value || null); rteMudou(ed); }
 
@@ -4314,7 +4427,21 @@ function novoEventoNoDia(key){ diaSelecionado = key; abrirFormEvento(null, key);
 /* ============================================================
    DESCRIÇÃO / CHECKLIST: recolher, reordenar e importar linhas
 ============================================================ */
-function secoesLer(){ try { return JSON.parse(localStorage.getItem('sharkbite_secoes') || '{}') || {}; } catch(e){ return {}; } }
+let formSecEventKey = '__novo__';
+    
+function secoesLer(){
+    try {
+        const all = JSON.parse(localStorage.getItem('sharkbite_secoes') || '{}') || {};
+        return all[formSecEventKey] || {};
+    } catch(e){ return {}; }
+}
+function secoesSalvar(state){
+    try {
+        const all = JSON.parse(localStorage.getItem('sharkbite_secoes') || '{}') || {};
+        all[formSecEventKey] = state;
+        localStorage.setItem('sharkbite_secoes', JSON.stringify(all));
+    } catch(e){}
+}
 function secoesAplicar(){
     const s = secoesLer();
     [['desc', 'secDesc'], ['check', 'formChecklist']].forEach(([k, id]) => {
@@ -4327,11 +4454,10 @@ function secoesAplicar(){
 }
 function toggleSecao(nome){
     const s = secoesLer(); s[nome] = !s[nome];
-    try { localStorage.setItem('sharkbite_secoes', JSON.stringify(s)); } catch(e){}
+    secoesSalvar(s);
     secoesAplicar();
 }
 function secaoExpandir(nome){ if(secoesLer()[nome]) toggleSecao(nome); }
-
 /* cada linha vira um item; remove marcadores comuns (-, *, •, 1., 1), [ ]) */
 function linhasParaChecklist(texto){
     return String(texto || '').split(/\r?\n/)
@@ -4340,7 +4466,7 @@ function linhasParaChecklist(texto){
 }
 function checklistAdicionarTextos(textos, pos){
     checklistSincronizarDoDOM();
-    const novos = textos.map(t => ({ id: novoChecklistId(), texto: t, concluido: false, data: '' }));
+    const novos = textos.map(t => ({ id: novoChecklistId(), texto: t, concluido: false, data: '', responsavel: '' }));
     if(pos == null || pos < 0 || pos > formChecklistDraft.length) formChecklistDraft.push(...novos);
     else formChecklistDraft.splice(pos, 0, ...novos);
     renderChecklistForm();
@@ -4442,7 +4568,51 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { const n = root.querySelectorAll('.task-checklist-item')[idx + 1]; const t = n && n.querySelector('.check-text-input'); if(t) t.focus(); }, 0);
     });
 });
+/* Menu de responsável para o item do checklist */
+function checklistAbrirMenuResp(e, itemId){
+    e.stopPropagation();
+    fecharMenuRespChecklist();
+    const resps = data.config.responsaveis || [];
+    const menu = document.createElement('div');
+    menu.id = 'checklistRespMenu';
+    menu.className = 'checklist-resp-menu';
+    menu.innerHTML = `
+        <div class="ctx-opt" onclick="checklistSetResp('${itemId}', '')">
+            <span class="resp-empty">—</span> Sem responsável
+        </div>
+        ${resps.length
+            ? resps.map(r => `<div class="ctx-opt" onclick="checklistSetResp('${itemId}', '${escapeHtml(r.label).replace(/'/g, "\\'")}')">
+                <span class="resp-dot" style="background:${escapeHtml(r.cor)}"></span>${escapeHtml(r.label)}
+              </div>`).join('')
+            : '<div class="sem-resp">Nenhum responsável cadastrado.</div>'}
+    `;
+    document.body.appendChild(menu);
+    const rc = e.currentTarget.getBoundingClientRect();
+    menu.style.left = Math.max(8, Math.min(rc.left, innerWidth - menu.offsetWidth - 8)) + 'px';
+    menu.style.top = Math.min(rc.bottom + 4, innerHeight - menu.offsetHeight - 8) + 'px';
+}
 
+function fecharMenuRespChecklist(){
+    const m = document.getElementById('checklistRespMenu');
+    if(m) m.remove();
+}
+
+function checklistSetResp(itemId, responsavel){
+    checklistSincronizarDoDOM();
+    const item = formChecklistDraft.find(i => i.id === itemId);
+    if(!item) return;
+    item.responsavel = responsavel;
+    fecharMenuRespChecklist();
+    renderChecklistForm();
+    checklistPersistirSeEventoExistente();
+    checklistAjustarTodos();
+}
+
+document.addEventListener('mousedown', e => {
+    if(!e.target.closest || !e.target.closest('#checklistRespMenu, .check-resp-btn')) fecharMenuRespChecklist();
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharMenuRespChecklist(); });
+window.addEventListener('scroll', fecharMenuRespChecklist, true);
 /* Celular: "Filtros ▸" abre/fecha os filtros */
 document.addEventListener('DOMContentLoaded', () => {
     const bar = document.getElementById('filtersBar'), l = bar && bar.querySelector('.lbl');
