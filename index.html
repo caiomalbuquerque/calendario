@@ -838,6 +838,15 @@
         .task-checklist-item .check-delete { grid-column: 4 / 5; grid-row: 1 / span 2; }
         .check-handle { grid-row: 1 / span 2; }
     }
+
+    /* ===== Largura fixa do cartão + texto do checklist com quebra de linha ===== */
+    #modalForm .modal { width: min(760px, 100% - 16px); }
+    .task-checklist-item { align-items: start; }
+    .task-checklist-item input[type=checkbox], .task-checklist-item .check-handle { margin-top: 8px; }
+    .task-checklist-item .check-handle { height: 16px; }
+    .task-checklist-item .check-text-input { display: block; resize: none; overflow: hidden; line-height: 1.35; min-height: 34px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .task-checklist-item .check-date { margin-top: 1px; }
+    .task-checklist-item .check-delete { margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -3467,7 +3476,7 @@ function renderChecklistForm(){
         <div class="task-checklist-item ${item.concluido ? 'done' : ''}" data-check-id="${escapeHtml(item.id)}">
             <span class="check-handle" title="Arraste para reordenar">${ic('grip', 14)}</span>
             <input type="checkbox" ${item.concluido ? 'checked' : ''} aria-label="Concluir item do checklist">
-            <input type="text" class="check-text-input" value="${escapeHtml(item.texto)}" placeholder="Item do checklist">
+            <textarea class="check-text-input" rows="1" placeholder="Item do checklist">${escapeHtml(item.texto)}</textarea>
             <input type="date" class="check-date" value="${escapeHtml(item.data || '')}" title="Data do item">
             <button type="button" class="check-delete" title="Excluir item">×</button>
         </div>`).join('');
@@ -3561,6 +3570,7 @@ function abrirFormEvento(id, diaForcado){
 
     secoesAplicar();
     document.getElementById('modalForm').classList.add('active');
+    checklistAjustarTodos();
     setTimeout(()=>document.getElementById('formTitulo').focus(), 100);
 }
 function preencherSelect(id, opcoes, valorAtual){
@@ -4306,6 +4316,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const idx = [...root.querySelectorAll('.task-checklist-item')].indexOf(row);
         if(!inp.value.trim()) inp.value = linhas.shift();
         checklistAdicionarTextos(linhas, idx + 1);
+    });
+});
+
+/* ============================================================
+   CHECKLIST: texto com quebra de linha (auto-altura) e Enter cria novo item
+============================================================ */
+function checklistAjustar(el){
+    if(!el || !el.offsetParent) return;   // oculto: ajusta quando aparecer
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight + (el.offsetHeight - el.clientHeight)) + 'px';
+}
+function checklistAjustarTodos(){
+    requestAnimationFrame(() => document.querySelectorAll('#formChecklistItems .check-text-input').forEach(checklistAjustar));
+}
+(function(){
+    const _render = renderChecklistForm;
+    renderChecklistForm = function(){ _render(); checklistAjustarTodos(); };
+    const _secoes = secoesAplicar;
+    secoesAplicar = function(){ _secoes(); checklistAjustarTodos(); };
+})();
+window.addEventListener('resize', checklistAjustarTodos);
+document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('formChecklistItems'); if(!root) return;
+    root.addEventListener('input', e => { if(e.target.classList && e.target.classList.contains('check-text-input')) checklistAjustar(e.target); });
+    root.addEventListener('keydown', e => {
+        const inp = e.target;
+        if(!inp.classList || !inp.classList.contains('check-text-input')) return;
+        if(e.key !== 'Enter' || e.isComposing) return;
+        e.preventDefault();                       // Enter = novo item logo abaixo
+        const rows = [...root.querySelectorAll('.task-checklist-item')];
+        const idx = rows.indexOf(inp.closest('.task-checklist-item'));
+        checklistAdicionarTextos([''], idx + 1);
+        setTimeout(() => { const n = root.querySelectorAll('.task-checklist-item')[idx + 1]; const t = n && n.querySelector('.check-text-input'); if(t) t.focus(); }, 0);
     });
 });
 </script>
