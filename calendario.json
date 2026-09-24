@@ -742,15 +742,15 @@
     ],
     "temaAtivo": "claro",
     "autosave": {
-      "ativo": true,
+      "ativo": false,
       "debounceMs": 30000,
       "dragImediato": false
     },
     "tamanhos": {
       "semana": 100,
-      "mes": 70
+      "mes": 85
     },
-    "linhasMes": 4
+    "linhasMes": 2
   },
   "notas": [
     {
