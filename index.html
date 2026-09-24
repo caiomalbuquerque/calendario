@@ -758,6 +758,21 @@
 
     /* respiro entre o cabeçalho e a barra de filtros */
     .appbar + .filters { margin-top: 16px; }
+
+    /* ===== Complexidade, legenda e menu rápido ===== */
+    .row2.row3 { grid-template-columns: repeat(3, 1fr); }
+    .lg-bar { display: inline-block; width: 4px; height: 14px; border-radius: 2px; }
+    .lg-sw { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid rgba(0,0,0,.15); }
+    #ctxRapido { position: fixed; z-index: 3600; min-width: 190px; padding: 5px; background: var(--bg-container); border: 1px solid var(--border-color-strong); border-radius: var(--radius); box-shadow: var(--shadow); font-size: 14px; color: var(--text-color); }
+    .ctx-item, .ctx-opt { position: relative; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+    .ctx-item:hover, .ctx-opt:hover { background: var(--bg-panel-dark); }
+    .ctx-arrow { margin-left: auto; padding-left: 14px; color: var(--text-muted); }
+    .ctx-sub { display: none; position: absolute; left: 100%; top: -5px; min-width: 190px; max-height: 60vh; overflow-y: auto; padding: 5px; background: var(--bg-container); border: 1px solid var(--border-color-strong); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .ctx-item:hover > .ctx-sub { display: block; }
+    #ctxRapido.flip .ctx-sub { left: auto; right: 100%; }
+    .ctx-opt.atual { font-weight: 700; }
+    .ctx-opt.atual::after { content: ''; margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); }
+    .ctx-sep { height: 1px; background: var(--border-color); margin: 4px 2px; }
 </style>
 </head>
 <body>
@@ -859,9 +874,10 @@
         <div class="field"><label>Descrição (opcional)</label>
             <div class="rte-wrap"><div id="rteBarraForm"></div>
             <div id="formDescricao" class="notas-editor rte rte-form" contenteditable="true" data-placeholder="Detalhes, anotações ou checklist…" onkeydown="rteKeydown(event)" onpaste="rtePaste(event)" onkeyup="fmtAtualizarEstado()" onmouseup="fmtAtualizarEstado()"></div></div></div>
-        <div class="row2">
+        <div class="row2 row3">
             <div class="field"><label>Tipo</label><select id="formTipo"></select></div>
             <div class="field"><label>Status</label><select id="formStatus"></select></div>
+            <div class="field"><label>Complexidade</label><select id="formComplexidade"></select></div>
         </div>
         <div class="actions">
             <button class="btn btn-danger left" id="btnExcluirForm" style="display:none;" onclick="excluirEventoForm()">Excluir</button>
@@ -1198,7 +1214,7 @@ function slug(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u03
 function hexToRgb(hex){ const m = String(hex).match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i); if(!m) return {r:128,g:128,b:128}; return {r:parseInt(m[1],16),g:parseInt(m[2],16),b:parseInt(m[3],16)}; }
 function mix(a,b,t){ return {r:Math.round(a.r+(b.r-a.r)*t), g:Math.round(a.g+(b.g-a.g)*t), b:Math.round(a.b+(b.b-a.b)*t)}; }
 function rgbToHex(c){ return '#'+[c.r,c.g,c.b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
-function tipoCss(cor){ const base = hexToRgb(cor||'#888'); const bg = rgbToHex(mix(base,{r:255,g:255,b:255},.85)); const txt = rgbToHex(mix(base,{r:0,g:0,b:0},.45)); return `background:${bg};border-left-color:${cor||'#888'};color:${txt};`; }
+
 function getTipo(id){ return (data.config.tipos||[]).find(t=>t.id===id) || {id, label:id||'Sem tipo', cor:'#888'}; }
 function getStatus(id){ if(!id) return null; return (data.config.status||[]).find(s=>s.id===id) || {id, label:id, cor:'#888'}; }
 function corAutomatica(label){ let h = 0; for(let i = 0; i < label.length; i++) h = (h * 31 + label.charCodeAt(i)) >>> 0; return PALETA[h % PALETA.length]; }
@@ -2060,9 +2076,10 @@ function renderChipHeaderPontos(ev, isContinuation){
     const dot = (cor, tit) => `<span class="dot-badge" style="background:${escapeHtml(cor)}" title="${escapeHtml(tit)}"></span>`;
     const parts = [];
     if(isContinuation) parts.push('<span class="continuation-mark" title="Continuação">↳</span>');
-    if(ev.status){ const s = getStatus(ev.status); if(s) parts.push(dot(s.cor, 'Status: ' + s.label)); }
-    if(ev.responsavel) parts.push(dot(getRespCor(ev.responsavel), 'Responsável: ' + ev.responsavel));
     if(ev.area) parts.push(dot(getAreaCor(ev.area), 'Área: ' + ev.area));
+    if(ev.responsavel) parts.push(dot(getRespCor(ev.responsavel), 'Responsável: ' + ev.responsavel));
+    const cx = getComplexidade(ev.complexidade);
+    if(cx) parts.push(dot(cx.cor, 'Complexidade: ' + cx.label));
     return parts.length ? `<div class="chip-header">${parts.join('')}</div>` : '';
 }
 
@@ -2173,7 +2190,7 @@ function renderDayCard(ev, position, dayKey){
     const isCont = isMulti && position !== 'start' && position !== 'single';
     const header = renderChipHeader(ev, isCont);
     const periodo = isMulti ? `<div class="dc-meta">${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</div>` : '';
-    const desc = ev.descricao ? `<div class="dc-desc">${descHtml(ev)}</div>` : '';    return `<div class="day-card" style="${tipoCss(t.cor)}" draggable="true"
+    const desc = ev.descricao ? `<div class="dc-desc">${descHtml(ev)}</div>` : '';    return `<div class="day-card" style="${cardCss(ev)}" draggable="true"
                  data-event-id="${ev.id}" data-day="${dayKey}"
                  ondragstart="onChipDragStart(event, ${ev.id}, '${dayKey}')"
                  ondragend="onChipDragEnd(event)"
@@ -2994,7 +3011,7 @@ function renderInboxCard(ev){
     const t = getTipo(ev.tipo);
     const header = renderChipHeader(ev, false);
     const desc = ev.descricao ? `<div class="dc-desc">${descHtml(ev)}</div>` : '';
-    return `<div class="day-card" style="${tipoCss(t.cor)}" draggable="true"
+    return `<div class="day-card" style="${cardCss(ev)}" draggable="true"
                  data-event-id="${ev.id}" data-inbox="1"
                  ondragstart="onChipDragStart(event, ${ev.id}, null)"
                  ondragend="onChipDragEnd(event)"
@@ -3041,7 +3058,7 @@ function renderChip(ev, position, dayKey, expandido){
 
     // === Modo expandido (view Lista) com ações ===
     if(expandido){
-        return `<div class="event-chip event-chip-expandido" style="${tipoCss(t.cor)}" draggable="true"
+        return `<div class="event-chip event-chip-expandido" style="${cardCss(ev)}" draggable="true"
                      data-event-id="${ev.id}" data-day="${dayKey}"
                      title="${escapeHtml(tooltip)}"
                      ondragstart="onChipDragStart(event, ${ev.id}, '${dayKey}')"
@@ -3061,7 +3078,7 @@ function renderChip(ev, position, dayKey, expandido){
     }
 
     // === Modo compacto (Mês / Semana) — sem ações, apenas clique abre o form ===
-    return `<div class="event-chip" style="${tipoCss(t.cor)}" draggable="true"
+    return `<div class="event-chip" style="${cardCss(ev)}" draggable="true"
                  data-event-id="${ev.id}" data-day="${dayKey}"
                  title="${escapeHtml(tooltip)}"
                  ondragstart="onChipDragStart(event, ${ev.id}, '${dayKey}')"
@@ -3073,12 +3090,7 @@ function renderChip(ev, position, dayKey, expandido){
             </div>`;
 }
 
-function renderLegendMes(){
-    const l = document.getElementById('legend');
-    const tipos = (data.config.tipos || []).map(t => `<div class="item"><div class="dot" style="background:${rgbToHex(mix(hexToRgb(t.cor), {r:255,g:255,b:255}, .85))};border-left-color:${escapeHtml(t.cor)}"></div>${escapeHtml(t.label)}</div>`).join('');
-    const grupo = (nome, arr) => arr.length ? `<div class="sep"></div><span class="lg-t">${nome}</span>` + arr.map(x => `<div class="item"><span class="dot-badge" style="background:${escapeHtml(x.cor)}"></span>${escapeHtml(x.label)}</div>`).join('') : '';
-    l.innerHTML = (tipos ? '<span class="lg-t">Tipo</span>' + tipos : '') + grupo('Status', data.config.status || []);
-}
+
 
 /* ============================================================
    DRAG & DROP
@@ -3222,7 +3234,7 @@ function renderListaDia(){
         const t = getTipo(ev.tipo);
         const periodo = ev.dataInicio !== ev.dataFim ? `<span class="periodo">${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</span>` : '';
         const header = renderChipHeader(ev, false);
-        return `<div class="event-row" style="${tipoCss(t.cor)}">
+        return `<div class="event-row" style="${cardCss(ev)}" data-event-id="${ev.id}">
                     <div class="info">
                         <span class="tipo-label">${escapeHtml(t.label)}</span>
                         ${header}
@@ -3304,6 +3316,7 @@ function abrirFormEvento(id, diaForcado){
     preencherSelect('formTipo', data.config.tipos.map(t=>({value:t.id,label:t.label})), ev ? ev.tipo : tipoDefault);
     const statusDefault = ev ? (ev.status || '') : ((data.config.status[0] && data.config.status[0].id) || '');
     preencherSelect('formStatus', data.config.status.map(s=>({value:s.id,label:s.label})), statusDefault);
+    preencherSelect('formComplexidade', [{value:'',label:'Não definida'}].concat(COMPLEXIDADES.map(c=>({value:c.id,label:c.label}))), ev ? (ev.complexidade || '') : '');
 
     const chk = document.getElementById('formIsolado');
     if(chk) chk.checked = false;
@@ -3337,6 +3350,7 @@ function salvarEvento(){
     const descricaoHtml = descricao ? sanitizarHtml(_ed.innerHTML).trim() : '';
     const tipo = document.getElementById('formTipo').value;
     const status = document.getElementById('formStatus').value;
+    const complexidade = document.getElementById('formComplexidade').value;
     const id = document.getElementById('formId').value;
     const isolado = document.getElementById('formIsolado').checked;
 
@@ -3351,7 +3365,7 @@ function salvarEvento(){
             const d = addDays(dataInicio, i);
             data.eventos.push({
                 id: nextId++, dataInicio: d, dataFim: d,
-                titulo, responsavel, area, descricao, descricaoHtml, tipo, status,
+                titulo, responsavel, area, descricao, descricaoHtml, tipo, status, complexidade,
                 ordem: nextId*10
             });
         }
@@ -3367,7 +3381,7 @@ function salvarEvento(){
                 ev.dataInicio = semData ? '' : dataInicio;
                 ev.dataFim    = semData ? '' : dataFim;
                 ev.titulo = titulo; ev.responsavel = responsavel;
-                ev.area = area; ev.descricao = descricao; ev.descricaoHtml = descricaoHtml;
+                ev.area = area; ev.descricao = descricao; ev.descricaoHtml = descricaoHtml; ev.complexidade = complexidade;
                 ev.tipo = tipo; ev.status = status;
             }
         }
@@ -3379,7 +3393,7 @@ function salvarEvento(){
                 id: nextId++,
                 dataInicio: semData ? '' : dataInicio,
                 dataFim:    semData ? '' : dataFim,
-                titulo, responsavel, area, descricao, descricaoHtml, tipo, status,
+                titulo, responsavel, area, descricao, descricaoHtml, tipo, status, complexidade,
                 ordem: nextId*10
             });
         }
@@ -3622,10 +3636,10 @@ function renderQuadro(){
 }
 function renderQuadroCard(ev){
     const t = getTipo(ev.tipo);
-    const hdr = renderChipHeader(Object.assign({}, ev, { status: '' }), false);
+    const hdr = renderChipHeader(ev, false);
     const desc = ev.descricao ? `<div class="qdesc">${escapeHtml(ev.descricao.slice(0, 90))}${ev.descricao.length > 90 ? '…' : ''}</div>` : '';
     const dt = ev.dataInicio ? `<div class="qdate">${ic('calendar', 13)}${fmtBR(ev.dataInicio)}${ev.dataFim && ev.dataFim !== ev.dataInicio ? ' → ' + fmtBR(ev.dataFim) : ''}</div>` : '';
-    return `<div class="event-chip qcard" style="${tipoCss(t.cor)}" draggable="true" data-event-id="${ev.id}"
+    return `<div class="event-chip qcard" style="${cardCss(ev)}" draggable="true" data-event-id="${ev.id}"
                  ondragstart="onChipDragStart(event, ${ev.id}, null)" ondragend="onChipDragEnd(event)" onclick="abrirFormEvento(${ev.id})">
                 ${hdr}<span class="chip-title">${escapeHtml(ev.titulo)}</span>${desc}${dt}</div>`;
 }
@@ -3678,29 +3692,15 @@ function resetTamanhos(){
 function renderChipHeaderNomes(ev, isContinuation){
     const parts = [];
     if(isContinuation) parts.push('<span class="continuation-mark" title="Continuação">↳</span>');
-    if(ev.status){
-        const s = getStatus(ev.status);
-        if(s) parts.push(`<span class="badge badge-status" style="${badgeStyle(s.cor)}" title="Status: ${escapeHtml(s.label)}"><span class="status-dot" style="background:${escapeHtml(s.cor)}"></span>${escapeHtml(s.label)}</span>`);
-    }
-    if(ev.responsavel){
-        const cor = getRespCor(ev.responsavel);
-        parts.push(`<span class="badge badge-resp" style="${badgeStyle(cor)}" title="Responsável: ${escapeHtml(ev.responsavel)}">@${escapeHtml(ev.responsavel)}</span>`);
-    }
-    if(ev.area){
-        const cor = getAreaCor(ev.area);
-        parts.push(`<span class="badge badge-area" style="${badgeStyle(cor)}" title="Área: ${escapeHtml(ev.area)}">${escapeHtml(ev.area)}</span>`);
-    }
-    if(parts.length === 0) return '';
-    return `<div class="chip-header">${parts.join('')}</div>`;
+    if(ev.area) parts.push(`<span class="badge badge-area" style="${badgeStyle(getAreaCor(ev.area))}" title="Área: ${escapeHtml(ev.area)}">${escapeHtml(ev.area)}</span>`);
+    if(ev.responsavel) parts.push(`<span class="badge badge-resp" style="${badgeStyle(getRespCor(ev.responsavel))}" title="Responsável: ${escapeHtml(ev.responsavel)}">@${escapeHtml(ev.responsavel)}</span>`);
+    const cx = getComplexidade(ev.complexidade);
+    if(cx) parts.push(`<span class="badge badge-cx" style="${badgeStyle(cx.cor)}" title="Complexidade: ${cx.label}">${cx.label}</span>`);
+    return parts.length ? `<div class="chip-header">${parts.join('')}</div>` : '';
 }
-function renderLegendPadrao(){
-    const l = document.getElementById('legend');
-    const tipos = (data.config.tipos||[]).map(t=>`<div class="item"><div class="dot" style="background:${rgbToHex(mix(hexToRgb(t.cor),{r:255,g:255,b:255},.85))};border-left-color:${escapeHtml(t.cor)}"></div>${escapeHtml(t.label)}</div>`).join('');
-    const status = (data.config.status||[]).map(s=>`<div class="item"><div class="dot" style="background:${rgbToHex(mix(hexToRgb(s.cor),{r:255,g:255,b:255},.85))};border-left-color:${escapeHtml(s.cor)}"></div>${escapeHtml(s.label)}</div>`).join('');
-    l.innerHTML = tipos + (tipos && status ? '<div class="sep"></div>' : '') + status;
-}
+
 function renderChipHeader(ev, isContinuation){ return view === 'mes' ? renderChipHeaderPontos(ev, isContinuation) : renderChipHeaderNomes(ev, isContinuation); }
-function renderLegend(){ return view === 'mes' ? renderLegendMes() : renderLegendPadrao(); }
+
 
 /* ============================================================
    CHECKLIST, MENÇÕES (@) E CAIXA DE EVENTOS DO DIA
@@ -3824,12 +3824,83 @@ function abrirPopDia(e, key){
     const tit = new Date(y, m - 1, d).toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
     const p = document.createElement('div'); p.id = 'popDia';
     p.innerHTML = `<div class="pop-h"><span>${escapeHtml(tit.charAt(0).toUpperCase() + tit.slice(1))}</span><button onclick="fecharPopDia()" title="Fechar">${ic('x', 16)}</button></div>
-        <div class="pop-list">${lista.map(({ ev }) => `<div class="event-chip pop-item" style="${tipoCss(getTipo(ev.tipo).cor)}" onclick="fecharPopDia(); abrirFormEvento(${ev.id})">${renderChipHeaderPontos(ev, false)}<span class="chip-title">${escapeHtml(ev.titulo)}</span></div>`).join('')}</div>
+        <div class="pop-list">${lista.map(({ ev }) => `<div class="event-chip pop-item" style="${cardCss(ev)}" data-event-id="${ev.id}" onclick="fecharPopDia(); abrirFormEvento(${ev.id})">${renderChipHeaderPontos(ev, false)}<span class="chip-title">${escapeHtml(ev.titulo)}</span></div>`).join('')}</div>
         <button class="pop-add" onclick="fecharPopDia(); abrirFormEvento(null, '${key}')">Novo evento neste dia</button>`;
     document.body.appendChild(p);
     const rc = e.currentTarget.getBoundingClientRect();
     p.style.left = Math.max(8, Math.min(rc.left + rc.width / 2 - 150, innerWidth - 308)) + 'px';
     p.style.top = (rc.bottom + 6 + p.offsetHeight > innerHeight ? Math.max(8, rc.top - 6 - p.offsetHeight) : rc.bottom + 6) + 'px';
+}
+
+/* ============================================================
+   COMPLEXIDADE, APARÊNCIA DO CARTÃO E MENU DE BOTÃO DIREITO
+============================================================ */
+const COMPLEXIDADES = [
+    { id: 'baixa', label: 'Baixa', cor: '#22a06b' },
+    { id: 'media', label: 'Média', cor: '#d9a300' },
+    { id: 'alta', label: 'Alta', cor: '#f07a1a' },
+    { id: 'critica', label: 'Crítica', cor: '#e03a3a' }
+];
+function getComplexidade(id){ return COMPLEXIDADES.find(c => c.id === id) || null; }
+function statusBg(cor){ return rgbToHex(mix(hexToRgb(cor || '#888'), { r: 255, g: 255, b: 255 }, .78)); }
+/* barra lateral = tipo; fundo = status */
+function cardCss(ev){
+    const t = getTipo(ev.tipo), s = getStatus(ev.status);
+    const bg = s ? statusBg(s.cor) : 'var(--bg-panel-alt)';
+    const txt = s ? rgbToHex(mix(hexToRgb(s.cor || '#888'), { r: 0, g: 0, b: 0 }, .55)) : 'var(--text-heading)';
+    return `background:${bg};border-left-color:${t.cor || '#888'};color:${txt};`;
+}
+function renderLegend(){
+    const l = document.getElementById('legend');
+    const tipos = (data.config.tipos || []).map(t => `<div class="item"><span class="lg-bar" style="background:${escapeHtml(t.cor)}"></span>${escapeHtml(t.label)}</div>`).join('');
+    const status = (data.config.status || []).map(s => `<div class="item"><span class="lg-sw" style="background:${statusBg(s.cor)}"></span>${escapeHtml(s.label)}</div>`).join('');
+    l.innerHTML = (tipos ? '<span class="lg-t">Tipo</span>' + tipos : '') + (status ? '<div class="sep"></div><span class="lg-t">Status</span>' + status : '');
+}
+
+let ctxOpcoes = {};
+document.addEventListener('contextmenu', e => {
+    const c = e.target.closest && e.target.closest('[data-event-id]');
+    if(!c || e.target.closest('.rte')) return;
+    e.preventDefault(); abrirMenuRapido(e, Number(c.dataset.eventId));
+});
+document.addEventListener('mousedown', e => { if(!e.target.closest || !e.target.closest('#ctxRapido')) fecharMenuRapido(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharMenuRapido(); });
+window.addEventListener('resize', fecharMenuRapido);
+function fecharMenuRapido(){ const m = document.getElementById('ctxRapido'); if(m) m.remove(); }
+function abrirMenuRapido(e, id){
+    const ev = data.eventos.find(x => x.id === id); if(!ev) return;
+    fecharMenuRapido();
+    const cfg = data.config;
+    ctxOpcoes = {
+        status: (cfg.status || []).map(s => ({ valor: s.id, label: s.label, cor: s.cor })),
+        responsavel: [{ valor: '', label: 'Sem responsável' }].concat((cfg.responsaveis || []).map(r => ({ valor: r.label, label: r.label, cor: r.cor }))),
+        area: [{ valor: '', label: 'Sem área' }].concat((cfg.areas || []).map(a => ({ valor: a.label, label: a.label, cor: a.cor }))),
+        tipo: (cfg.tipos || []).map(t => ({ valor: t.id, label: t.label, cor: t.cor })),
+        complexidade: [{ valor: '', label: 'Não definida' }].concat(COMPLEXIDADES.map(c => ({ valor: c.id, label: c.label, cor: c.cor })))
+    };
+    const grupo = (titulo, campo) => `<div class="ctx-item" onmouseenter="ctxAjustar(this)">${titulo}<span class="ctx-arrow">›</span><div class="ctx-sub">${ctxOpcoes[campo].map((o, i) =>
+        `<div class="ctx-opt ${(o.valor || '') === (ev[campo] || '') ? 'atual' : ''}" onclick="aplicarRapido(${id}, '${campo}', ${i})">${o.cor ? `<span class="dot-badge" style="background:${escapeHtml(o.cor)}"></span>` : ''}${escapeHtml(o.label)}</div>`).join('')}</div></div>`;
+    const m = document.createElement('div'); m.id = 'ctxRapido';
+    m.innerHTML = grupo('Status', 'status') + grupo('Responsável', 'responsavel') + grupo('Área', 'area') + grupo('Tipo', 'tipo') + grupo('Complexidade', 'complexidade')
+        + `<div class="ctx-sep"></div><div class="ctx-item" onclick="fecharMenuRapido(); abrirFormEvento(${id})">Abrir cartão</div>`;
+    document.body.appendChild(m);
+    m.style.left = Math.max(8, Math.min(e.clientX, innerWidth - m.offsetWidth - 8)) + 'px';
+    m.style.top = Math.max(8, Math.min(e.clientY, innerHeight - m.offsetHeight - 8)) + 'px';
+    if(m.getBoundingClientRect().right + 200 > innerWidth) m.classList.add('flip');
+}
+function ctxAjustar(item){
+    const sub = item.querySelector('.ctx-sub'); if(!sub) return;
+    sub.style.top = '-5px';
+    const r = sub.getBoundingClientRect();
+    if(r.bottom > innerHeight - 8) sub.style.top = (-5 - (r.bottom - innerHeight + 8)) + 'px';
+}
+function aplicarRapido(id, campo, i){
+    const ev = data.eventos.find(x => x.id === id), op = (ctxOpcoes[campo] || [])[i];
+    if(!ev || !op) return;
+    ev[campo] = op.valor;
+    fecharMenuRapido();
+    marcarAlterado({ imediato: getAutosaveConfig().dragImediato });
+    render();
 }
 </script>
 </body>
