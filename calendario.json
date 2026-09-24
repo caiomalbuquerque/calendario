@@ -109,18 +109,6 @@
       "ordem": 30
     },
     {
-      "id": 14,
-      "dataInicio": "2026-09-22",
-      "dataFim": "2026-09-22",
-      "titulo": "Painel de Metas",
-      "responsavel": "Caio Albuquerque",
-      "area": "SG",
-      "descricao": "",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 50
-    },
-    {
       "id": 15,
       "dataInicio": "2026-09-22",
       "dataFim": "2026-09-22",
@@ -131,18 +119,6 @@
       "tipo": "tarefa",
       "status": "finalizado",
       "ordem": 30
-    },
-    {
-      "id": 16,
-      "dataInicio": "2026-09-23",
-      "dataFim": "2026-09-23",
-      "titulo": "Painel de Metas",
-      "responsavel": "Caio Albuquerque",
-      "area": "SG",
-      "descricao": "",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 40
     },
     {
       "id": 17,
@@ -226,7 +202,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 70
+      "ordem": 60
     },
     {
       "id": 24,
@@ -238,7 +214,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 80
+      "ordem": 70
     },
     {
       "id": 25,
@@ -250,7 +226,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 90
+      "ordem": 80
     },
     {
       "id": 26,
@@ -262,7 +238,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 100
+      "ordem": 90
     },
     {
       "id": 28,
@@ -274,7 +250,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 110
+      "ordem": 100
     },
     {
       "id": 29,
@@ -286,7 +262,7 @@
       "descricao": "Gostaria de solicitar alguns ajustes no BI do Planejamento Estratégico.\n\nNa planilha \"Indicadores\", especificamente na aba \"Assistência\", seria possível detalhar os dados por especialidade, ofertadas e agendadas, contemplando:\nConsultas médicas;\nConsultas multiprofissionais;\nSessões multiprofissionais; e\nCentro de Especialidades Odontológicas (CEO).\n\nAlém disso, peço que essas informações sejam refletidas no BI, permitindo a visualização da perda primária e do absenteísmo por especialidade/categoria (médica, multiprofissional e CEO), mantendo também os indicadores consolidados de perda primária e absenteísmo geral.\n\nQuanto aos exames, não há necessidade de ajustes, pois já estão detalhados por tipo de exame.\n\nPor solicitação do Samuel, peço ainda que seja incluído no BI de Tempo de Espera do Planejamento Estratégico o acompanhamento do tempo de espera dos atendimentos multiprofissionais e odontológicos.",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 120
+      "ordem": 110
     },
     {
       "id": 30,
@@ -357,7 +333,7 @@
       "area": "SAS",
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
-      "status": "nao-iniciado",
+      "status": "finalizado",
       "ordem": 10
     },
     {
@@ -417,7 +393,7 @@
       "area": "SAS",
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
       "tipo": "tarefa",
-      "status": "nao-iniciado",
+      "status": "finalizado",
       "ordem": 20
     },
     {
@@ -442,14 +418,14 @@
       "descricao": "Para o Painel OKR e Painel Estratégico",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 130
+      "ordem": 120
     },
     {
       "id": 43,
       "dataInicio": "",
       "dataFim": "",
       "titulo": "Incluir categoria de profissionais no pagamento por folha",
-      "responsavel": "Caio Albuquerque",
+      "responsavel": "",
       "area": "Planejamento Estratégico",
       "descricao": "Jefferson irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
       "tipo": "tarefa",
@@ -520,6 +496,10 @@
       {
         "label": "Lucas Xavier",
         "cor": "#2d9cf0"
+      },
+      {
+        "label": "Ruthelcy Andrade",
+        "cor": "#1a38d1"
       }
     ],
     "areas": [
@@ -747,20 +727,32 @@
       "dragImediato": false
     },
     "tamanhos": {
-      "semana": 100,
-      "mes": 85
+      "semana": 90,
+      "mes": 85,
+      "dia": 70,
+      "quadro": 90,
+      "inbox": 70
     },
     "linhasMes": 2
   },
   "notas": [
     {
+      "id": 1790255322832,
+      "titulo": "Demandas verbalizadas",
+      "conteudo": "<div class=\"\"><br></div>",
+      "cor": "#ffffff",
+      "anexos": [],
+      "criadoEm": "2026-09-24T13:08:42.832Z",
+      "atualizadoEm": "2026-09-24T13:10:17.171Z"
+    },
+    {
       "id": 1790166062714,
-      "titulo": "Demandas",
-      "conteudo": "Adicionar especialidade no painel de exames laboratoriais &gt; Atribuída ao atendimento;<div>Trocar o caminho do CID para vir da tabela <b>DIAGNOSTICO_ATENDIME</b></div><div><b><br></b></div><div>Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades, manter a linha de meta</div><div><br></div><div>Ouvidoria: Ser menos repetitivo. </div><div><br></div><div>Manutenção geral: painéis do estratégico: programar para o início de outubro (dia 05/10?)</div><div><br></div><div class=\"chk\">UPAE Salgueiro - Ajuste na página de OKR</div>",
+      "titulo": "Anotações Gerais",
+      "conteudo": "Adicionar especialidade no painel de exames laboratoriais &gt; Atribuída ao atendimento;<div>Trocar o caminho do CID para vir da tabela <b>DIAGNOSTICO_ATENDIME</b></div><div><b><br></b></div><div>Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades, manter a linha de meta</div><div><br></div><div>Ouvidoria: Ser menos repetitivo. </div><div><br></div><div>Manutenção geral: painéis do estratégico: programar para o início de outubro (dia 05/10?)</div><div><br></div><div><br></div>",
       "cor": "#ec8027",
       "anexos": [],
       "criadoEm": "2026-09-23T12:21:02.714Z",
-      "atualizadoEm": "2026-09-24T11:30:13.553Z"
+      "atualizadoEm": "2026-09-24T13:09:06.824Z"
     },
     {
       "id": 1789991653386,
