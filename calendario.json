@@ -747,7 +747,8 @@
       "dragImediato": false
     },
     "tamanhos": {
-      "semana": 100
+      "semana": 100,
+      "mes": 70
     },
     "linhasMes": 4
   },
