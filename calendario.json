@@ -130,7 +130,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 50
+      "ordem": 70
     },
     {
       "id": 18,
@@ -166,7 +166,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 60
+      "ordem": 80
     },
     {
       "id": 21,
@@ -178,7 +178,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 70
+      "ordem": 90
     },
     {
       "id": 22,
@@ -202,7 +202,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 80
+      "ordem": 100
     },
     {
       "id": 24,
@@ -214,7 +214,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 90
+      "ordem": 110
     },
     {
       "id": 25,
@@ -226,7 +226,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 100
+      "ordem": 120
     },
     {
       "id": 26,
@@ -238,7 +238,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 110
+      "ordem": 130
     },
     {
       "id": 28,
@@ -250,7 +250,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 120
+      "ordem": 140
     },
     {
       "id": 29,
@@ -262,31 +262,21 @@
       "descricao": "Gostaria de solicitar alguns ajustes no BI do Planejamento Estratégico.\n\nNa planilha \"Indicadores\", especificamente na aba \"Assistência\", seria possível detalhar os dados por especialidade, ofertadas e agendadas, contemplando:\nConsultas médicas;\nConsultas multiprofissionais;\nSessões multiprofissionais; e\nCentro de Especialidades Odontológicas (CEO).\n\nAlém disso, peço que essas informações sejam refletidas no BI, permitindo a visualização da perda primária e do absenteísmo por especialidade/categoria (médica, multiprofissional e CEO), mantendo também os indicadores consolidados de perda primária e absenteísmo geral.\n\nQuanto aos exames, não há necessidade de ajustes, pois já estão detalhados por tipo de exame.\n\nPor solicitação do Samuel, peço ainda que seja incluído no BI de Tempo de Espera do Planejamento Estratégico o acompanhamento do tempo de espera dos atendimentos multiprofissionais e odontológicos.",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 130
+      "ordem": 150
     },
     {
       "id": 30,
-      "dataInicio": "2026-09-24",
-      "dataFim": "2026-09-24",
+      "dataInicio": "",
+      "dataFim": "",
       "titulo": "Painel de Metas",
       "responsavel": "Caio Albuquerque",
       "area": "SG",
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 30
-    },
-    {
-      "id": 31,
-      "dataInicio": "2026-09-25",
-      "dataFim": "2026-09-25",
-      "titulo": "Painel de Metas",
-      "responsavel": "Caio Albuquerque",
-      "area": "SG",
-      "descricao": "",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 30
+      "ordem": 30,
+      "descricaoHtml": "",
+      "complexidade": ""
     },
     {
       "id": 32,
@@ -409,30 +399,6 @@
       "ordem": 20
     },
     {
-      "id": 42,
-      "dataInicio": "",
-      "dataFim": "",
-      "titulo": "Colocar a responsabilidade de Cálculo no Painel do OKR",
-      "responsavel": "Caio Albuquerque",
-      "area": "OKR",
-      "descricao": "Para o Painel OKR e Painel Estratégico",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 140
-    },
-    {
-      "id": 43,
-      "dataInicio": "",
-      "dataFim": "",
-      "titulo": "Incluir categoria de profissionais no pagamento por folha",
-      "responsavel": "",
-      "area": "Planejamento Estratégico",
-      "descricao": "Jefferson irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 30
-    },
-    {
       "id": 44,
       "dataInicio": "",
       "dataFim": "",
@@ -442,7 +408,7 @@
       "descricao": "Trocar o nome do arquivo\nfazer conexão com o fluxo de dados",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 40
+      "ordem": 60
     },
     {
       "id": 46,
@@ -476,8 +442,8 @@
       "titulo": "Manutenção e Revisão: Painel de OKR",
       "responsavel": "Caio Albuquerque",
       "area": "OKR",
-      "descricao": "Organizar medidasOrganizar RelacionamentosDeixar formatação visual mais simples e intuitiva",
-      "descricaoHtml": "<div class=\"chk\">Organizar medidas</div><div class=\"chk\">Organizar Relacionamentos</div><div class=\"chk\">Deixar formatação visual mais simples e intuitiva</div>",
+      "descricao": "Organizar medidasOrganizar RelacionamentosDeixar formatação visual mais simples e intuitivaColocar a responsabilidade de Cálculo no Painel do OKR",
+      "descricaoHtml": "<div class=\"chk\">Organizar medidas</div><div class=\"chk\">Organizar Relacionamentos</div><div class=\"chk\">Deixar formatação visual mais simples e intuitiva</div><div class=\"chk\">Colocar a responsabilidade de Cálculo no Painel do OKR</div>",
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "complexidade": "alta",
@@ -490,8 +456,8 @@
       "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
       "responsavel": "Caio Albuquerque",
       "area": "Planejamento Estratégico",
-      "descricao": "Incluir bases do multiatendimentoIncluir bases da ouvidoriaImportar visuais do painel do multiatendimentoImportar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico @Lisiane Soares @Ruthelcy Andrade   Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
-      "descricaoHtml": "<div class=\"chk\">Incluir bases do multiatendimento</div><div class=\"chk\">Incluir bases da ouvidoria</div><div class=\"chk\">Importar visuais do painel do multiatendimento</div><div class=\"chk\">Importar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico <span class=\"mention\" data-resp=\"Lisiane Soares\" style=\"background-color:#9c27b033\">@Lisiane Soares</span> <span class=\"mention\" data-resp=\"Ruthelcy Andrade\" style=\"background-color:#1a38d133\">@Ruthelcy Andrade</span>&nbsp;</div><div class=\"chk\"> &nbsp;Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades</div>",
+      "descricao": "Incluir bases do multiatendimentoIncluir bases da ouvidoriaImportar visuais do painel do multiatendimentoImportar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico @Lisiane Soares  Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidadesIncluir categoria de profissionais no pagamento por folha: @Jefferson Souza irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+      "descricaoHtml": "<div class=\"chk\">Incluir bases do multiatendimento</div><div class=\"chk\">Incluir bases da ouvidoria</div><div class=\"chk\">Importar visuais do painel do multiatendimento</div><div class=\"chk\">Importar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico <span class=\"mention\" data-resp=\"Lisiane Soares\" style=\"background-color:#9c27b033\">@Lisiane Soares</span></div><div class=\"chk\"> &nbsp;Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades</div><div class=\"chk\">Incluir categoria de profissionais no pagamento por folha: <span class=\"mention\" data-resp=\"Jefferson Souza\" style=\"background-color:#d2d52033\">@Jefferson Souza</span>&nbsp;irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico</div>",
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "complexidade": "alta",
@@ -532,6 +498,10 @@
       {
         "label": "Lisiane Soares",
         "cor": "#9c27b0"
+      },
+      {
+        "label": "Jefferson Souza",
+        "cor": "#d2d520"
       }
     ],
     "areas": [
