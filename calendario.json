@@ -487,101 +487,25 @@
           "id": "ck_e66c9f2a-20b4-47ee-bc75-df91c8aa1465",
           "texto": "Organizar medidas",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_b2aec6e8-9588-4c20-9af6-034c9a3f0fa6",
           "texto": "Organizar Relacionamentos",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_8e3f6f2c-4271-4dfd-8679-4c92df7b6913",
           "texto": "Deixar formatação visual mais simples e intuitiva",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_8ed7b030-550c-44a4-9b70-75bc935cd6ab",
           "texto": "Colocar a responsabilidade de Cálculo no Painel do OKR",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
-        }
-      ]
-    },
-    {
-      "id": 50,
-      "dataInicio": "2026-09-29",
-      "dataFim": "2026-10-09",
-      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
-      "responsavel": "Caio Albuquerque",
-      "area": "Planejamento Estratégico",
-      "descricao": "",
-      "descricaoHtml": "",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "complexidade": "alta",
-      "ordem": 20,
-      "checklist": [
-        {
-          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
-          "texto": "Incluir bases do multiatendimento",
-          "concluido": false,
-          "data": "2026-09-29",
-          "responsavel": ""
-        },
-        {
-          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
-          "texto": "Incluir bases da ouvidoria",
-          "concluido": false,
-          "data": "2026-09-29",
-          "responsavel": ""
-        },
-        {
-          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
-          "texto": "Importar visuais do painel do multiatendimento",
-          "concluido": false,
-          "data": "2026-09-30",
-          "responsavel": ""
-        },
-        {
-          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
-          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
-          "concluido": false,
-          "data": "",
-          "responsavel": "Lisiane Soares"
-        },
-        {
-          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
-          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
-          "concluido": false,
-          "data": "",
-          "responsavel": ""
-        },
-        {
-          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
-          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
-          "concluido": false,
-          "data": "",
-          "responsavel": "Jefferson Souza"
-        },
-        {
-          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
-          "texto": "Agrupar exames de imagem pelo nome do exame",
-          "concluido": false,
-          "data": "",
-          "responsavel": ""
-        },
-        {
-          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
-          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
-          "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         }
       ]
     },
@@ -647,102 +571,807 @@
           "id": "ck_d4ae3c47-a447-4be5-b6ff-304244d07b91",
           "texto": "NGC",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_471c227a-3810-456b-a5ef-83a4b27bec81",
           "texto": "ALFA",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_901b94de-34a3-4be9-8755-dafc0f550691",
           "texto": "HCR",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_269ad0a6-e18d-40d0-bb09-650e300c9646",
           "texto": "HEC",
           "concluido": false,
-          "data": "2026-09-30",
-          "responsavel": ""
+          "data": "2026-09-30"
         },
         {
           "id": "ck_252153dd-524a-4a0d-92fd-b2fd80e6edeb",
           "texto": "HDH",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_7f88eee5-d4f6-4f8b-8c30-0d95255b1bd2",
           "texto": "HMA",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_a7d8a6bc-e91a-4977-bce2-b1ffd2023b2b",
           "texto": "HPS",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_dcc84967-eee7-4dc4-917f-601f33741164",
           "texto": "UPA SLM",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_895f9dab-f9b1-430a-b42a-704b92d785a4",
           "texto": "UPAE Carpina",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_dc34053a-2b19-451f-8ff2-1aad8d7670f9",
           "texto": "UPAE Escada",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_44c0a7c9-4d11-438f-8054-0d75ea92b1ad",
           "texto": "UPAE Garanhuns",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_f50ad9aa-8d02-4992-93b5-3e0b6045e219",
           "texto": "UPAE Salgueiro",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         },
         {
           "id": "ck_97bda66a-dcf4-43c1-b1c9-ecda33616afb",
           "texto": "UPAE Ibura",
           "concluido": false,
-          "data": "2026-09-29",
-          "responsavel": ""
+          "data": "2026-09-29"
         },
         {
           "id": "ck_45292f3c-a9db-41ad-83c7-0b16745633b2",
           "texto": "UPAE Mustardinha",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": ""
+          "data": "2026-09-28"
         }
       ],
       "ordem": 550
+    },
+    {
+      "id": 55,
+      "dataInicio": "2026-09-29",
+      "dataFim": "2026-09-29",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 560
+    },
+    {
+      "id": 56,
+      "dataInicio": "2026-09-30",
+      "dataFim": "2026-09-30",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 570
+    },
+    {
+      "id": 57,
+      "dataInicio": "2026-10-01",
+      "dataFim": "2026-10-01",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 580
+    },
+    {
+      "id": 58,
+      "dataInicio": "2026-10-02",
+      "dataFim": "2026-10-02",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 590
+    },
+    {
+      "id": 59,
+      "dataInicio": "2026-10-03",
+      "dataFim": "2026-10-03",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 600
+    },
+    {
+      "id": 60,
+      "dataInicio": "2026-10-04",
+      "dataFim": "2026-10-04",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 610
+    },
+    {
+      "id": 61,
+      "dataInicio": "2026-10-05",
+      "dataFim": "2026-10-05",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 620
+    },
+    {
+      "id": 62,
+      "dataInicio": "2026-10-06",
+      "dataFim": "2026-10-06",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 630
+    },
+    {
+      "id": 63,
+      "dataInicio": "2026-10-07",
+      "dataFim": "2026-10-07",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 640
+    },
+    {
+      "id": 64,
+      "dataInicio": "2026-10-08",
+      "dataFim": "2026-10-08",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 650
+    },
+    {
+      "id": 65,
+      "dataInicio": "2026-10-09",
+      "dataFim": "2026-10-09",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "checklist": [
+        {
+          "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
+          "texto": "Incluir bases do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
+          "texto": "Incluir bases da ouvidoria",
+          "concluido": false,
+          "data": "2026-09-29"
+        },
+        {
+          "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
+          "texto": "Importar visuais do painel do multiatendimento",
+          "concluido": false,
+          "data": "2026-09-30"
+        },
+        {
+          "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
+          "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
+          "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
+          "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
+          "texto": "Agrupar exames de imagem pelo nome do exame",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
+          "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
+          "concluido": false,
+          "data": ""
+        }
+      ],
+      "ordem": 660
+    },
+    {
+      "id": 66,
+      "dataInicio": "2026-09-25",
+      "dataFim": "2026-09-25",
+      "titulo": "Cobrar preenchimento ENVOLVER SORMANE",
+      "responsavel": "",
+      "area": "",
+      "descricao": "",
+      "descricaoHtml": "",
+      "tipo": "lembrete",
+      "status": "nao-iniciado",
+      "complexidade": "",
+      "checklist": [],
+      "ordem": 670
     }
   ],
   "config": {
