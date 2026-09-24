@@ -130,7 +130,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 30
+      "ordem": 50
     },
     {
       "id": 18,
@@ -166,7 +166,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 40
+      "ordem": 60
     },
     {
       "id": 21,
@@ -178,7 +178,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 50
+      "ordem": 70
     },
     {
       "id": 22,
@@ -202,7 +202,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 60
+      "ordem": 80
     },
     {
       "id": 24,
@@ -214,7 +214,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 70
+      "ordem": 90
     },
     {
       "id": 25,
@@ -226,7 +226,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 80
+      "ordem": 100
     },
     {
       "id": 26,
@@ -238,7 +238,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 90
+      "ordem": 110
     },
     {
       "id": 28,
@@ -250,7 +250,7 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 100
+      "ordem": 120
     },
     {
       "id": 29,
@@ -262,7 +262,7 @@
       "descricao": "Gostaria de solicitar alguns ajustes no BI do Planejamento Estratégico.\n\nNa planilha \"Indicadores\", especificamente na aba \"Assistência\", seria possível detalhar os dados por especialidade, ofertadas e agendadas, contemplando:\nConsultas médicas;\nConsultas multiprofissionais;\nSessões multiprofissionais; e\nCentro de Especialidades Odontológicas (CEO).\n\nAlém disso, peço que essas informações sejam refletidas no BI, permitindo a visualização da perda primária e do absenteísmo por especialidade/categoria (médica, multiprofissional e CEO), mantendo também os indicadores consolidados de perda primária e absenteísmo geral.\n\nQuanto aos exames, não há necessidade de ajustes, pois já estão detalhados por tipo de exame.\n\nPor solicitação do Samuel, peço ainda que seja incluído no BI de Tempo de Espera do Planejamento Estratégico o acompanhamento do tempo de espera dos atendimentos multiprofissionais e odontológicos.",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 110
+      "ordem": 130
     },
     {
       "id": 30,
@@ -418,7 +418,7 @@
       "descricao": "Para o Painel OKR e Painel Estratégico",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 120
+      "ordem": 140
     },
     {
       "id": 43,
@@ -430,7 +430,7 @@
       "descricao": "Jefferson irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 10
+      "ordem": 30
     },
     {
       "id": 44,
@@ -442,7 +442,7 @@
       "descricao": "Trocar o nome do arquivo\nfazer conexão com o fluxo de dados",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 20
+      "ordem": 40
     },
     {
       "id": 46,
@@ -468,6 +468,34 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "ordem": 480
+    },
+    {
+      "id": 49,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Manutenção e Revisão: Painel de OKR",
+      "responsavel": "Caio Albuquerque",
+      "area": "OKR",
+      "descricao": "Organizar medidasOrganizar RelacionamentosDeixar formatação visual mais simples e intuitiva",
+      "descricaoHtml": "<div class=\"chk\">Organizar medidas</div><div class=\"chk\">Organizar Relacionamentos</div><div class=\"chk\">Deixar formatação visual mais simples e intuitiva</div>",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "ordem": 10
+    },
+    {
+      "id": 50,
+      "dataInicio": "",
+      "dataFim": "",
+      "titulo": "Inclusões, Manutenção e Revisão: Planejamento Estratégico",
+      "responsavel": "Caio Albuquerque",
+      "area": "Planejamento Estratégico",
+      "descricao": "Incluir bases do multiatendimentoIncluir bases da ouvidoriaImportar visuais do painel do multiatendimentoImportar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico @Lisiane Soares @Ruthelcy Andrade   Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
+      "descricaoHtml": "<div class=\"chk\">Incluir bases do multiatendimento</div><div class=\"chk\">Incluir bases da ouvidoria</div><div class=\"chk\">Importar visuais do painel do multiatendimento</div><div class=\"chk\">Importar visuais da Ouvidoria: me reunir/solicitar seleção do que deverá ser considerado para o planejamento estratégico <span class=\"mention\" data-resp=\"Lisiane Soares\" style=\"background-color:#9c27b033\">@Lisiane Soares</span> <span class=\"mention\" data-resp=\"Ruthelcy Andrade\" style=\"background-color:#1a38d133\">@Ruthelcy Andrade</span>&nbsp;</div><div class=\"chk\"> &nbsp;Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades</div>",
+      "tipo": "tarefa",
+      "status": "nao-iniciado",
+      "complexidade": "alta",
+      "ordem": 20
     }
   ],
   "config": {
@@ -500,6 +528,10 @@
       {
         "label": "Ruthelcy Andrade",
         "cor": "#1a38d1"
+      },
+      {
+        "label": "Lisiane Soares",
+        "cor": "#9c27b0"
       }
     ],
     "areas": [
@@ -740,10 +772,10 @@
       "id": 1790255322832,
       "titulo": "Demandas verbalizadas",
       "conteudo": "<div class=\"\"><br></div>",
-      "cor": "#ffffff",
+      "cor": "#b23cdd",
       "anexos": [],
       "criadoEm": "2026-09-24T13:08:42.832Z",
-      "atualizadoEm": "2026-09-24T13:10:17.171Z"
+      "atualizadoEm": "2026-09-24T13:34:50.488Z"
     },
     {
       "id": 1790166062714,
@@ -752,7 +784,7 @@
       "cor": "#ec8027",
       "anexos": [],
       "criadoEm": "2026-09-23T12:21:02.714Z",
-      "atualizadoEm": "2026-09-24T13:09:06.824Z"
+      "atualizadoEm": "2026-09-24T13:34:44.415Z"
     },
     {
       "id": 1789991653386,
