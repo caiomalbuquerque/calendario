@@ -773,6 +773,23 @@
     .ctx-opt.atual { font-weight: 700; }
     .ctx-opt.atual::after { content: ''; margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); }
     .ctx-sep { height: 1px; background: var(--border-color); margin: 4px 2px; }
+
+    /* ===== Sem contorno claro em volta do cabeçalho ===== */
+    .container { border: 0; }
+    .appbar { border-radius: 0; }
+
+    /* ===== Semana: menu no hover e "+" no dia ===== */
+    .tab-wrap { position: relative; display: flex; }
+    .tab-menu { display: none; position: absolute; top: 100%; left: 0; padding-top: 8px; z-index: 400; }
+    .tab-wrap:hover .tab-menu, .tab-wrap:focus-within .tab-menu { display: block; }
+    .tab-menu-box { min-width: 230px; padding: 5px; background: var(--bg-container); border: 1px solid var(--border-color-strong); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .tab-menu-box button { display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding: 8px 10px; border: 0; border-radius: 6px; background: transparent; color: var(--text-heading); font: 600 14px var(--font-body); cursor: pointer; text-align: left; }
+    .tab-menu-box button small { font-weight: 400; font-size: 12px; color: var(--text-muted); }
+    .tab-menu-box button:hover { background: var(--bg-panel-dark); }
+    .tab-menu-box button.atual { background: var(--bg-panel-alt); box-shadow: inset 3px 0 0 var(--secondary); }
+    .week-col-header { position: relative; }
+    .wk-add { position: absolute; top: 5px; right: 5px; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 6px; background: rgba(255,255,255,.14); color: inherit; opacity: .55; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .wk-add:hover { opacity: 1; background: rgba(255,255,255,.3); }
 </style>
 </head>
 <body>
@@ -788,7 +805,13 @@
         </div>
         <nav class="tabs" aria-label="Visualizações">
             <button class="btn btn-toggle" data-view="mes" onclick="setView('mes')">Mês</button>
-            <button class="btn btn-toggle" data-view="semana" onclick="setView('semana')">Semana</button>
+            <span class="tab-wrap">
+                <button class="btn btn-toggle" data-view="semana" onclick="setView('semana')">Semana</button>
+                <div class="tab-menu"><div class="tab-menu-box">
+                    <button data-modo="completa" onclick="setSemana('completa')">Semana<small>Domingo a sábado</small></button>
+                    <button data-modo="util" onclick="setSemana('util')">Semana de trabalho<small>Segunda a sexta</small></button>
+                </div></div>
+            </span>
             <button class="btn btn-toggle" data-view="dia" onclick="setView('dia')">Dia</button>
             <button class="btn btn-toggle" data-view="quadro" onclick="setView('quadro')">Quadro</button>
             <span class="tabs-sep"></span>
@@ -2042,7 +2065,7 @@ function construirMapa(){
 ============================================================ */
 function render(){
     document.body.dataset.view = view;
-    aplicarTamanhoView(); fecharPopDia();
+    aplicarTamanhoView(); fecharPopDia(); marcarSemana();
     document.querySelectorAll('.btn-toggle').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
     const c = document.getElementById('viewContainer');
     if(view === 'mes') c.innerHTML = renderMes();
@@ -2130,15 +2153,17 @@ function renderSemana(){
     ini.setDate(currentDate.getDate() - currentDate.getDay());
     const hojeKey = dateKeyFromDate(new Date());
     const mapa = construirMapa();
-    let html = '<div class="week-grid">';
+    const util = semanaUtil();
+    let html = `<div class="week-grid" style="grid-template-columns:repeat(${util ? 5 : 7}, minmax(0, 1fr))">`;
     for(let i=0;i<7;i++){
+        if(util && (i===0 || i===6)) continue;
         const d = new Date(ini); d.setDate(ini.getDate()+i);
         const key = dateKeyFromDate(d);
         const evs = mapa[key] || [];
         const hj = key === hojeKey;
         const wknd = (i===0||i===6);
         html += `<div class="week-col ${wknd?'weekend':''}" data-day="${key}" ondragover="onDayDragOver(event, this)" ondragleave="onDayDragLeave(event, this)" ondrop="onDayDrop(event, this)">`;
-        html += `<div class="week-col-header ${hj?'hoje':''}"><span style="font-size:9px;text-transform:uppercase;letter-spacing:1px;">${DIAS_SEMANA_CURTO[i]}</span><span class="wk-day">${d.getDate()}</span></div>`;
+        html += `<div class="week-col-header ${hj?'hoje':''}"><span style="font-size:9px;text-transform:uppercase;letter-spacing:1px;">${DIAS_SEMANA_CURTO[i]}</span><span class="wk-day">${d.getDate()}</span><button class="wk-add" title="Novo evento em ${d.getDate()}/${d.getMonth()+1}" onclick="event.stopPropagation(); novoEventoNoDia('${key}')">${ic('plus', 12)}</button></div>`;
         evs.forEach(({ev, position})=>{ html += renderChip(ev, position, key); });
         html += '</div>';
     }
@@ -3902,6 +3927,21 @@ function aplicarRapido(id, campo, i){
     marcarAlterado({ imediato: getAutosaveConfig().dragImediato });
     render();
 }
+
+/* ============================================================
+   SEMANA (COMPLETA / DE TRABALHO) E NOVO EVENTO PELO CABEÇALHO DO DIA
+============================================================ */
+function semanaUtil(){ return localStorage.getItem('sharkbite_semana') === 'util'; }
+function setSemana(modo){
+    localStorage.setItem('sharkbite_semana', modo);
+    document.activeElement && document.activeElement.blur();
+    setView('semana');
+}
+function marcarSemana(){
+    const modo = semanaUtil() ? 'util' : 'completa';
+    document.querySelectorAll('.tab-menu-box button').forEach(b => b.classList.toggle('atual', b.dataset.modo === modo));
+}
+function novoEventoNoDia(key){ diaSelecionado = key; abrirFormEvento(null, key); }
 </script>
 </body>
 </html>
