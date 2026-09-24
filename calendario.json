@@ -10,7 +10,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "ordem": 10,
-      "status": "finalizado"
+      "status": "finalizado",
+      "checklist": []
     },
     {
       "id": 2,
@@ -22,7 +23,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
       "tipo": "tarefa",
       "ordem": 20,
-      "status": "finalizado"
+      "status": "finalizado",
+      "checklist": []
     },
     {
       "id": 3,
@@ -34,7 +36,8 @@
       "descricao": "Comunicar Assessoria por E-mail",
       "tipo": "tarefa",
       "ordem": 30,
-      "status": "finalizado"
+      "status": "finalizado",
+      "checklist": []
     },
     {
       "id": 4,
@@ -46,7 +49,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "ordem": 50,
-      "status": "finalizado"
+      "status": "finalizado",
+      "checklist": []
     },
     {
       "id": 5,
@@ -58,7 +62,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "ordem": 60,
-      "status": "finalizado"
+      "status": "finalizado",
+      "checklist": []
     },
     {
       "id": 6,
@@ -70,7 +75,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "ordem": 70,
-      "status": "suspenso"
+      "status": "suspenso",
+      "checklist": []
     },
     {
       "id": 7,
@@ -82,7 +88,8 @@
       "descricao": "",
       "tipo": "lembrete",
       "ordem": 40,
-      "status": "finalizado"
+      "status": "finalizado",
+      "checklist": []
     },
     {
       "id": 12,
@@ -94,7 +101,8 @@
       "descricao": "Entender melhor com Ruthelcy",
       "tipo": "tarefa",
       "status": "em-andamento",
-      "ordem": 30
+      "ordem": 30,
+      "checklist": []
     },
     {
       "id": 13,
@@ -106,7 +114,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 30
+      "ordem": 30,
+      "checklist": []
     },
     {
       "id": 15,
@@ -118,7 +127,8 @@
       "descricao": "Criar planilhas 4º ciclo para cada Unidade - OK\nFazer a Conexão com o Power BI, Planilha de Tarefas -",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 30
+      "ordem": 30,
+      "checklist": []
     },
     {
       "id": 17,
@@ -130,7 +140,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 70
+      "ordem": 70,
+      "checklist": []
     },
     {
       "id": 18,
@@ -142,7 +153,8 @@
       "descricao": "IBURA Solicitou adiamento para o final do dia 28/09\nHEC Solicitou adiamento para o final do dia 29/09",
       "tipo": "lembrete",
       "status": "nao-iniciado",
-      "ordem": 40
+      "ordem": 40,
+      "checklist": []
     },
     {
       "id": 19,
@@ -154,7 +166,8 @@
       "descricao": "Assistência: Infecções Hospitalares relacionadas à assistência - No operacional não há um gráfico específico para isso. Ao todo, são 6 gráficos que compõem a seção de Infecções hospitalares relacionadas à assistência. Decidir o que deve ser considerado; OK\n\nFinanceiro: Acuracidade: Acuracidade de quê? Enviado para Sormane, aguardar retorno\n\nPerda por Vencimento: o que considerar: R$? OK",
       "tipo": "tarefa",
       "status": "em-andamento",
-      "ordem": 40
+      "ordem": 40,
+      "checklist": []
     },
     {
       "id": 20,
@@ -166,7 +179,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 80
+      "ordem": 80,
+      "checklist": []
     },
     {
       "id": 21,
@@ -178,7 +192,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 90
+      "ordem": 90,
+      "checklist": []
     },
     {
       "id": 22,
@@ -190,7 +205,8 @@
       "descricao": "Colocar a estrutura de tabelas da Ouvidoria no PE;\nColocar Estrutura do Multiatendimento no PE",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 10
+      "ordem": 10,
+      "checklist": []
     },
     {
       "id": 23,
@@ -202,7 +218,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 100
+      "ordem": 100,
+      "checklist": []
     },
     {
       "id": 24,
@@ -214,7 +231,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 110
+      "ordem": 110,
+      "checklist": []
     },
     {
       "id": 25,
@@ -226,7 +244,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 120
+      "ordem": 120,
+      "checklist": []
     },
     {
       "id": 26,
@@ -238,7 +257,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 130
+      "ordem": 130,
+      "checklist": []
     },
     {
       "id": 28,
@@ -250,7 +270,8 @@
       "descricao": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 140
+      "ordem": 140,
+      "checklist": []
     },
     {
       "id": 29,
@@ -262,7 +283,8 @@
       "descricao": "Gostaria de solicitar alguns ajustes no BI do Planejamento Estratégico.\n\nNa planilha \"Indicadores\", especificamente na aba \"Assistência\", seria possível detalhar os dados por especialidade, ofertadas e agendadas, contemplando:\nConsultas médicas;\nConsultas multiprofissionais;\nSessões multiprofissionais; e\nCentro de Especialidades Odontológicas (CEO).\n\nAlém disso, peço que essas informações sejam refletidas no BI, permitindo a visualização da perda primária e do absenteísmo por especialidade/categoria (médica, multiprofissional e CEO), mantendo também os indicadores consolidados de perda primária e absenteísmo geral.\n\nQuanto aos exames, não há necessidade de ajustes, pois já estão detalhados por tipo de exame.\n\nPor solicitação do Samuel, peço ainda que seja incluído no BI de Tempo de Espera do Planejamento Estratégico o acompanhamento do tempo de espera dos atendimentos multiprofissionais e odontológicos.",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 150
+      "ordem": 150,
+      "checklist": []
     },
     {
       "id": 30,
@@ -276,7 +298,8 @@
       "status": "nao-iniciado",
       "ordem": 30,
       "descricaoHtml": "",
-      "complexidade": ""
+      "complexidade": "",
+      "checklist": []
     },
     {
       "id": 32,
@@ -288,7 +311,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 20
+      "ordem": 20,
+      "checklist": []
     },
     {
       "id": 33,
@@ -300,7 +324,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 10
+      "ordem": 10,
+      "checklist": []
     },
     {
       "id": 34,
@@ -312,7 +337,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 10
+      "ordem": 10,
+      "checklist": []
     },
     {
       "id": 35,
@@ -324,7 +350,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 10
+      "ordem": 10,
+      "checklist": []
     },
     {
       "id": 36,
@@ -336,7 +363,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQA5g-TwcwyTSZfL2obHNgZgAUJPfubuVGlPHWgoJaY8x6c?e=rWjnmL",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 10
+      "ordem": 10,
+      "checklist": []
     },
     {
       "id": 37,
@@ -348,7 +376,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 10
+      "ordem": 10,
+      "checklist": []
     },
     {
       "id": 38,
@@ -360,7 +389,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 20
+      "ordem": 20,
+      "checklist": []
     },
     {
       "id": 39,
@@ -372,7 +402,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 20
+      "ordem": 20,
+      "checklist": []
     },
     {
       "id": 40,
@@ -384,7 +415,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
       "tipo": "tarefa",
       "status": "finalizado",
-      "ordem": 20
+      "ordem": 20,
+      "checklist": []
     },
     {
       "id": 41,
@@ -396,7 +428,8 @@
       "descricao": "https://imip-my.sharepoint.com/:x:/g/personal/barbara_siebra_fghsaude_org_br/IQBpk0oNCLmARZ9FVKV05Y26ASoTxBKJqABi7bKUU_I2i3Q?e=j3XXqP",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 20
+      "ordem": 20,
+      "checklist": []
     },
     {
       "id": 44,
@@ -408,7 +441,8 @@
       "descricao": "Trocar o nome do arquivo\nfazer conexão com o fluxo de dados",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 60
+      "ordem": 60,
+      "checklist": []
     },
     {
       "id": 46,
@@ -420,7 +454,8 @@
       "descricao": "https://app.powerbi.com/groups/55390961-c171-4f8c-82e4-55356aec3435/list?experience=power-bi&clientSideAuth=0&subfolderId=81876",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 470
+      "ordem": 470,
+      "checklist": []
     },
     {
       "id": 47,
@@ -433,7 +468,8 @@
       "descricaoHtml": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 480
+      "ordem": 480,
+      "checklist": []
     },
     {
       "id": 49,
@@ -442,12 +478,38 @@
       "titulo": "Manutenção e Revisão: Painel de OKR",
       "responsavel": "Caio Albuquerque",
       "area": "OKR",
-      "descricao": "Organizar medidasOrganizar RelacionamentosDeixar formatação visual mais simples e intuitivaColocar a responsabilidade de Cálculo no Painel do OKR",
-      "descricaoHtml": "<div class=\"chk\">Organizar medidas</div><div class=\"chk\">Organizar Relacionamentos</div><div class=\"chk\">Deixar formatação visual mais simples e intuitiva</div><div class=\"chk\">Colocar a responsabilidade de Cálculo no Painel do OKR</div>",
+      "descricao": "",
+      "descricaoHtml": "",
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "complexidade": "alta",
-      "ordem": 10
+      "ordem": 10,
+      "checklist": [
+        {
+          "id": "ck_e66c9f2a-20b4-47ee-bc75-df91c8aa1465",
+          "texto": "Organizar medidas",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_b2aec6e8-9588-4c20-9af6-034c9a3f0fa6",
+          "texto": "Organizar Relacionamentos",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8e3f6f2c-4271-4dfd-8679-4c92df7b6913",
+          "texto": "Deixar formatação visual mais simples e intuitiva",
+          "concluido": false,
+          "data": ""
+        },
+        {
+          "id": "ck_8ed7b030-550c-44a4-9b70-75bc935cd6ab",
+          "texto": "Colocar a responsabilidade de Cálculo no Painel do OKR",
+          "concluido": false,
+          "data": ""
+        }
+      ]
     },
     {
       "id": 50,
@@ -461,7 +523,8 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "complexidade": "alta",
-      "ordem": 20
+      "ordem": 20,
+      "checklist": []
     }
   ],
   "config": {
