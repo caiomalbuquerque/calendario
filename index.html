@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -126,12 +127,34 @@
     .badge-status { display: inline-flex; align-items: center; gap: 4px; }
     .badge-status .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; padding: 0 20px; }
-    .week-col { background: var(--cal-cell-bg); border: var(--border-width) var(--border-style) var(--border-color); border-radius: var(--radius); padding: 5px; min-height: clamp(220px, 42vh, 440px); display: flex; flex-direction: column; gap: 4px; }
-    .week-col-header { background: var(--cal-head-bg); color: var(--cal-head-text); text-align: center; font-family: var(--font-heading); font-size: 10px; padding: 5px; border-radius: var(--radius-sm); margin: -5px -5px 4px; }
-    .week-col-header.hoje { background: var(--primary); }
-    .week-col-header .wk-day { display: block; font-size: 18px; line-height: 1.1; margin-top: 2px; }
-    .week-col.weekend { background: var(--cal-cell-other); }
+    /* ===== Semana estilo Microsoft/Outlook: horários na lateral e dias no topo ===== */
+    .week-view { height: 100%; min-height: 0; padding: 0 20px 14px; overflow: auto; }
+    .week-calendar { --hour-h: 64px; --week-days: 7; min-width: calc(68px + (var(--week-days) * 150px)); border: var(--border-width) var(--border-style) var(--border-color); border-radius: var(--radius); background: var(--bg-container); overflow: hidden; }
+    .week-head { display: grid; grid-template-columns: 68px repeat(var(--week-days), minmax(150px, 1fr)); position: sticky; top: 0; z-index: 12; background: var(--bg-container); border-bottom: 1px solid var(--border-color-strong); }
+    .week-head-spacer { background: var(--bg-panel); border-right: 1px solid var(--border-color); }
+    .week-day-head { position: relative; min-height: 58px; padding: 7px 28px 7px 8px; border-left: 1px solid var(--border-color); background: var(--cal-head-bg); color: var(--cal-head-text); }
+    .week-day-head.weekend { background: var(--cal-head-weekend); }
+    .week-day-head.hoje { box-shadow: inset 0 -4px 0 var(--secondary); }
+    .week-day-head .wd-name { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: .82; }
+    .week-day-head .wd-num { display: block; margin-top: 2px; font-size: 20px; line-height: 1; font-weight: 900; }
+    .week-day-head .wk-add { top: 8px; right: 7px; }
+    .week-body { display: grid; grid-template-columns: 68px repeat(var(--week-days), minmax(150px, 1fr)); }
+    .week-time-col, .week-day-col { min-height: calc(24 * var(--hour-h)); }
+    .week-time-col { background: var(--bg-panel); border-right: 1px solid var(--border-color-strong); }
+    .week-time { height: var(--hour-h); padding: 5px 7px 0 4px; border-top: 1px solid var(--border-color); color: var(--text-muted); font: 11px var(--font-body); text-align: right; }
+    .week-time:first-child { border-top: 0; }
+    .week-day-col { position: relative; border-left: 1px solid var(--border-color); background: var(--cal-cell-bg); cursor: crosshair; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--hour-h) - 1px), var(--border-color) var(--hour-h)); }
+    .week-day-col.weekend { background-color: var(--cal-cell-other); }
+    .week-event { position: absolute; z-index: 3; min-width: 0; overflow: hidden; padding: 4px 6px; border-left: 4px solid; border-radius: 4px; box-shadow: 0 1px 2px rgba(11,42,74,.12); cursor: grab; user-select: none; }
+    .week-event.dragging { opacity: .35; }
+    .week-event .week-event-time { display: block; font-size: 10px; font-weight: 800; opacity: .78; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .week-event .chip-header { gap: 3px; margin-bottom: 1px; }
+    .week-event .chip-title { font-size: 12px; line-height: 1.2; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .week-allday { display: grid; grid-template-columns: 68px repeat(var(--week-days), minmax(150px, 1fr)); border-top: 1px solid var(--border-color-strong); border-bottom: 1px solid var(--border-color-strong); }
+    .week-allday-label { padding: 6px 7px; background: var(--bg-panel); color: var(--text-muted); font-size: 10px; text-align: right; }
+    .week-allday-cell { min-height: 30px; padding: 3px; border-left: 1px solid var(--border-color); background: var(--cal-cell-bg); }
+    .week-allday-event { display:block; margin:1px 0; padding:2px 5px; border-left:3px solid; border-radius:3px; font-size:11px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:grab; }
+    .week-empty { padding: 30px 20px; color: var(--text-muted); text-align:center; }
 
     .day-view { max-width: min(900px, 100%); margin: 0 auto; padding: 0 20px; }
     .day-view-header { background: var(--day-header-bg); color: var(--day-header-text); padding: 14px 18px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
@@ -178,7 +201,7 @@
     .modal .field { margin-bottom: 10px; }
     .modal label { display: block; font-weight: 700; font-family: var(--font-body); font-size: 14px; color: var(--text-heading); margin-bottom: 3px; letter-spacing: .5px; text-transform: uppercase; }
     .modal .hint { font-family: var(--font-body); font-size: 13px; color: var(--text-muted); margin-top: 2px; display: block; }
-    .modal input[type=text], .modal input[type=date], .modal input[type=number], .modal input[type=color], .modal textarea, .modal select { width: 100%; padding: 7px 9px; border: var(--border-width) var(--border-style) var(--border-color-strong); background: var(--bg-panel-alt); color: var(--text-color); font-family: var(--font-body); font-size: 15px; border-radius: var(--radius-sm); }
+    .modal input[type=text], .modal input[type=date], .modal input[type=datetime-local], .modal input[type=number], .modal input[type=color], .modal textarea, .modal select { width: 100%; padding: 7px 9px; border: var(--border-width) var(--border-style) var(--border-color-strong); background: var(--bg-panel-alt); color: var(--text-color); font-family: var(--font-body); font-size: 15px; border-radius: var(--radius-sm); }
     .modal input[type=color] { height: 34px; padding: 2px; cursor: pointer; }
     .modal textarea { resize: vertical; min-height: 70px; }
     .modal input:focus, .modal textarea:focus, .modal select:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
@@ -375,6 +398,10 @@
         font-family: var(--font-body); font-size: 14px;
     }
     .nota-item:hover { border-color: var(--secondary); }
+    .nota-item.dragging { opacity: .4; }
+    .nota-item.nota-drop-target { border-color: var(--secondary); box-shadow: inset 0 0 0 2px var(--secondary); }
+    .nota-drag-handle { color: var(--text-muted); cursor: grab; font-size: 14px; line-height: 1; flex-shrink: 0; padding: 2px 0; }
+    .nota-drag-handle:active { cursor: grabbing; }
     .nota-item.ativa { background: var(--primary); color: var(--text-on-primary); border-color: var(--primary); }
     .nota-item .nota-cor-dot {
         width: 10px; height: 10px; border-radius: 50%;
@@ -899,22 +926,17 @@
         body[data-view=mes] .event-chip .chip-title, body[data-view=mes] .event-chip .chip-header { display: none; }
         body[data-view=mes] .more-btn { font-size: 10px; padding: 0; }
 
-        /* --- Semana: um dia embaixo do outro --- */
-        .week-grid { grid-template-columns: 1fr !important; padding: 0 10px; overflow: visible; gap: 8px; }
-        .week-col { min-height: 56px; }
-        .week-col-header { display: flex; align-items: center; gap: 8px; text-align: left; padding: 6px 34px 6px 8px; }
-        .week-col-header .wk-day { display: inline; margin: 0; font-size: 16px; }
-        .wk-add { top: 50%; transform: translateY(-50%); }
-
-        /* --- Dia --- */
-        .day-view { padding: 0 10px; }
-        .day-view-header { flex-direction: row; align-items: center; text-align: left; padding: 8px 12px; margin-bottom: 8px; }
-        .day-view-header .day-nav { display: none; }   /* ‹ › já estão na barra de data */
-        .day-view-header h2 { font-size: 15px; }
-        .day-view-header .sub { font-size: 12px; }
-        .day-card { padding: 9px 11px; }
-        .day-card .dc-title { font-size: 15px; }
-        .day-card .dc-desc { font-size: 13px; max-height: 6em; overflow: hidden; }
+        /* --- Semana: mesma grade de horários, com rolagem horizontal --- */
+        .week-view { padding: 0 10px 10px; overflow: auto; }
+        .week-calendar { --hour-h: 64px; min-width: calc(58px + (var(--week-days) * 130px)); }
+        .week-head { grid-template-columns: 58px repeat(var(--week-days), minmax(130px, 1fr)); }
+        .week-body { grid-template-columns: 58px repeat(var(--week-days), minmax(130px, 1fr)); }
+        .week-allday { grid-template-columns: 58px repeat(var(--week-days), minmax(130px, 1fr)); }
+        .week-day-head { padding-right: 24px; }
+        .week-day-head .wd-num { font-size: 17px; }
+        .week-time { padding-right: 5px; font-size: 10px; }
+        .week-event { padding: 3px 5px; }
+        .week-event .chip-title { font-size: 11px; }
 
         /* --- Quadro: colunas quase da largura da tela, com encaixe --- */
         .quadro { scroll-snap-type: x mandatory; padding: 0 10px 10px; gap: 10px; }
@@ -932,7 +954,7 @@
         .modal-overlay .modal { width: 100% !important; max-width: 100% !important; height: 100%; max-height: 100dvh; border-radius: 0; padding: 14px 14px 0; }
         #modalDia { padding: 10px; align-items: center; }
         #modalDia .modal { height: auto; max-height: 85dvh; border-radius: var(--radius-lg); }
-        .modal input[type=text], .modal input[type=date], .modal input[type=number], .modal textarea, .modal select { font-size: 16px; }
+        .modal input[type=text], .modal input[type=date], .modal input[type=datetime-local], .modal input[type=number], .modal textarea, .modal select { font-size: 16px; }
         .modal .actions { position: sticky; bottom: 0; background: var(--modal-bg); padding: 10px 0; margin-top: 12px; border-top: 1px solid var(--border-color); }
         .row2.row3 { grid-template-columns: 1fr 1fr !important; }
         .row2.row3 .field:last-child { grid-column: 1 / -1; }
@@ -995,13 +1017,12 @@
         <nav class="tabs" aria-label="Visualizações">
             <button class="btn btn-toggle" data-view="mes" onclick="setView('mes')">Mês</button>
             <span class="tab-wrap">
-                <button class="btn btn-toggle" data-view="semana" onclick="setView('semana')">Semana</button>
+                <button class="btn btn-toggle" data-view="semana" onclick="setView('semana')">Semana completa</button>
                 <div class="tab-menu"><div class="tab-menu-box">
-                    <button data-modo="completa" onclick="setSemana('completa')">Semana<small>Domingo a sábado</small></button>
+                    <button data-modo="completa" onclick="setSemana('completa')">Semana completa<small>Segunda a domingo</small></button>
                     <button data-modo="util" onclick="setSemana('util')">Semana de trabalho<small>Segunda a sexta</small></button>
                 </div></div>
             </span>
-            <button class="btn btn-toggle" data-view="dia" onclick="setView('dia')">Dia</button>
             <button class="btn btn-toggle" data-view="quadro" onclick="setView('quadro')">Quadro</button>
             <span class="tabs-sep"></span>
             <button class="btn btn-toggle" data-view="inbox" onclick="setView('inbox')" title="Tarefas sem data">Inbox <span class="inbox-badge" id="inboxBadge" style="display:none;">0</span></button>
@@ -1045,7 +1066,7 @@
 <!-- Modal do dia -->
 <div class="modal-overlay" id="modalDia" onclick="if(event.target===this && overlayDown) fecharModalDia()">
     <div class="modal">
-        <h2 id="modalDiaTitulo">Eventos do dia</h2>
+        <h2 id="modalDiaTitulo">Eventos da data</h2>
         <div class="events-day-list" id="eventsDayList"></div>
         <div class="actions">
             <button class="btn btn-secondary left" onclick="abrirFormEvento(null, diaSelecionado)">Adicionar evento</button>
@@ -1066,8 +1087,8 @@
             </label>
         </div>
         <div class="row2" id="formDatasRow">
-            <div class="field"><label>Data de início</label><input type="date" id="formDataInicio" onchange="atualizarToggleIsolado()"></div>
-            <div class="field"><label>Data de término</label><input type="date" id="formDataFim" onchange="atualizarToggleIsolado()" oninput="atualizarToggleIsolado()"></div>
+            <div class="field"><label>Início</label><input type="datetime-local" id="formDataInicio" onchange="atualizarToggleIsolado()"></div>
+            <div class="field"><label>Fim</label><input type="datetime-local" id="formDataFim" onchange="atualizarToggleIsolado()" oninput="atualizarToggleIsolado()"></div>
         </div>
         <div class="field" id="formIsoladoWrap" style="display:none;">
             <label class="checkbox-label">
@@ -1434,8 +1455,52 @@ function dateKey(y,m,d){ return `${y}-${pad(m+1)}-${pad(d)}`; }
 function dateKeyFromDate(dt){ return dateKey(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
 function parseDateKey(k){ const [y,m,d]=k.split('-').map(Number); return new Date(y,m-1,d); }
 function fmtBR(k){ const [y,m,d]=k.split('-'); return `${Number(d)}/${Number(m)}/${Number(y)}`; }
-function addDays(key,n){ const d = parseDateKey(key); d.setDate(d.getDate()+n); return dateKeyFromDate(d); }
-function daysBetween(a,b){ return Math.round((parseDateKey(b)-parseDateKey(a))/86400000); }
+function addDays(key,n){
+    const hasTime = typeof key === 'string' && key.length >= 16 && key[10] === 'T';
+    const d = parseDateKey(datePart(key));
+    d.setDate(d.getDate()+n);
+    const dk = dateKeyFromDate(d);
+    return hasTime ? `${dk}T${timePart(key)}` : dk;
+}
+function datePart(value){ return value ? String(value).slice(0,10) : ''; }
+function timePart(value){ const m = String(value || '').match(/T(\d{2}:\d{2})/); return m ? m[1] : ''; }
+function parseDateTimeLocal(value){
+    const ss = String(value || '');
+    if(/^\d{4}-\d{2}-\d{2}$/.test(ss)) return new Date(`${ss}T00:00`);
+    if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(ss)) {
+        const [d,t] = ss.split('T');
+        const [y,m,day] = d.split('-').map(Number);
+        const [hh,mm] = t.split(':').map(Number);
+        return new Date(y,m-1,day,hh,mm,0,0);
+    }
+    return new Date(ss);
+}
+function pad2Time(n){ return String(Math.max(0, Number(n)||0)).padStart(2,'0'); }
+function toDateTimeLocal(value, fallbackTime='09:00'){
+    if(!value) return '';
+    if(/^\d{4}-\d{2}-\d{2}$/.test(String(value))) return `${value}T${fallbackTime}`;
+    const d = parseDateTimeLocal(value);
+    if(Number.isNaN(d.getTime())) return '';
+    return `${dateKeyFromDate(d)}T${pad2Time(d.getHours())}:${pad2Time(d.getMinutes())}`;
+}
+function addMinutesLocal(value, minutes){
+    const d = parseDateTimeLocal(value);
+    if(Number.isNaN(d.getTime())) return value;
+    d.setMinutes(d.getMinutes() + Number(minutes || 0));
+    return `${dateKeyFromDate(d)}T${pad2Time(d.getHours())}:${pad2Time(d.getMinutes())}`;
+}
+function fmtBRHora(value){ return timePart(value) || ''; }
+function fmtBRDataHora(value){
+    const dt = toDateTimeLocal(value);
+    return dt ? `${fmtBR(datePart(dt))} ${fmtBRHora(dt)}`.trim() : fmtBR(datePart(value));
+}
+function minutosDoDia(value, fallback){
+    const t = timePart(value);
+    if(!t) return fallback == null ? null : fallback;
+    const [h,m] = t.split(':').map(Number);
+    return (h * 60) + m;
+}
+function daysBetween(a,b){ return Math.round((parseDateKey(datePart(b))-parseDateKey(datePart(a)))/86400000); }
 function escapeHtml(t){ if(t==null) return ''; return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
 function slug(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
 
@@ -1831,9 +1896,12 @@ function prepararDados(){
     if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
     if(data.config.userPhoto === undefined) data.config.userPhoto = '';
     if(!data.notas) data.notas = [];
-    data.notas.forEach(n => {
+    data.notas.forEach((n, idx) => {
         if(!n.anexos) n.anexos = [];
+        if(n.ordem === undefined) n.ordem = (idx + 1) * 10;
     });
+    data.notas.sort((a,b)=>(a.ordem||0)-(b.ordem||0) || (a.id||0)-(b.id||0));
+    data.notas.forEach((n, idx) => { n.ordem = (idx + 1) * 10; });
     if(!data.config.autosave) data.config.autosave = { ativo: true, debounceMs: 3000, dragImediato: true };
     const embutidos = [['claro', 'Sharkbite Claro', THEME_VARS_SHARKBITE], ['escuro', 'Sharkbite Escuro', THEME_VARS_ESCURO]];
     const temas = (Array.isArray(data.config.temas) ? data.config.temas : []).filter(t => !['default', 'doom', 'sharkbite'].includes(t.id));
@@ -1847,6 +1915,7 @@ function prepararDados(){
     data.eventos.forEach(ev=>{
         if(!ev.dataInicio && ev.data){ ev.dataInicio = ev.data; delete ev.data; }
         if(ev.dataFim === undefined) ev.dataFim = ev.dataInicio || '';
+        // Datas antigas em YYYY-MM-DD continuam válidas; ao editar, passam para data e hora.
         if(ev.responsavel === undefined) ev.responsavel = '';
         if(ev.area === undefined) ev.area = '';
         if(ev.status === undefined) ev.status = '';
@@ -2236,14 +2305,12 @@ function navPrev(){
     const y = currentDate.getFullYear(), m = currentDate.getMonth(), d = currentDate.getDate();
     if(view === 'mes' || view === 'lista') currentDate = new Date(y, m-1, 1);
     else if(view === 'semana') currentDate = new Date(y, m, d-7);
-    else if(view === 'dia') currentDate = new Date(y, m, d-1);
     sincronizarSelects(); render();
 }
 function navNext(){
     const y = currentDate.getFullYear(), m = currentDate.getMonth(), d = currentDate.getDate();
     if(view === 'mes' || view === 'lista') currentDate = new Date(y, m+1, 1);
     else if(view === 'semana') currentDate = new Date(y, m, d+7);
-    else if(view === 'dia') currentDate = new Date(y, m, d+1);
     sincronizarSelects(); render();
 }
 function irHoje(){ currentDate = new Date(); sincronizarSelects(); render(); }
@@ -2261,10 +2328,7 @@ function initSelects(){
     sm.addEventListener('change', ()=>{ currentDate = new Date(currentDate.getFullYear(), Number(sm.value), 1); render(); });
     sa.addEventListener('change', ()=>{ currentDate = new Date(Number(sa.value), currentDate.getMonth(), 1); render(); });
 }
-function setView(v){ view = v; localStorage.setItem(VIEW_KEY, v); render(); }
-function navDiaPrev(){ currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1); sincronizarSelects(); render(); }
-function navDiaNext(){ currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()+1); sincronizarSelects(); render(); }
-function irParaDia(key){ currentDate = parseDateKey(key); sincronizarSelects(); render(); }
+function setView(v){ if(v === 'dia') v = 'semana'; view = v; localStorage.setItem(VIEW_KEY, v); render(); }
 
 /* ============================================================
    MAPA
@@ -2273,8 +2337,8 @@ function construirMapa(){
     const mapa = {};
     const evs = data.eventos.filter(passaFiltro).filter(ev => ev.dataInicio).sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
     evs.forEach(ev=>{
-        const ini = ev.dataInicio, fim = ev.dataFim||ini;
-        if(!ini||!fim) return;
+        const ini = datePart(ev.dataInicio), fim = datePart(ev.dataFim || ev.dataInicio);
+        if(!ini || !fim) return;
         let cur = ini;
         while(cur <= fim){
             if(!mapa[cur]) mapa[cur] = [];
@@ -2296,7 +2360,6 @@ function render(){
     const c = document.getElementById('viewContainer');
     if(view === 'mes') c.innerHTML = renderMes();
     else if(view === 'semana') c.innerHTML = renderSemana();
-    else if(view === 'dia') c.innerHTML = renderDia();
     else if(view === 'inbox') c.innerHTML = renderInbox();
     else if(view === 'notas') { renderNotas(); return; }
     else c.innerHTML = renderQuadro();
@@ -2374,67 +2437,126 @@ function renderMes(){
     return html;
 }
 
+function inicioSemana(date){
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const diff = (d.getDay() + 6) % 7;
+    d.setDate(d.getDate() - diff);
+    d.setHours(0,0,0,0);
+    return d;
+}
+function semanaDiasAtuais(){
+    const ini = inicioSemana(currentDate);
+    const qtd = semanaUtil() ? 5 : 7;
+    return Array.from({length:qtd}, (_,idx)=>{
+        const d = new Date(ini);
+        d.setDate(ini.getDate() + idx);
+        return d;
+    });
+}
+function weekPointDateTime(dayKey, clientY, el){
+    const rect = el.getBoundingClientRect();
+    const hourH = parseFloat(getComputedStyle(el).getPropertyValue('--hour-h')) || 64;
+    const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+    let minute = Math.round(((y / hourH) * 60) / 15) * 15;
+    minute = Math.max(0, Math.min(23 * 60 + 45, minute));
+    const hh = Math.floor(minute / 60), mm = minute % 60;
+    return `${dayKey}T${pad2Time(hh)}:${pad2Time(mm)}`;
+}
+function weekEventInterval(ev, dayKey){
+    const iniDay = datePart(ev.dataInicio);
+    const fimDay = datePart(ev.dataFim || ev.dataInicio);
+    const multi = iniDay !== fimDay;
+    const legacyAllDay = !timePart(ev.dataInicio) && !timePart(ev.dataFim || ev.dataInicio);
+    if(legacyAllDay) return { allDay:true, start:0, end:0 };
+    let startMin = minutosDoDia(ev.dataInicio, 9 * 60);
+    let endMin = minutosDoDia(ev.dataFim || ev.dataInicio, startMin + 60);
+    if(dayKey > iniDay) startMin = 0;
+    if(dayKey < fimDay) endMin = 24 * 60;
+    if(!multi && endMin <= startMin) endMin = Math.min(24*60, startMin + 60);
+    return { allDay:false, start:startMin, end:Math.max(startMin + 15, endMin) };
+}
+function layoutWeekEvents(events, dayKey){
+    const items = events.map(ev=>({ev, ...weekEventInterval(ev, dayKey)}));
+    const allDay = items.filter(x=>x.allDay);
+    const timed = items.filter(x=>!x.allDay).sort((a,b)=>a.start-b.start || b.end-a.end || a.ev.id-b.ev.id);
+    const lanes = [];
+    timed.forEach(item=>{
+        let lane = lanes.findIndex(end => end <= item.start);
+        if(lane < 0){ lane = lanes.length; lanes.push(item.end); }
+        else lanes[lane] = item.end;
+        item.lane = lane;
+    });
+    timed.forEach(item=>item.lanes = Math.max(1, lanes.length));
+    return {allDay, timed};
+}
+function renderWeekEvent(item, dayKey){
+    const ev = item.ev;
+    const t = getTipo(ev.tipo);
+    const top = (item.start / 60) * 64;
+    const height = Math.max(24, ((item.end - item.start) / 60) * 64 - 2);
+    const widthPct = 100 / Math.max(1, item.lanes);
+    const leftPct = item.lane * widthPct;
+    const header = renderChipHeaderNomes(ev, datePart(ev.dataInicio) !== dayKey);
+    const inicioTxt = (datePart(ev.dataInicio) === dayKey && timePart(ev.dataInicio)) ? timePart(ev.dataInicio) : '00:00';
+    const fimTxt = (datePart(ev.dataFim || ev.dataInicio) === dayKey && timePart(ev.dataFim || ev.dataInicio)) ? timePart(ev.dataFim || ev.dataInicio) : '24:00';
+    const horario = `${inicioTxt}–${fimTxt}`;
+    const tooltip = [ev.titulo, horario, ev.responsavel ? '@'+ev.responsavel : '', ev.area || '', t.label].filter(Boolean).join(' • ');
+    return `<div class="week-event ${dragState.eventId===ev.id?'dragging':''}" style="${cardCss(ev)};top:${top}px;height:${height}px;left:calc(${leftPct}% + 2px);width:calc(${widthPct}% - 4px);" draggable="true" data-event-id="${ev.id}" data-day="${dayKey}" title="${escapeHtml(tooltip)}"
+                ondragstart="onChipDragStart(event, ${ev.id}, '${dayKey}')" ondragend="onChipDragEnd(event)"
+                onclick="event.stopPropagation(); abrirFormEvento(${ev.id})">
+                <span class="week-event-time">${escapeHtml(horario)}</span>${header}<span class="chip-title">${escapeHtml(ev.titulo)}</span>
+            </div>`;
+}
 function renderSemana(){
-    const ini = new Date(currentDate);
-    ini.setDate(currentDate.getDate() - currentDate.getDay());
+    const dias = semanaDiasAtuais();
     const hojeKey = dateKeyFromDate(new Date());
     const mapa = construirMapa();
-    const util = semanaUtil();
-    let html = `<div class="week-grid" style="grid-template-columns:repeat(${util ? 5 : 7}, minmax(0, 1fr))">`;
-    for(let i=0;i<7;i++){
-        if(util && (i===0 || i===6)) continue;
-        const d = new Date(ini); d.setDate(ini.getDate()+i);
+    const n = dias.length;
+    let html = `<div class="week-view"><div class="week-calendar" style="--week-days:${n}">`;
+    html += '<div class="week-head"><div class="week-head-spacer"></div>';
+    dias.forEach(d=>{
         const key = dateKeyFromDate(d);
-        const evs = mapa[key] || [];
-        const hj = key === hojeKey;
-        const wknd = (i===0||i===6);
-        html += `<div class="week-col ${wknd?'weekend':''}" data-day="${key}" ondragover="onDayDragOver(event, this)" ondragleave="onDayDragLeave(event, this)" ondrop="onDayDrop(event, this)">`;
-        html += `<div class="week-col-header ${hj?'hoje':''}"><span style="font-size:9px;text-transform:uppercase;letter-spacing:1px;">${DIAS_SEMANA_CURTO[i]}</span><span class="wk-day">${d.getDate()}</span><button class="wk-add" title="Novo evento em ${d.getDate()}/${d.getMonth()+1}" onclick="event.stopPropagation(); novoEventoNoDia('${key}')">${ic('plus', 12)}</button></div>`;
-        evs.forEach(({ev, position})=>{ html += renderChip(ev, position, key); });
+        const fimSemana = d.getDay() === 0 || d.getDay() === 6;
+        const classes = ['week-day-head'];
+        if(fimSemana) classes.push('weekend');
+        if(key === hojeKey) classes.push('hoje');
+        html += `<div class="${classes.join(' ')}"><span class="wd-name">${DIAS_SEMANA_CURTO[d.getDay()]}</span><span class="wd-num">${d.getDate()}</span><button class="wk-add" title="Novo evento em ${d.getDate()}/${d.getMonth()+1}" onclick="event.stopPropagation(); novoEventoNoDia('${key}')">${ic('plus',12)}</button></div>`;
+    });
+    html += '</div>';
+
+    const layouts = dias.map(d=>layoutWeekEvents(mapa[dateKeyFromDate(d)] || [], dateKeyFromDate(d)));
+    if(layouts.some(x=>x.allDay.length)){
+        html += '<div class="week-allday"><div class="week-allday-label">Dia inteiro</div>';
+        dias.forEach((d,idx)=>{
+            const key = dateKeyFromDate(d);
+            html += `<div class="week-allday-cell">${layouts[idx].allDay.map(item=>{
+                const ev=item.ev;
+                return `<div class="week-allday-event" style="${cardCss(ev)}" draggable="true" data-event-id="${ev.id}" data-day="${key}" ondragstart="onChipDragStart(event, ${ev.id}, '${key}')" ondragend="onChipDragEnd(event)" onclick="event.stopPropagation(); abrirFormEvento(${ev.id})">${escapeHtml(ev.titulo)}</div>`;
+            }).join('')}</div>`;
+        });
         html += '</div>';
     }
+
+    html += '<div class="week-body"><div class="week-time-col">';
+    for(let h=0; h<24; h++) html += `<div class="week-time">${pad2Time(h)}:00</div>`;
     html += '</div>';
+    dias.forEach((d,idx)=>{
+        const key = dateKeyFromDate(d);
+        const fimSemana = d.getDay() === 0 || d.getDay() === 6;
+        html += `<div class="week-day-col ${fimSemana?'weekend':''}" data-day="${key}" onclick="weekDayClick(event, this, '${key}')" ondragover="onDayDragOver(event, this)" ondragleave="onDayDragLeave(event, this)" ondrop="onDayDrop(event, this)">`;
+        layouts[idx].timed.forEach(item=>{ html += renderWeekEvent(item, key); });
+        html += '</div>';
+    });
+    html += '</div></div></div>';
     return html;
+}
+function weekDayClick(e, el, dayKey){
+    if(e.target.closest('.week-event, .wk-add')) return;
+    const dt = weekPointDateTime(dayKey, e.clientY, el);
+    diaSelecionado = dayKey;
+    abrirFormEvento(null, dt);
 }
 
-function renderDia(){
-    const key = dateKeyFromDate(currentDate);
-    const mapa = construirMapa();
-    const evs = mapa[key] || [];
-    const dt = currentDate;
-    const hj = key === dateKeyFromDate(new Date());
-    let html = '<div class="day-view">';
-    html += `<div class="day-view-header">
-        <div><h2>${dt.getDate()} ${MESES[dt.getMonth()]} ${dt.getFullYear()}</h2><div class="sub">${DIAS_SEMANA_LONGO[dt.getDay()]} ${hj?'• HOJE':''}</div></div>
-        <div class="day-nav">
-            <button class="btn btn-nav" onclick="navDiaPrev()">‹</button>
-            <button class="btn btn-primary" onclick="irHoje()">Hoje</button>
-            <button class="btn btn-nav" onclick="navDiaNext()">›</button>
-            <button class="btn btn-secondary" onclick="abrirFormEvento(null, '${key}')">Novo</button>
-        </div></div>`;
-    html += renderDayStrip();
-    html += `<div class="day-view-list" data-day="${key}" ondragover="onDayDragOver(event, this)" ondragleave="onDayDragLeave(event, this)" ondrop="onDayDrop(event, this)">`;
-    evs.forEach(({ev, position})=>{ html += renderDayCard(ev, position, key); });
-    html += '</div></div>';
-    return html;
-}
-function renderDayStrip(){
-    const ini = new Date(currentDate);
-    ini.setDate(currentDate.getDate() - currentDate.getDay());
-    const hojeKey = dateKeyFromDate(new Date());
-    const curKey = dateKeyFromDate(currentDate);
-    let html = '<div class="day-strip">';
-    for(let i=0;i<7;i++){
-        const d = new Date(ini); d.setDate(ini.getDate()+i);
-        const k = dateKeyFromDate(d);
-        const cls = ['day-strip-item'];
-        if(k === curKey) cls.push('active');
-        if(k === hojeKey) cls.push('hoje');
-        html += `<button type="button" class="${cls.join(' ')}" onclick="irParaDia('${k}')"><span class="ds-wd">${DIAS_SEMANA_CURTO[i]}</span><span class="ds-num">${d.getDate()}</span></button>`;
-    }
-    html += '</div>';
-    return html;
-}
 function checklistResumo(ev){
     const itens = Array.isArray(ev.checklist) ? ev.checklist : [];
     if(!itens.length) return '';
@@ -2444,7 +2566,7 @@ function checklistResumo(ev){
 }
 function renderDayCard(ev, position, dayKey){
     const t = getTipo(ev.tipo);
-    const isMulti = ev.dataInicio !== ev.dataFim;
+    const isMulti = datePart(ev.dataInicio) !== datePart(ev.dataFim || ev.dataInicio);
     const isCont = isMulti && position !== 'start' && position !== 'single';
     const header = renderChipHeader(ev, isCont);
     const periodo = isMulti ? `<div class="dc-meta">${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</div>` : '';
@@ -2469,19 +2591,25 @@ function renderDayCard(ev, position, dayKey){
 /* ============================================================
    NOTAS — Bloco de anotações
 ============================================================ */
+function ordenarNotasPersistente(){
+    data.notas.sort((a,b)=>(a.ordem||0)-(b.ordem||0) || (a.id||0)-(b.id||0));
+    data.notas.forEach((n, idx)=>{ n.ordem = (idx + 1) * 10; });
+}
+let notaDragState = { id: null };
 function renderNotas(){
     const c = document.getElementById('viewContainer');
-
-    // Se nenhuma nota está ativa e existem notas, seleciona a primeira
+    ordenarNotasPersistente();
     if(!notaAtivaId && data.notas.length > 0) notaAtivaId = data.notas[0].id;
 
     const listaHtml = data.notas.length === 0
         ? '<li class="notas-vazio">Nenhuma nota ainda.<br>Clique em "+ Nova nota".</li>'
         : data.notas.map(n => {
             const ativa = n.id === notaAtivaId ? 'ativa' : '';
-            const data = new Date(n.atualizadoEm || n.criadoEm || Date.now());
-            const dataStr = `${pad(data.getDate())}/${pad(data.getMonth()+1)}`;
-            return `<li class="nota-item ${ativa}" onclick="selecionarNota(${n.id})">
+            const d = new Date(n.atualizadoEm || n.criadoEm || Date.now());
+            const dataStr = `${pad(d.getDate())}/${pad(d.getMonth()+1)}`;
+            return `<li class="nota-item ${ativa}" draggable="true" data-nota-id="${n.id}"
+                ondragstart="onNotaDragStart(event, ${n.id})" ondragover="onNotaDragOver(event, this)" ondragleave="onNotaDragLeave(event, this)" ondrop="onNotaDrop(event, this)" ondragend="onNotaDragEnd(event)" onclick="selecionarNota(${n.id})">
+                <span class="nota-drag-handle" title="Arraste para mudar a ordem">⋮⋮</span>
                 <span class="nota-cor-dot" style="background:${escapeHtml(n.cor || '#ffffff')}"></span>
                 <span class="nota-titulo-lista" id="nota-lista-titulo-${n.id}">${escapeHtml(n.titulo || 'Sem título')}</span>
                 <span class="nota-data-lista">${dataStr}</span>
@@ -2489,12 +2617,11 @@ function renderNotas(){
         }).join('');
 
     const nota = notaAtivaId ? data.notas.find(n => n.id === notaAtivaId) : null;
-
     c.innerHTML = `
         <div class="notas-view">
             <div class="notas-sidebar">
                 <button class="btn-nova-nota" onclick="novaNota()">Nova nota</button>
-                <ul class="notas-lista">${listaHtml}</ul>
+                <ul class="notas-lista" ondragover="onNotasListaDragOver(event)" ondrop="onNotasListaDrop(event)">${listaHtml}</ul>
             </div>
             <div class="notas-editor-wrap" id="notasEditorWrap">
                 ${nota ? `
@@ -2521,37 +2648,71 @@ function renderNotas(){
                 `}
             </div>
         </div>`;
-
-    // Reanexa os listeners dos checkboxes (para marcar/desmarcar e riscar)
     if(nota) setTimeout(() => rteBind(document.getElementById('notaEditor')), 30);
 }
-
 function selecionarNota(id){
-    // Salva antes de trocar
     if(notaAtivaId) notaOnInput();
     notaAtivaId = id;
     renderNotas();
 }
-
+function notasReordenar(idArrastado, idAlvo){
+    const from = data.notas.findIndex(n=>n.id===idArrastado);
+    if(from < 0) return;
+    const [item] = data.notas.splice(from, 1);
+    let to = idAlvo == null ? data.notas.length : data.notas.findIndex(n=>n.id===idAlvo);
+    if(to < 0) to = data.notas.length;
+    data.notas.splice(to, 0, item);
+    data.notas.forEach((n, idx)=>{ n.ordem = (idx + 1) * 10; });
+    marcarAlterado();
+    renderNotas();
+}
+function onNotaDragStart(e,id){
+    notaDragState.id = id;
+    if(e.dataTransfer){ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', String(id)); }
+    if(e.currentTarget) e.currentTarget.classList.add('dragging');
+}
+function onNotaDragOver(e,el){
+    e.preventDefault();
+    if(!notaDragState.id || Number(el.dataset.notaId) === notaDragState.id) return;
+    el.classList.add('nota-drop-target');
+    if(e.dataTransfer) e.dataTransfer.dropEffect='move';
+}
+function onNotaDragLeave(e,el){
+    if(!el.contains(e.relatedTarget)) el.classList.remove('nota-drop-target');
+}
+function onNotaDrop(e,el){
+    e.preventDefault(); e.stopPropagation();
+    const id = notaDragState.id || Number(e.dataTransfer?.getData('text/plain') || 0);
+    const alvo = Number(el.dataset.notaId || 0);
+    el.classList.remove('nota-drop-target');
+    if(id && alvo && id !== alvo) notasReordenar(id, alvo);
+    notaDragState.id = null;
+}
+function onNotaDragEnd(e){
+    if(e.currentTarget) e.currentTarget.classList.remove('dragging');
+    document.querySelectorAll('.nota-drop-target').forEach(el=>el.classList.remove('nota-drop-target'));
+    notaDragState.id = null;
+}
+function onNotasListaDragOver(e){
+    e.preventDefault();
+    if(e.dataTransfer) e.dataTransfer.dropEffect='move';
+}
+function onNotasListaDrop(e){
+    e.preventDefault();
+    if(e.target.closest('.nota-item')) return;
+    const id = notaDragState.id || Number(e.dataTransfer?.getData('text/plain') || 0);
+    if(id) notasReordenar(id, null);
+    notaDragState.id = null;
+}
 function novaNota(){
     const agora = new Date().toISOString();
-    const nova = {
-        id: Date.now(),
-        titulo: '',
-        conteudo: '',
-        cor: '#ffffff',
-        anexos: [],
-        criadoEm: agora,
-        atualizadoEm: agora
-    };
+    const nova = { id: Date.now(), titulo: '', conteudo: '', cor: '#ffffff', anexos: [], criadoEm: agora, atualizadoEm: agora, ordem: 10 };
+    data.notas.forEach(n=>{ n.ordem = (n.ordem || 0) + 10; });
     data.notas.unshift(nova);
     notaAtivaId = nova.id;
     marcarAlterado();
     renderNotas();
-    setTimeout(() => {
-        const t = document.getElementById('notaTitulo');
-        if(t) t.focus();
-    }, 50);
+    setTimeout(() => { const t = document.getElementById('notaTitulo'); if(t) t.focus(); }, 50);
 }
 /* Remove um arquivo do repositório GitHub */
 async function githubDeleteFile(path){
@@ -3297,7 +3458,9 @@ function agendarEvento(id){
         const chk = document.getElementById('formSemData');
         if(chk) chk.checked = false;
         toggleSemData();
-        document.getElementById('formDataInicio').value = dateKeyFromDate(new Date());
+        const hoje = `${dateKeyFromDate(new Date())}T09:00`;
+        document.getElementById('formDataInicio').value = hoje;
+        document.getElementById('formDataFim').value = addMinutesLocal(hoje, 60);
     }, 60);
 }
 
@@ -3305,14 +3468,15 @@ function agendarEvento(id){
 
 function renderChip(ev, position, dayKey, expandido){
     const t = getTipo(ev.tipo);
-    const isMulti = ev.dataInicio !== ev.dataFim;
+    const isMulti = datePart(ev.dataInicio) !== datePart(ev.dataFim || ev.dataInicio);
     const isCont = isMulti && position !== 'start' && position !== 'single';
     const header = renderChipHeader(ev, isCont);
-    const periodo = (expandido && isMulti) ? `<div style="font-size:13px;opacity:.75;margin-top:3px;font-style:italic;">${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</div>` : '';
+    const temHora = !!(timePart(ev.dataInicio) || timePart(ev.dataFim || ev.dataInicio));
+    const periodo = (expandido && (isMulti || temHora)) ? `<div style="font-size:13px;opacity:.75;margin-top:3px;font-style:italic;">${fmtBRDataHora(ev.dataInicio)}${ev.dataFim ? ' → ' + fmtBRDataHora(ev.dataFim) : ''}</div>` : '';
     const desc = (expandido && ev.descricao) ? `<div style="font-size:14px;opacity:.85;margin-top:3px;">${descHtml(ev)}</div>` : '';
     const tipoLabel = expandido ? `<div style="font-size:11px;font-weight:700;text-transform:uppercase;opacity:.7;margin-top:3px;">${escapeHtml(t.label)}</div>` : '';
     const statusLabel = ev.status ? (getStatus(ev.status) ? getStatus(ev.status).label : ev.status) : '';
-    const tooltip = [statusLabel?'Status: '+statusLabel:'', ev.responsavel?'Resp: '+ev.responsavel:'', ev.area?'Área: '+ev.area:'', ev.titulo, isMulti?`${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}`:'', ev.descricao||''].filter(Boolean).join(' • ');
+    const tooltip = [statusLabel?'Status: '+statusLabel:'', ev.responsavel?'Resp: '+ev.responsavel:'', ev.area?'Área: '+ev.area:'', ev.titulo, (isMulti || temHora)?`${fmtBRDataHora(ev.dataInicio)}${ev.dataFim?' → '+fmtBRDataHora(ev.dataFim):''}`:'', ev.descricao||''].filter(Boolean).join(' • ');
 
     // === Modo expandido (view Lista) com ações ===
     if(expandido){
@@ -3376,31 +3540,47 @@ function onDayDrop(e, el){
     if(!srcId) return;
     const dayKey = el.dataset.day; if(!dayKey) return;
     const ev = data.eventos.find(x=>x.id === srcId); if(!ev) return;
-    if(!ev.dataInicio){
-        ev.dataInicio = dayKey;
-        ev.dataFim = dayKey;
+
+    if(el.classList.contains('week-day-col')){
+        const destino = weekPointDateTime(dayKey, e.clientY, el);
+        if(ev.dataInicio){
+            const antiga = parseDateTimeLocal(toDateTimeLocal(ev.dataInicio, '09:00'));
+            const fimOriginal = ev.dataFim ? parseDateTimeLocal(toDateTimeLocal(ev.dataFim, '10:00')) : addMinutesLocal(ev.dataInicio, 60);
+            const dur = Math.max(15, Math.round((fimOriginal - antiga) / 60000));
+            ev.dataInicio = destino;
+            ev.dataFim = addMinutesLocal(destino, dur);
+        } else {
+            ev.dataInicio = destino;
+            ev.dataFim = addMinutesLocal(destino, 60);
+        }
+    } else if(!ev.dataInicio){
+        ev.dataInicio = `${dayKey}T09:00`;
+        ev.dataFim = `${dayKey}T10:00`;
     } else {
-        const origem = dragState.sourceDay || ev.dataInicio;
+        const origem = dragState.sourceDay ? datePart(dragState.sourceDay) : datePart(ev.dataInicio);
         const diff = daysBetween(origem, dayKey);
         if(diff !== 0){
             ev.dataInicio = addDays(ev.dataInicio, diff);
-            ev.dataFim = addDays(ev.dataFim, diff);
+            ev.dataFim = addDays(ev.dataFim || ev.dataInicio, diff);
         }
     }
-    const chips = Array.from(el.querySelectorAll('.event-chip, .day-card')).filter(c => Number(c.dataset.eventId) !== srcId);
-    const mouseY = e.clientY;
-    let insertBeforeIdx = chips.length;
-    for(let i=0;i<chips.length;i++){
-        const rect = chips[i].getBoundingClientRect();
-        if(mouseY < rect.top + rect.height/2){ insertBeforeIdx = i; break; }
+
+    if(!el.classList.contains('week-day-col')){
+        const chips = Array.from(el.querySelectorAll('.event-chip, .day-card')).filter(c => Number(c.dataset.eventId) !== srcId);
+        const mouseY = e.clientY;
+        let insertBeforeIdx = chips.length;
+        for(let i=0;i<chips.length;i++){
+            const rect = chips[i].getBoundingClientRect();
+            if(mouseY < rect.top + rect.height/2){ insertBeforeIdx = i; break; }
+        }
+        const diaEvs = data.eventos.filter(x => x.id !== srcId && x.dataInicio && datePart(x.dataInicio) <= dayKey && dayKey <= datePart(x.dataFim || x.dataInicio) && passaFiltro(x))
+            .sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
+        diaEvs.splice(Math.min(insertBeforeIdx, diaEvs.length), 0, ev);
+        diaEvs.forEach((x,i)=>{ x.ordem = (i+1)*10; });
     }
-    const diaEvs = data.eventos.filter(x => x.id !== srcId && x.dataInicio && x.dataInicio <= dayKey && dayKey <= x.dataFim && passaFiltro(x))
-        .sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
-    diaEvs.splice(insertBeforeIdx, 0, ev);
-    diaEvs.forEach((x,i)=>{ x.ordem = (i+1)*10; });
+
     dragState.eventId = null; dragState.sourceDay = null;
     document.body.classList.remove('arrastando');
-    // Drag: salva imediatamente se configurado
     const cfg = getAutosaveConfig();
     marcarAlterado({ imediato: cfg.dragImediato });
     render();
@@ -3468,7 +3648,7 @@ function onInboxListDrop(e, el){
 
 function cellClick(e, key){
     if(e.target.closest('.event-chip')) return;
-    const tem = data.eventos.some(ev => ev.dataInicio && ev.dataInicio <= key && key <= (ev.dataFim || ev.dataInicio));
+    const tem = data.eventos.some(ev => ev.dataInicio && datePart(ev.dataInicio) <= key && key <= datePart(ev.dataFim || ev.dataInicio));
     if(tem) abrirModalDia(key); else { diaSelecionado = key; abrirFormEvento(null, key); }
 }
 
@@ -3484,13 +3664,13 @@ function abrirModalDia(key){
     document.getElementById('modalDia').classList.add('active');
 }
 function renderListaDia(){
-    const evs = data.eventos.filter(ev => ev.dataInicio && ev.dataFim && ev.dataInicio <= diaSelecionado && diaSelecionado <= ev.dataFim)
+    const evs = data.eventos.filter(ev => ev.dataInicio && datePart(ev.dataInicio) <= diaSelecionado && diaSelecionado <= datePart(ev.dataFim || ev.dataInicio))
         .filter(passaFiltro).sort((a,b)=>(a.ordem||0)-(b.ordem||0) || a.id-b.id);
     const c = document.getElementById('eventsDayList');
     if(evs.length === 0){ c.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;font-family:var(--font-body);">Nenhum evento neste dia.</p>'; return; }
     c.innerHTML = evs.map(ev => {
         const t = getTipo(ev.tipo);
-        const periodo = ev.dataInicio !== ev.dataFim ? `<span class="periodo">${fmtBR(ev.dataInicio)} → ${fmtBR(ev.dataFim)}</span>` : '';
+        const periodo = (datePart(ev.dataInicio) !== datePart(ev.dataFim || ev.dataInicio) || timePart(ev.dataInicio) || timePart(ev.dataFim || ev.dataInicio)) ? `<span class="periodo">${fmtBRDataHora(ev.dataInicio)}${ev.dataFim ? ' → ' + fmtBRDataHora(ev.dataFim) : ''}</span>` : '';
         const header = renderChipHeader(ev, false);
         return `<div class="event-row" style="${cardCss(ev)}" data-event-id="${ev.id}">
                     <div class="info">
@@ -3683,7 +3863,7 @@ function abrirFormEvento(id, diaForcado){
     fecharModalDia();
     const ev = id ? data.eventos.find(e=>e.id===id) : null;
     const semData = (diaForcado === '__inbox__') || (ev && !ev.dataInicio) || (!ev && diaSelecionado === '__inbox__');
-    if(diaForcado && diaForcado !== '__inbox__') diaSelecionado = diaForcado;
+    if(diaForcado && diaForcado !== '__inbox__') diaSelecionado = datePart(diaForcado);
 
     document.getElementById('formTituloModal').textContent = ev ? 'Editar evento' : 'Novo evento';
     document.getElementById('formId').value = ev ? ev.id : '';
@@ -3693,9 +3873,20 @@ function abrirFormEvento(id, diaForcado){
         document.getElementById('formDataInicio').value = '';
         document.getElementById('formDataFim').value = '';
     } else {
-        const dataIni = ev ? ev.dataInicio : (diaSelecionado && diaSelecionado !== '__inbox__' ? diaSelecionado : dateKeyFromDate(new Date()));
+        let dataIni;
+        if(ev) dataIni = toDateTimeLocal(ev.dataInicio, '09:00');
+        else if(diaForcado && diaForcado !== '__inbox__') dataIni = toDateTimeLocal(diaForcado, '09:00');
+        else if(diaSelecionado && diaSelecionado !== '__inbox__') dataIni = `${diaSelecionado}T09:00`;
+        else dataIni = `${dateKeyFromDate(new Date())}T09:00`;
+        let dataFim = '';
+        if(ev && ev.dataFim){
+            dataFim = toDateTimeLocal(ev.dataFim, datePart(ev.dataFim) === datePart(ev.dataInicio) ? '10:00' : '17:00');
+        } else if(dataIni){
+            dataFim = addMinutesLocal(dataIni, 60);
+        }
+        if(dataFim && dataFim === dataIni) dataFim = addMinutesLocal(dataIni, 60);
         document.getElementById('formDataInicio').value = dataIni || '';
-        document.getElementById('formDataFim').value = (ev && ev.dataFim && ev.dataFim !== ev.dataInicio) ? ev.dataFim : '';
+        document.getElementById('formDataFim').value = dataFim || '';
     }
     document.getElementById('formTitulo').value = ev ? ev.titulo : '';
     { const ed = document.getElementById('formDescricao'); ed.innerHTML = ev ? (ev.descricaoHtml ? sanitizarHtml(ev.descricaoHtml) : linkifyText(ev.descricao||'').replace(/\n/g,'<br>')) : ''; rteBind(ed); }
@@ -3753,18 +3944,25 @@ function persistirFormulario(){
     const checklist = clonarChecklist(formChecklistDraft);
 
     if(!titulo){ alert('Informe o título.'); return false; }
-    if(!semData && !dataInicio){ alert('Informe a data de início ou marque "Sem data definida".'); return false; }
-    if(!semData && dataFimRaw && dataFimRaw < dataInicio){ alert('A data de término não pode ser anterior à data de início.'); return false; }
+    if(!semData && !dataInicio){ alert('Informe a data e hora de início ou marque "Sem data definida".'); return false; }
 
-    const dataFim = (!semData && dataFimRaw && dataFimRaw >= dataInicio) ? dataFimRaw : dataInicio;
-    const isMulti = !semData && dataFim > dataInicio;
+    let dataFim = '';
+    if(!semData){
+        dataFim = dataFimRaw || addMinutesLocal(dataInicio, 60);
+        if(dataFim < dataInicio){ alert('O fim não pode ser anterior ao início.'); return false; }
+        if(dataFim === dataInicio) dataFim = addMinutesLocal(dataInicio, 60);
+    }
+    const isMultiData = !semData && datePart(dataFim) !== datePart(dataInicio);
 
     function criarIsolados(){
-        const N = daysBetween(dataInicio, dataFim) + 1;
+        const N = daysBetween(datePart(dataInicio), datePart(dataFim)) + 1;
+        const duracaoMin = Math.max(15, Math.round((parseDateTimeLocal(dataFim) - parseDateTimeLocal(dataInicio)) / 60000));
         for(let i=0; i<N; i++){
             const d = addDays(dataInicio, i);
+            const iniIso = toDateTimeLocal(d, timePart(dataInicio) || '09:00');
+            const fimIso = addMinutesLocal(iniIso, Math.min(duracaoMin, 23*60));
             data.eventos.push({
-                id: nextId++, dataInicio: d, dataFim: d,
+                id: nextId++, dataInicio: iniIso, dataFim: fimIso,
                 titulo, responsavel, area, descricao, descricaoHtml, tipo, status, complexidade,
                 checklist: clonarChecklist(checklist),
                 ordem: nextId*10
@@ -3775,7 +3973,7 @@ function persistirFormulario(){
     if(id){
         const ev = data.eventos.find(e=>e.id===Number(id));
         if(ev){
-            if(isolado && isMulti){
+            if(isolado && isMultiData){
                 data.eventos = data.eventos.filter(e => e.id !== Number(id));
                 criarIsolados();
             } else {
@@ -3787,7 +3985,7 @@ function persistirFormulario(){
             }
         }
     } else {
-        if(isolado && isMulti){
+        if(isolado && isMultiData){
             criarIsolados();
         } else {
             data.eventos.push({
@@ -3855,7 +4053,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     await loadData();
     aplicarTema();
     const pref = localStorage.getItem(VIEW_KEY);
-    if(pref) view = (pref === 'lista' ? 'quadro' : pref);
+    if(pref) view = (pref === 'lista' ? 'quadro' : (pref === 'dia' ? 'semana' : pref));
     else if(window.innerWidth < 560) view = 'quadro';
     initSelects();
     sincronizarSelects();
@@ -3865,14 +4063,6 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
     document.addEventListener('keydown', e=>{
         if(e.key === 'Escape'){ fecharForm(); fecharModalDia(); fecharAdmin(); return; }
-        if(view === 'dia'){
-            const tag = (e.target.tagName || '').toLowerCase();
-            const digitando = (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable);
-            const modalAberto = document.querySelector('.modal-overlay.active');
-            if(digitando || modalAberto) return;
-            if(e.key === 'ArrowLeft'){ e.preventDefault(); navDiaPrev(); }
-            if(e.key === 'ArrowRight'){ e.preventDefault(); navDiaNext(); }
-        }
     });
 
     // Salva antes de fechar a aba
@@ -4109,7 +4299,7 @@ function renderQuadroCard(ev){
     const t = getTipo(ev.tipo);
     const hdr = renderChipHeader(ev, false);
     const desc = ev.descricao ? `<div class="qdesc">${escapeHtml(ev.descricao.slice(0, 90))}${ev.descricao.length > 90 ? '…' : ''}</div>` : '';
-    const dt = ev.dataInicio ? `<div class="qdate">${ic('calendar', 13)}${fmtBR(ev.dataInicio)}${ev.dataFim && ev.dataFim !== ev.dataInicio ? ' → ' + fmtBR(ev.dataFim) : ''}</div>` : '';
+    const dt = ev.dataInicio ? `<div class="qdate">${ic('calendar', 13)}${fmtBRDataHora(ev.dataInicio)}${ev.dataFim && (ev.dataFim !== ev.dataInicio || timePart(ev.dataInicio)) ? ' → ' + fmtBRDataHora(ev.dataFim) : ''}</div>` : '';
     return `<div class="event-chip qcard" style="${cardCss(ev)}" draggable="true" data-event-id="${ev.id}"
                  ondragstart="onChipDragStart(event, ${ev.id}, null)" ondragend="onChipDragEnd(event)" onclick="abrirFormEvento(${ev.id})">
                 ${hdr}<span class="chip-title">${escapeHtml(ev.titulo)}</span>${desc}${dt}${checklistResumo(ev)}</div>`;
@@ -4133,8 +4323,8 @@ function novoCartaoQuadro(status){ diaSelecionado = '__inbox__'; abrirFormEvento
 /* ============================================================
    TAMANHO DO TEXTO POR TELA (Admin → Aparência)
 ============================================================ */
-const TAM_PADRAO = { mes: 90, semana: 90, dia: 100, quadro: 100, inbox: 100 };
-const TAM_NOMES = { mes: 'Mês', semana: 'Semana', dia: 'Dia', quadro: 'Quadro', inbox: 'Inbox' };
+const TAM_PADRAO = { mes: 90, semana: 90, quadro: 100, inbox: 100 };
+const TAM_NOMES = { mes: 'Mês', semana: 'Semana completa', quadro: 'Quadro', inbox: 'Inbox' };
 function tamanhoView(v){ return Number((data.config.tamanhos || {})[v]) || TAM_PADRAO[v] || 100; }
 function aplicarTamanhoView(){
     const c = document.getElementById('viewContainer');
