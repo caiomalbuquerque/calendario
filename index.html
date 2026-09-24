@@ -818,6 +818,26 @@
     .week-col-header { position: relative; }
     .wk-add { position: absolute; top: 5px; right: 5px; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 6px; background: rgba(255,255,255,.14); color: inherit; opacity: .55; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
     .wk-add:hover { opacity: 1; background: rgba(255,255,255,.3); }
+
+    /* ===== Descrição / Checklist: cabeçalho recolhível, ordenar e "+" ===== */
+    .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+    .modal .sec-head label { display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; user-select: none; }
+    .sec-arrow { display: inline-block; width: 12px; color: var(--text-muted); }
+    .sec-head .pct, .sec-info { color: var(--text-muted); font-size: 12px; font-weight: 700; text-transform: none; letter-spacing: 0; }
+    .sec-tools { display: flex; gap: 6px; align-items: center; }
+    .sec-fechada .sec-body { display: none; }
+    .task-checklist { margin: 0; padding: 0; background: none; border: 0; }
+    .checklist-add[data-ic] { width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+    .task-checklist-item { grid-template-columns: 16px 20px minmax(0, 1fr) 145px 30px; }
+    .check-handle { display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: grab; opacity: .6; }
+    .check-handle:hover { opacity: 1; }
+    .task-checklist-item.dragging-ck { opacity: .4; }
+    @media (max-width: 620px) {
+        .task-checklist-item { grid-template-columns: 16px 20px minmax(0, 1fr) 30px; }
+        .task-checklist-item .check-date { grid-column: 3 / 4; }
+        .task-checklist-item .check-delete { grid-column: 4 / 5; grid-row: 1 / span 2; }
+        .check-handle { grid-row: 1 / span 2; }
+    }
 </style>
 </head>
 <body>
@@ -922,19 +942,22 @@
             <div class="field"><label>Responsável</label><select id="formResponsavel"></select></div>
             <div class="field"><label>Área</label><select id="formArea"></select></div>
         </div>
-        <div class="field"><label>Descrição (opcional)</label>
-            <div class="rte-wrap"><div id="rteBarraForm"></div>
-            <div id="formDescricao" class="notas-editor rte rte-form" contenteditable="true" data-placeholder="Detalhes, anotações…" onkeydown="rteKeydown(event)" onpaste="rtePaste(event)" onkeyup="fmtAtualizarEstado()" onmouseup="fmtAtualizarEstado()"></div></div></div>
+        <div class="field" id="secDesc"><div class="sec-head"><label onclick="toggleSecao('desc')"><span class="sec-arrow">▾</span>Descrição (opcional)</label><span class="sec-info" id="descInfo"></span></div>
+            <div class="sec-body"><div class="rte-wrap"><div id="rteBarraForm"></div>
+            <div id="formDescricao" class="notas-editor rte rte-form" contenteditable="true" data-placeholder="Detalhes, anotações…" onkeydown="rteKeydown(event)" onpaste="rtePaste(event)" onkeyup="fmtAtualizarEstado()" onmouseup="fmtAtualizarEstado()"></div></div></div></div>
 
-        <div class="task-checklist" id="formChecklist">
-            <div class="task-checklist-head">
-                <div class="task-checklist-title">
-                    <span data-ic="check"></span><span>Checklist</span> <span class="pct" id="formChecklistPct"></span>
-                </div>
-                <button type="button" class="checklist-add" onclick="adicionarChecklistItem()">Checklist +</button>
+        <div class="task-checklist field" id="formChecklist">
+            <div class="sec-head">
+                <label onclick="toggleSecao('check')"><span class="sec-arrow">▾</span>Checklist <span class="pct" id="formChecklistPct"></span></label>
+                <span class="sec-tools">
+                    <button type="button" class="checklist-add" onmousedown="event.preventDefault()" onclick="checklistDaDescricao()" title="Transforma cada linha da descrição (ou do trecho selecionado) em um item">Da descrição</button>
+                    <button type="button" class="checklist-add" data-ic="plus" onclick="adicionarChecklistItem()" title="Adicionar item"></button>
+                </span>
             </div>
-            <div class="task-checklist-progress" id="formChecklistProgressWrap" style="display:none;"><span id="formChecklistProgress"></span></div>
-            <div class="task-checklist-items" id="formChecklistItems"></div>
+            <div class="sec-body">
+                <div class="task-checklist-progress" id="formChecklistProgressWrap" style="display:none;"><span id="formChecklistProgress"></span></div>
+                <div class="task-checklist-items" id="formChecklistItems"></div>
+            </div>
         </div>
 
         <div class="row2 row3">
@@ -1685,6 +1708,7 @@ function prepararDados(){
         if(ev.responsavel === undefined) ev.responsavel = '';
         if(ev.area === undefined) ev.area = '';
         if(ev.status === undefined) ev.status = '';
+        if(ev.complexidade === 'critica') ev.complexidade = 'alta';
         if(ev.ordem === undefined) ev.ordem = ev.id*10;
         if(!Array.isArray(ev.checklist)) ev.checklist = [];
         ev.checklist = ev.checklist.map((item, idx) => ({
@@ -3441,6 +3465,7 @@ function renderChecklistForm(){
     }
     root.innerHTML = itens.map(item => `
         <div class="task-checklist-item ${item.concluido ? 'done' : ''}" data-check-id="${escapeHtml(item.id)}">
+            <span class="check-handle" title="Arraste para reordenar">${ic('grip', 14)}</span>
             <input type="checkbox" ${item.concluido ? 'checked' : ''} aria-label="Concluir item do checklist">
             <input type="text" class="check-text-input" value="${escapeHtml(item.texto)}" placeholder="Item do checklist">
             <input type="date" class="check-date" value="${escapeHtml(item.data || '')}" title="Data do item">
@@ -3449,6 +3474,7 @@ function renderChecklistForm(){
     checklistAtualizarProgresso();
 }
 function adicionarChecklistItem(){
+    secaoExpandir('check');
     checklistSincronizarDoDOM();
     formChecklistDraft.push({ id: novoChecklistId(), texto: '', concluido: false, data: '' });
     renderChecklistForm();
@@ -3533,6 +3559,7 @@ function abrirFormEvento(id, diaForcado){
     toggleSemData();
     atualizarToggleIsolado();
 
+    secoesAplicar();
     document.getElementById('modalForm').classList.add('active');
     setTimeout(()=>document.getElementById('formTitulo').focus(), 100);
 }
@@ -3840,7 +3867,8 @@ const IC = {
     clip: '<path d="M21 11l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/>',
     check: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12l3 3 5-6"/>',
     ul: '<path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
-    marker: '<path d="M9 11l-5 5v4h4l5-5M9 11l6-6 4 4-6 6z"/>'
+    marker: '<path d="M9 11l-5 5v4h4l5-5M9 11l6-6 4 4-6 6z"/>',
+    grip: '<circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/>'
 };
 function ic(n, s){ s = s || 16; return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`; }
 document.addEventListener('DOMContentLoaded', () => document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); }));
@@ -4103,8 +4131,7 @@ function abrirPopDia(e, key){
 const COMPLEXIDADES = [
     { id: 'baixa', label: 'Baixa', cor: '#22a06b' },
     { id: 'media', label: 'Média', cor: '#d9a300' },
-    { id: 'alta', label: 'Alta', cor: '#f07a1a' },
-    { id: 'critica', label: 'Crítica', cor: '#e03a3a' }
+    { id: 'alta', label: 'Alta', cor: '#f07a1a' }
 ];
 function getComplexidade(id){ return COMPLEXIDADES.find(c => c.id === id) || null; }
 function statusBg(cor){ return rgbToHex(mix(hexToRgb(cor || '#888'), { r: 255, g: 255, b: 255 }, .78)); }
@@ -4182,6 +4209,105 @@ function marcarSemana(){
     document.querySelectorAll('.tab-menu-box button').forEach(b => b.classList.toggle('atual', b.dataset.modo === modo));
 }
 function novoEventoNoDia(key){ diaSelecionado = key; abrirFormEvento(null, key); }
+
+/* ============================================================
+   DESCRIÇÃO / CHECKLIST: recolher, reordenar e importar linhas
+============================================================ */
+function secoesLer(){ try { return JSON.parse(localStorage.getItem('sharkbite_secoes') || '{}') || {}; } catch(e){ return {}; } }
+function secoesAplicar(){
+    const s = secoesLer();
+    [['desc', 'secDesc'], ['check', 'formChecklist']].forEach(([k, id]) => {
+        const el = document.getElementById(id); if(!el) return;
+        el.classList.toggle('sec-fechada', !!s[k]);
+        const a = el.querySelector('.sec-arrow'); if(a) a.textContent = s[k] ? '▸' : '▾';
+    });
+    const ed = document.getElementById('formDescricao'), info = document.getElementById('descInfo');
+    if(info) info.textContent = (s.desc && ed && ed.textContent.trim()) ? '· preenchida' : '';
+}
+function toggleSecao(nome){
+    const s = secoesLer(); s[nome] = !s[nome];
+    try { localStorage.setItem('sharkbite_secoes', JSON.stringify(s)); } catch(e){}
+    secoesAplicar();
+}
+function secaoExpandir(nome){ if(secoesLer()[nome]) toggleSecao(nome); }
+
+/* cada linha vira um item; remove marcadores comuns (-, *, •, 1., 1), [ ]) */
+function linhasParaChecklist(texto){
+    return String(texto || '').split(/\r?\n/)
+        .map(l => l.replace(/\u00a0/g, ' ').trim().replace(/^(?:[-*•·▪◦–]|\d+[.)]|\[[ xX]?\])\s+/, '').trim())
+        .filter(Boolean);
+}
+function checklistAdicionarTextos(textos, pos){
+    checklistSincronizarDoDOM();
+    const novos = textos.map(t => ({ id: novoChecklistId(), texto: t, concluido: false, data: '' }));
+    if(pos == null || pos < 0 || pos > formChecklistDraft.length) formChecklistDraft.push(...novos);
+    else formChecklistDraft.splice(pos, 0, ...novos);
+    renderChecklistForm();
+    checklistPersistirSeEventoExistente();
+}
+/* Botão "Da descrição": usa o trecho selecionado; sem seleção, usa a descrição inteira */
+function checklistDaDescricao(){
+    const ed = document.getElementById('formDescricao'); if(!ed) return;
+    const sel = getSelection();
+    let usaSel = false, rg = null, texto;
+    if(sel.rangeCount && !sel.isCollapsed && ed.contains(sel.anchorNode) && ed.contains(sel.focusNode)){
+        usaSel = true; rg = sel.getRangeAt(0).cloneRange(); texto = sel.toString();
+    } else texto = ed.innerText;
+    const linhas = linhasParaChecklist(texto);
+    if(!linhas.length){ mostrarToast('Nenhuma linha encontrada na descrição'); return; }
+    secaoExpandir('check');
+    checklistAdicionarTextos(linhas);
+    const n = linhas.length;
+    if(confirm(`${n} ${n > 1 ? 'itens adicionados' : 'item adicionado'} ao checklist.\n\nRemover ${usaSel ? 'o trecho selecionado' : 'esse texto'} da descrição?`)){
+        if(usaSel){ ed.focus(); const s2 = getSelection(); s2.removeAllRanges(); s2.addRange(rg); document.execCommand('delete'); }
+        else ed.innerHTML = '';
+        rteMudou(ed);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    secoesAplicar();
+    const root = document.getElementById('formChecklistItems'); if(!root) return;
+    let arrastando = null;
+    const linhaDe = e => e.target.closest && e.target.closest('.task-checklist-item');
+
+    /* só a alça (⋮⋮) inicia o arraste, para não atrapalhar a edição do texto */
+    root.addEventListener('mousedown', e => { const h = e.target.closest && e.target.closest('.check-handle'); if(h) h.closest('.task-checklist-item').draggable = true; });
+    document.addEventListener('mouseup', () => { if(!arrastando) root.querySelectorAll('.task-checklist-item[draggable="true"]').forEach(r => { r.draggable = false; }); });
+    root.addEventListener('dragstart', e => {
+        const row = linhaDe(e); if(!row || e.target !== row) return;
+        arrastando = row; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'checklist');
+        setTimeout(() => row.classList.add('dragging-ck'), 0);
+    });
+    root.addEventListener('dragover', e => {
+        if(!arrastando) return;
+        e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+        const ref = [...root.querySelectorAll('.task-checklist-item')].filter(r => r !== arrastando)
+            .find(r => { const b = r.getBoundingClientRect(); return e.clientY < b.top + b.height / 2; });
+        if(ref){ if(arrastando.nextElementSibling !== ref) root.insertBefore(arrastando, ref); }
+        else if(root.lastElementChild !== arrastando) root.appendChild(arrastando);
+    });
+    root.addEventListener('drop', e => { if(arrastando) e.preventDefault(); });
+    root.addEventListener('dragend', () => {
+        if(!arrastando) return;
+        const r = arrastando; arrastando = null;
+        r.draggable = false; r.classList.remove('dragging-ck');
+        checklistPersistirSeEventoExistente();   // lê a nova ordem do DOM e salva
+    });
+
+    /* colar várias linhas num item: cada linha vira um item */
+    root.addEventListener('paste', e => {
+        const inp = e.target.closest && e.target.closest('.check-text-input'); if(!inp) return;
+        const txt = (e.clipboardData || window.clipboardData).getData('text/plain');
+        const linhas = linhasParaChecklist(txt);
+        if(linhas.length < 2) return;
+        e.preventDefault();
+        const row = inp.closest('.task-checklist-item');
+        const idx = [...root.querySelectorAll('.task-checklist-item')].indexOf(row);
+        if(!inp.value.trim()) inp.value = linhas.shift();
+        checklistAdicionarTextos(linhas, idx + 1);
+    });
+});
 </script>
 </body>
 </html>
