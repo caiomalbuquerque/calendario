@@ -847,6 +847,97 @@
     .task-checklist-item .check-text-input { display: block; resize: none; overflow: hidden; line-height: 1.35; min-height: 34px; white-space: pre-wrap; overflow-wrap: anywhere; }
     .task-checklist-item .check-date { margin-top: 1px; }
     .task-checklist-item .check-delete { margin-top: 3px; }
+
+    /* ============================================================
+       LAYOUT PARA CELULAR (até 700px)
+    ============================================================ */
+    @media (max-width: 700px) {
+        body { padding: 0; }
+        .container { border-radius: 0; max-width: 100%; }
+
+        /* --- Cabeçalho: marca + ícones na 1ª linha, abas roláveis na 2ª --- */
+        .appbar { padding: 8px 10px; gap: 8px; flex-wrap: wrap; }
+        .brand { order: 1; flex: 1; margin-right: 0; }
+        .brand-logo { width: 30px; height: 30px; }
+        .brand-name { font-size: 18px; }
+        .appbar-actions { order: 2; gap: 6px; }
+        .appbar-actions .btn { padding: 8px 10px; }
+        .appbar-actions .btn-accent, #btnTema, #btnAdmin { font-size: 0; gap: 0; }   /* só o ícone */
+        .tabs { order: 3; width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab-wrap { flex: 0 0 auto; }
+        .tabs .btn-toggle { flex: 0 0 auto; padding: 7px 12px; white-space: nowrap; }
+        .tabs-sep { flex: 0 0 1px; }
+        .tab-menu { display: none !important; }
+        .inbox-badge { margin-left: 6px; }
+
+        /* --- Filtros: navegação de data sempre visível, filtros recolhidos --- */
+        .filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 10px; padding: 8px; }
+        .appbar + .filters { margin-top: 8px; }
+        .filters .datenav { order: 0; width: 100%; margin: 0; padding: 0; border: 0; gap: 6px; flex-wrap: nowrap; }
+        .filters .datenav select { flex: 1 1 0; min-width: 0; }
+        .filters .datenav .btn { flex: 0 0 auto; }
+        .filters .lbl { order: 1; cursor: pointer; padding: 4px 2px; }
+        .filters .lbl::after { content: ' ▸'; }
+        .filters.filtros-abertos .lbl::after { content: ' ▾'; }
+        .filters .count { order: 2; margin-left: auto; }
+        .filters select, .filters .btn-mini { order: 3; display: none; }
+        .filters.filtros-abertos select { display: block; flex: 1 1 calc(50% - 6px); min-width: 0; }
+        .filters.filtros-abertos .btn-mini { display: inline-flex; padding: 6px 12px; }
+
+        /* --- Legenda em uma linha rolável --- */
+        .legend { flex-wrap: nowrap; overflow-x: auto; max-height: none; margin: 4px 10px 8px; padding: 6px 10px; gap: 8px 12px; font-size: 12px; }
+        .legend .item, .legend .lg-t, .legend .sep { flex: 0 0 auto; white-space: nowrap; }
+        #viewContainer { padding-bottom: 8px; }
+
+        /* --- Mês: cada evento vira uma barrinha; toque no dia abre a lista --- */
+        .calendar { width: calc(100% - 20px); margin: 0 10px; }
+        body[data-view=mes] .calendar td { height: auto !important; min-height: 68px; padding: 2px; }
+        body[data-view=mes] .day-number { font-size: 12px; }
+        body[data-view=mes] .events-list { gap: 3px; margin-top: 2px; }
+        body[data-view=mes] .event-chip { height: 8px; min-height: 8px; padding: 0; border-left-width: 3px; overflow: hidden; pointer-events: none; }
+        body[data-view=mes] .event-chip .chip-title, body[data-view=mes] .event-chip .chip-header { display: none; }
+        body[data-view=mes] .more-btn { font-size: 10px; padding: 0; }
+
+        /* --- Semana: um dia embaixo do outro --- */
+        .week-grid { grid-template-columns: 1fr !important; padding: 0 10px; overflow: visible; gap: 8px; }
+        .week-col { min-height: 56px; }
+        .week-col-header { display: flex; align-items: center; gap: 8px; text-align: left; padding: 6px 34px 6px 8px; }
+        .week-col-header .wk-day { display: inline; margin: 0; font-size: 16px; }
+        .wk-add { top: 50%; transform: translateY(-50%); }
+
+        /* --- Dia --- */
+        .day-view { padding: 0 10px; }
+        .day-view-header { flex-direction: row; align-items: center; text-align: left; padding: 8px 12px; margin-bottom: 8px; }
+        .day-view-header .day-nav { display: none; }   /* ‹ › já estão na barra de data */
+        .day-view-header h2 { font-size: 15px; }
+        .day-view-header .sub { font-size: 12px; }
+        .day-card { padding: 9px 11px; }
+        .day-card .dc-title { font-size: 15px; }
+        .day-card .dc-desc { font-size: 13px; max-height: 6em; overflow: hidden; }
+
+        /* --- Quadro: colunas quase da largura da tela, com encaixe --- */
+        .quadro { scroll-snap-type: x mandatory; padding: 0 10px 10px; gap: 10px; }
+        .qcol { flex: 0 0 86%; scroll-snap-align: start; }
+
+        /* --- Inbox e Notas --- */
+        .inbox-view { margin: 0 10px; }
+        .inbox-header { flex-direction: row; text-align: left; padding: 10px 12px; }
+        .notas-view { margin: 0 10px 10px; gap: 8px; min-height: 0; }
+        .notas-sidebar { max-height: 170px; }
+        .notas-editor-wrap { min-height: 60vh; }
+
+        /* --- Cartões e painéis em tela cheia --- */
+        .modal-overlay { padding: 0; align-items: stretch; }
+        .modal-overlay .modal { width: 100% !important; max-width: 100% !important; height: 100%; max-height: 100dvh; border-radius: 0; padding: 14px 14px 0; }
+        #modalDia { padding: 10px; align-items: center; }
+        #modalDia .modal { height: auto; max-height: 85dvh; border-radius: var(--radius-lg); }
+        .modal input[type=text], .modal input[type=date], .modal input[type=number], .modal textarea, .modal select { font-size: 16px; }
+        .modal .actions { position: sticky; bottom: 0; background: var(--modal-bg); padding: 10px 0; margin-top: 12px; border-top: 1px solid var(--border-color); }
+        .row2.row3 { grid-template-columns: 1fr 1fr !important; }
+        .row2.row3 .field:last-child { grid-column: 1 / -1; }
+        #popDia { width: min(300px, 100% - 16px); }
+    }
 </style>
 </head>
 <body>
@@ -4350,6 +4441,12 @@ document.addEventListener('DOMContentLoaded', () => {
         checklistAdicionarTextos([''], idx + 1);
         setTimeout(() => { const n = root.querySelectorAll('.task-checklist-item')[idx + 1]; const t = n && n.querySelector('.check-text-input'); if(t) t.focus(); }, 0);
     });
+});
+
+/* Celular: "Filtros ▸" abre/fecha os filtros */
+document.addEventListener('DOMContentLoaded', () => {
+    const bar = document.getElementById('filtersBar'), l = bar && bar.querySelector('.lbl');
+    if(l) l.addEventListener('click', () => bar.classList.toggle('filtros-abertos'));
 });
 </script>
 </body>
