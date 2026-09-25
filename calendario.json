@@ -159,7 +159,7 @@
       "descricao": "IBURA Solicitou adiamento para o final do dia 28/09HEC Solicitou adiamento para o final do dia 29/09NGC Solicitou adiamento para o final do dia 25/09",
       "tipo": "lembrete",
       "status": "nao-iniciado",
-      "ordem": 40,
+      "ordem": 30,
       "checklist": [],
       "descricaoHtml": "IBURA Solicitou adiamento para o final do dia 28/09<br>HEC Solicitou adiamento para o final do dia 29/09<div>NGC Solicitou adiamento para o final do dia 25/09</div>",
       "complexidade": "baixa"
@@ -459,7 +459,7 @@
       "descricao": "https://app.powerbi.com/groups/55390961-c171-4f8c-82e4-55356aec3435/list?experience=power-bi&clientSideAuth=0&subfolderId=81876",
       "tipo": "tarefa",
       "status": "nao-iniciado",
-      "ordem": 470,
+      "ordem": 10,
       "checklist": [],
       "complexidade": "baixa",
       "descricaoHtml": "<a href=\"https://app.powerbi.com/groups/55390961-c171-4f8c-82e4-55356aec3435/list?experience=power-bi&amp;clientSideAuth=0&amp;subfolderId=81876\" target=\"_blank\" rel=\"noopener\">https://app.powerbi.com/groups/55390961-c171-4f8c-82e4-55356aec3435/list?experience=power-bi&amp;clientSideAuth=0&amp;subfolderId=81876</a>"
@@ -476,7 +476,7 @@
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "complexidade": "alta",
-      "ordem": 10,
+      "ordem": 30,
       "checklist": [
         {
           "id": "ck_e66c9f2a-20b4-47ee-bc75-df91c8aa1465",
@@ -532,7 +532,7 @@
       "status": "nao-iniciado",
       "complexidade": "baixa",
       "checklist": [],
-      "ordem": 530
+      "ordem": 20
     },
     {
       "id": 53,
@@ -661,7 +661,7 @@
           "responsavel": ""
         }
       ],
-      "ordem": 550
+      "ordem": 40
     },
     {
       "id": 55,
@@ -725,7 +725,7 @@
           "data": ""
         }
       ],
-      "ordem": 560
+      "ordem": 40
     },
     {
       "id": 56,
@@ -808,49 +808,57 @@
           "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
           "texto": "Incluir bases do multiatendimento",
           "concluido": false,
-          "data": "2026-09-29"
+          "data": "2026-09-29",
+          "responsavel": ""
         },
         {
           "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
           "texto": "Incluir bases da ouvidoria",
           "concluido": false,
-          "data": "2026-09-29"
+          "data": "2026-09-29",
+          "responsavel": ""
         },
         {
           "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
           "texto": "Importar visuais do painel do multiatendimento",
           "concluido": false,
-          "data": "2026-09-30"
+          "data": "2026-09-30",
+          "responsavel": ""
         },
         {
           "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
           "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
           "concluido": false,
-          "data": ""
+          "data": "",
+          "responsavel": ""
         },
         {
           "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
           "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
           "concluido": false,
-          "data": ""
+          "data": "",
+          "responsavel": ""
         },
         {
           "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
           "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
           "concluido": false,
-          "data": ""
+          "data": "",
+          "responsavel": ""
         },
         {
           "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
           "texto": "Agrupar exames de imagem pelo nome do exame",
           "concluido": false,
-          "data": ""
+          "data": "",
+          "responsavel": ""
         },
         {
           "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
           "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
           "concluido": false,
-          "data": ""
+          "data": "",
+          "responsavel": ""
         }
       ],
       "ordem": 580
@@ -1414,7 +1422,7 @@
       "status": "nao-iniciado",
       "complexidade": "baixa",
       "checklist": [],
-      "ordem": 700
+      "ordem": 10
     },
     {
       "id": 71,
