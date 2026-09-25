@@ -206,19 +206,6 @@
       "checklist": []
     },
     {
-      "id": 22,
-      "dataInicio": "2026-10-02",
-      "dataFim": "2026-10-02",
-      "titulo": "Atualizações: Atendimento",
-      "responsavel": "Caio Albuquerque",
-      "area": "Planejamento Estratégico",
-      "descricao": "Colocar a estrutura de tabelas da Ouvidoria no PE;\nColocar Estrutura do Multiatendimento no PE",
-      "tipo": "tarefa",
-      "status": "nao-iniciado",
-      "ordem": 10,
-      "checklist": []
-    },
-    {
       "id": 24,
       "dataInicio": "",
       "dataFim": "",
@@ -1518,7 +1505,7 @@
     "background": {
       "tipo": "imagem",
       "cor": "#0582ff",
-      "imagem": "bg3.jpg"
+      "imagem": "b49046e7f615f05e8db9df9b7e5a14ae.jpg"
     },
     "status": [
       {
@@ -1849,15 +1836,7 @@
       "ordem": 20
     }
   ],
-  "reunioes": [
-    {
-      "id": 1790359291425,
-      "nome": "a",
-      "cor": "#3f51b5",
-      "expandido": true,
-      "entradas": []
-    }
-  ],
+  "reunioes": [],
   "registros": [
     {
       "id": 1790359573514,
