@@ -450,15 +450,13 @@
           "id": "ck_7d0077f6-a16e-496d-84df-e5e0ba3efb46",
           "texto": "Trocar o nome do arquivo",
           "concluido": false,
-          "data": "2026-10-05",
-          "responsavel": ""
+          "data": "2026-10-05"
         },
         {
           "id": "ck_c830e6bd-a82f-44a4-843c-092a1531ba75",
           "texto": "fazer conexão com o fluxo de dados",
           "concluido": false,
-          "data": "2026-10-05",
-          "responsavel": ""
+          "data": "2026-10-05"
         }
       ],
       "descricaoHtml": "",
@@ -497,29 +495,25 @@
           "id": "ck_e66c9f2a-20b4-47ee-bc75-df91c8aa1465",
           "texto": "Organizar medidas",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_b2aec6e8-9588-4c20-9af6-034c9a3f0fa6",
           "texto": "Organizar Relacionamentos",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_8e3f6f2c-4271-4dfd-8679-4c92df7b6913",
           "texto": "Deixar formatação visual mais simples e intuitiva",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_8ed7b030-550c-44a4-9b70-75bc935cd6ab",
           "texto": "Colocar a responsabilidade de Cálculo no Painel do OKR",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         }
       ]
     },
@@ -575,8 +569,8 @@
       "titulo": "Formatar planilha de OKR de cada Unidade",
       "responsavel": "Caio Albuquerque",
       "area": "OKR",
-      "descricao": "",
-      "descricaoHtml": "",
+      "descricao": "Verificar se mandaram no e-mail do NIO material à parte",
+      "descricaoHtml": "Verificar se mandaram no e-mail do NIO material à parte",
       "tipo": "tarefa",
       "status": "nao-iniciado",
       "complexidade": "media",
@@ -1083,57 +1077,49 @@
           "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
           "texto": "Incluir bases do multiatendimento",
           "concluido": false,
-          "data": "2026-09-29",
-          "responsavel": ""
+          "data": "2026-09-29"
         },
         {
           "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
           "texto": "Incluir bases da ouvidoria",
           "concluido": false,
-          "data": "2026-09-29",
-          "responsavel": ""
+          "data": "2026-09-29"
         },
         {
           "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
           "texto": "Importar visuais do painel do multiatendimento",
           "concluido": false,
-          "data": "2026-09-30",
-          "responsavel": ""
+          "data": "2026-09-30"
         },
         {
           "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
           "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
           "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
           "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
           "texto": "Agrupar exames de imagem pelo nome do exame",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
           "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         }
       ],
       "ordem": 620
@@ -1347,57 +1333,49 @@
           "id": "ck_d5867895-031c-4950-9251-15040c91db7c",
           "texto": "Incluir bases do multiatendimento",
           "concluido": false,
-          "data": "2026-09-29",
-          "responsavel": ""
+          "data": "2026-09-29"
         },
         {
           "id": "ck_295a2e7e-55ac-4ae6-b234-d2d4f288c17a",
           "texto": "Incluir bases da ouvidoria",
           "concluido": false,
-          "data": "2026-09-29",
-          "responsavel": ""
+          "data": "2026-09-29"
         },
         {
           "id": "ck_f790cafa-14db-40a6-b485-cacaaf3605de",
           "texto": "Importar visuais do painel do multiatendimento",
           "concluido": false,
-          "data": "2026-09-30",
-          "responsavel": ""
+          "data": "2026-09-30"
         },
         {
           "id": "ck_311901c6-c107-42a5-b501-0c291170595f",
           "texto": "Importar visuais da Ouvidoria: me solicitar seleção do que deverá ser considerado para o planejamento estratégico",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_f21cb835-5081-4d9f-b2a7-7a17775ca805",
           "texto": "Metas contratuais: Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_32431e82-b1a6-4993-acab-ddb482efb308",
           "texto": "Incluir categoria de profissionais no pagamento por folha: Jefferson Souza (NIO) irá incluir essa informação no Operacional. Após Inclusão, ele irá me comunicar para que seja incluído no Planejamento Estratégico",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_8b730b6e-2778-43ba-8e65-561fda4f776d",
           "texto": "Agrupar exames de imagem pelo nome do exame",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         },
         {
           "id": "ck_f2552c62-1017-46a5-9d80-443a8812e5eb",
           "texto": "HPS, HDH: Aparecendo especialidades que a unidade não atende. Identificar o problema",
           "concluido": false,
-          "data": "",
-          "responsavel": ""
+          "data": ""
         }
       ],
       "ordem": 660
@@ -1412,29 +1390,26 @@
       "descricao": "Momento 1: Avaliação - Desafio Unidades 2026 (NGC)https://forms.cloud.microsoft/r/S9xjKJf5zY",
       "descricaoHtml": "<div>Momento 1: Avaliação - Desafio Unidades 2026 (NGC)</div><a href=\"https://forms.cloud.microsoft/r/S9xjKJf5zY\" target=\"_blank\" rel=\"noopener\">https://forms.cloud.microsoft/r/S9xjKJf5zY</a>",
       "tipo": "lembrete",
-      "status": "em-andamento",
+      "status": "suspenso",
       "complexidade": "baixa",
       "checklist": [
         {
           "id": "ck_68f118fd-f158-46f9-9b70-cadd2b85f19e",
           "texto": "Enviar novamente o e-mail, com prazo até 23h59 do dia 28/09",
           "concluido": false,
-          "data": "2026-09-25",
-          "responsavel": "Caio Albuquerque"
+          "data": "2026-09-25"
         },
         {
           "id": "ck_dc8606f7-9fc5-486b-b2a3-69e90be8dfb7",
           "texto": "Mandar print do e-mail para Sormane",
           "concluido": false,
-          "data": "2026-09-25",
-          "responsavel": "Caio Albuquerque"
+          "data": "2026-09-25"
         },
         {
           "id": "ck_40100b2a-da87-4f50-96b9-9bd417cfa7db",
           "texto": "Sormane envia no grupo dos superintendentes para eles preencherem",
           "concluido": false,
-          "data": "2026-09-28",
-          "responsavel": "Sormane Britto"
+          "data": "2026-09-28"
         }
       ],
       "ordem": 680
@@ -1464,7 +1439,7 @@
       "descricao": "Identificado por HPS, HDH",
       "descricaoHtml": "Identificado por HPS, HDH",
       "tipo": "tarefa",
-      "status": "nao-iniciado",
+      "status": "finalizado",
       "complexidade": "",
       "checklist": [],
       "ordem": 720
@@ -1826,7 +1801,21 @@
       "quadro": 90,
       "inbox": 70
     },
-    "linhasMes": 2
+    "linhasMes": 2,
+    "setores": [
+      {
+        "label": "a",
+        "cor": "#3f51b5"
+      },
+      {
+        "label": "aa",
+        "cor": "#607d8b"
+      },
+      {
+        "label": "Setore",
+        "cor": "#8bc34a"
+      }
+    ]
   },
   "notas": [
     {
@@ -1836,7 +1825,8 @@
       "cor": "#ff61fa",
       "anexos": [],
       "criadoEm": "2026-09-25T13:02:41.650Z",
-      "atualizadoEm": "2026-09-25T13:41:00.274Z"
+      "atualizadoEm": "2026-09-25T13:41:00.274Z",
+      "ordem": 0
     },
     {
       "id": 1790166062714,
@@ -1859,5 +1849,39 @@
       "ordem": 20
     }
   ],
-  "reunioes": []
+  "reunioes": [
+    {
+      "id": 1790359291425,
+      "nome": "a",
+      "cor": "#3f51b5",
+      "expandido": true,
+      "entradas": []
+    }
+  ],
+  "registros": [
+    {
+      "id": 1790359573514,
+      "nome": "a",
+      "cor": "var(--primary)",
+      "expandido": true,
+      "entradas": []
+    },
+    {
+      "id": 1790359443432,
+      "nome": "Planejamento Estratégico",
+      "cor": "var(--primary)",
+      "expandido": true,
+      "entradas": [
+        {
+          "id": 1790359446010,
+          "titulo": "Especialidades - Taxa de Ocupação e Tempo Médio de Permanência",
+          "descricao": "Questionamentos feitos pelo HDH e HPS sobre a presença de especialidades que não fazem parte do escopo da Unidade.",
+          "onde": "Páginas Taxa de Ocupação e Tempo Médio de Permanência",
+          "resolucao": "Verificada a presença de usuários teste no quantitativo geral de atendimentos/internações, contendo especialidades variadas, sendo uma das causas do problema. A outra, identificada a partir da análise de prontuários no PEP, é causada pela criação de um código de atendimento para o paciente na Urgência e, em caso de Internamento, gera-se outro. Exemplo: a paciente com o prontuário 1033392 deu entrada na Emergência do HPS com a especialidade de Neurologia cadastrada. Após decisão médica pelo internamento, um novo atendimento foi gerado, porém dessa vez a especialidade vinculada foi a de Assistente Social.  Outro prontuário que acontece o mesmo: 275643 (Neurologia > Geriatria)",
+          "anexos": "realizou-se ajuste na query para retirar os usuários teste:  r_est_hosp_analitico_25-09-2026.sql",
+          "data": "2026-09-25T18:06:07.026Z"
+        }
+      ]
+    }
+  ]
 }
