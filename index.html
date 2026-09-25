@@ -465,6 +465,80 @@
         text-decoration: line-through; opacity: .55;
     }
 
+    /* ============================================================
+       REUNIÕES — Atas com 2 níveis (reunião > data)
+    ============================================================ */
+    .reun-sidebar .btn-nova-nota { margin-bottom: 2px; }
+    .reun-lista { gap: 2px !important; }
+    .reun-serie { list-style: none; }
+    .reun-serie-head {
+        display: flex; align-items: center; gap: 6px;
+        padding: 8px 8px; border-radius: var(--radius-sm);
+        background: var(--bg-panel-alt); border: 1px solid var(--border-color);
+        cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 700;
+        color: var(--text-heading);
+    }
+    .reun-serie-head:hover { border-color: var(--secondary); }
+    .reun-serie-head.ativa { border-color: var(--primary); box-shadow: inset 3px 0 0 var(--primary); }
+    .reun-arrow { width: 10px; flex-shrink: 0; color: var(--text-muted); font-size: 11px; }
+    .reun-cor-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,.25); }
+    .reun-serie-nome { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .reun-mini-add, .reun-mini-del {
+        width: 20px; height: 20px; flex-shrink: 0; padding: 0; border: 0; border-radius: 5px;
+        background: transparent; color: var(--text-muted); cursor: pointer; font-size: 14px; line-height: 1;
+        display: inline-flex; align-items: center; justify-content: center;
+    }
+    .reun-mini-add:hover { background: var(--bg-panel-dark); color: var(--primary); }
+    .reun-mini-del:hover { background: rgba(220,53,69,.12); color: var(--danger); }
+    .reun-entradas { list-style: none; margin: 3px 0 6px; padding-left: 16px; display: flex; flex-direction: column; gap: 3px; }
+    .reun-entrada-item {
+        padding: 6px 8px; border-radius: var(--radius-sm); font-size: 13px; cursor: pointer;
+        background: var(--bg-container); border: 1px solid var(--border-color); color: var(--text-color);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .reun-entrada-item:hover { border-color: var(--secondary); }
+    .reun-entrada-item.ativa { background: var(--primary); color: var(--text-on-primary); border-color: var(--primary); }
+    .reun-vazio-mini { padding: 5px 8px; font-size: 12px; color: var(--text-muted); }
+
+    .reun-editor { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; padding-right: 2px; }
+    .reun-editor-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+    .reun-editor-top input[type=date] { font: 700 20px var(--font-heading); border: 1px solid var(--border-color-strong); border-radius: var(--radius-sm); padding: 4px 8px; background: var(--bg-panel); color: var(--text-heading); }
+    .reun-meta { color: var(--text-muted); font-size: 12px; flex: 1; }
+    .reun-secao { display: flex; flex-direction: column; gap: 6px; }
+    .reun-secao .sec-head label { font-weight: 800; color: var(--text-heading); font-size: 14px; }
+    .reun-linha-simples { display: flex; align-items: flex-start; gap: 7px; }
+    .reun-simples-input {
+        flex: 1; min-width: 0; resize: none; overflow: hidden; padding: 6px 8px; line-height: 1.35;
+        border: 1px solid var(--border-color-strong); background: var(--bg-container); color: var(--text-color);
+        border-radius: var(--radius-sm); font: 500 14px var(--font-body);
+    }
+    .reun-linha-tabela {
+        display: grid; grid-template-columns: minmax(0,1fr) 140px 135px 140px 30px;
+        align-items: start; gap: 7px;
+    }
+    .reun-linha-tabela .reun-tab-texto {
+        resize: none; overflow: hidden; padding: 6px 8px; line-height: 1.35;
+        border: 1px solid var(--border-color-strong); background: var(--bg-container); color: var(--text-color);
+        border-radius: var(--radius-sm); font: 500 14px var(--font-body);
+    }
+    .reun-linha-tabela select, .reun-linha-tabela input[type=date] {
+        width: 100%; padding: 6px 6px; border: 1px solid var(--border-color-strong);
+        background: var(--bg-panel-alt); color: var(--text-color); font: 500 12px var(--font-body);
+        border-radius: 4px;
+    }
+    .reun-tabela-head {
+        display: grid; grid-template-columns: minmax(0,1fr) 140px 135px 140px 30px; gap: 7px;
+        font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+        color: var(--text-muted); padding: 0 2px 2px;
+    }
+    @media (max-width: 700px) {
+        .reun-linha-tabela, .reun-tabela-head { grid-template-columns: minmax(0,1fr) 30px; }
+        .reun-tabela-head span:not(:first-child) { display: none; }
+        .reun-linha-tabela .reun-tab-resp, .reun-linha-tabela .reun-tab-prazo, .reun-linha-tabela .reun-tab-status { grid-column: 1 / 2; }
+        .reun-linha-tabela .check-delete { grid-row: 1 / span 4; }
+    }
+    .reun-vazio-editor { margin: auto; text-align: center; color: var(--text-muted); font-family: var(--font-body); font-size: 14px; }
+
     /* Context menu (botão direito) */
     .nota-context-menu {
         position: fixed;
@@ -647,7 +721,7 @@
     .subbar .title-block h1 { font-size: clamp(24px, 3vw, 34px); }
     .datenav { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
     .datenav select { border: 1px solid var(--border-color-strong); background: var(--bg-panel-alt); color: var(--text-heading); font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 7px 8px; border-radius: var(--btn-radius); cursor: pointer; }
-    body[data-view=inbox] .datenav, body[data-view=notas] .datenav, body[data-view=notas] .filters { display: none; }
+    body[data-view=inbox] .datenav, body[data-view=notas] .datenav, body[data-view=notas] .filters, body[data-view=reunioes] .datenav, body[data-view=reunioes] .filters { display: none; }
     .calendar td.other-month { cursor: default; opacity: .7; }
     .event-chip, .day-card { box-shadow: 0 1px 2px rgba(11,42,74,.08); }
     #modalForm .modal { max-width: min(760px, 100% - 16px); }
@@ -709,7 +783,7 @@
     .appbar, .subbar, .filters, .legend { flex-shrink: 0; }
     .legend { margin: 6px 20px 12px; padding: 8px 12px; }
     body[data-view=quadro] #viewContainer { overflow: hidden; }
-    body[data-view=quadro] .datenav, body[data-view=quadro] .legend, body[data-view=notas] .legend { display: none; }
+    body[data-view=quadro] .datenav, body[data-view=quadro] .legend, body[data-view=notas] .legend, body[data-view=reunioes] .legend { display: none; }
     body[data-view=quadro].arrastando .inbox-dropzone { display: none; }
     .brand-name { font-size: 22px; }
     .btn-ic { display: inline-flex; align-items: center; gap: 6px; }
@@ -940,7 +1014,7 @@
     }
         /* ===== Responsável do item do checklist ===== */
     .check-resp-btn {
-        width: 26px; height: 26px; padding: 0;
+        width: 26px; height: 26px; padding: 0; margin-top: 3px;
         border: 1px solid var(--border-color-strong); border-radius: 50%;
         background: var(--bg-panel-alt); cursor: pointer;
         display: inline-flex; align-items: center; justify-content: center;
@@ -1006,6 +1080,7 @@
             <span class="tabs-sep"></span>
             <button class="btn btn-toggle" data-view="inbox" onclick="setView('inbox')" title="Tarefas sem data">Inbox <span class="inbox-badge" id="inboxBadge" style="display:none;">0</span></button>
             <button class="btn btn-toggle" data-view="notas" onclick="setView('notas')" title="Bloco de anotações">Notas</button>
+            <button class="btn btn-toggle" data-view="reunioes" onclick="setView('reunioes')" title="Atas de reunião">Reuniões</button>
         </nav>
         <div class="appbar-actions">
             <button class="btn btn-accent btn-ic" onclick="novoEventoHoje()" title="Criar novo item na tela atual"><span data-ic="plus"></span>Novo</button>
@@ -1059,6 +1134,16 @@
     <div class="modal">
         <h2 id="formTituloModal">Novo evento</h2>
         <input type="hidden" id="formId">
+        <div class="field"><label>Título</label><input type="text" id="formTitulo" placeholder="Ex.: Disponibilização da planilha"></div>
+        <div class="row2">
+            <div class="field"><label>Responsável</label><select id="formResponsavel"></select></div>
+            <div class="field"><label>Área</label><select id="formArea"></select></div>
+        </div>
+        <div class="row2 row3">
+            <div class="field"><label>Tipo</label><select id="formTipo"></select></div>
+            <div class="field"><label>Complexidade</label><select id="formComplexidade"></select></div>
+            <div class="field"><label>Status</label><select id="formStatus"></select></div>
+        </div>
         <div class="data-toggle-row">
             <label class="checkbox-label">
                 <input type="checkbox" id="formSemData" onchange="toggleSemData()">
@@ -1071,20 +1156,22 @@
         </div>
         <div class="field" id="formIsoladoWrap" style="display:none;">
             <label class="checkbox-label">
-                <input type="checkbox" id="formIsolado">
+                <input type="checkbox" id="formIsolado" onchange="atualizarDiasUteisWrap()">
                 <span>Criar tarefas isoladas por dia</span>
             </label>
             <span class="hint">
                 <b>Desmarcado (padrão):</b> tarefa em cadeia — editar um dia afeta todos os dias do período.<br>
                 <b>Marcado:</b> cria um evento independente para cada dia — editar um não afeta os demais.
             </span>
+            <div id="formDiasUteisWrap" style="display:none; margin-top:8px;">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="formDiasUteis">
+                    <span>Considerar apenas dias úteis na recorrência</span>
+                </label>
+                <span class="hint">Quando marcado, sábados e domingos do período não geram tarefa isolada.</span>
+            </div>
         </div>
-        <div class="field"><label>Título</label><input type="text" id="formTitulo" placeholder="Ex.: Disponibilização da planilha"></div>
-        <div class="row2">
-            <div class="field"><label>Responsável</label><select id="formResponsavel"></select></div>
-            <div class="field"><label>Área</label><select id="formArea"></select></div>
-        </div>
-        <div class="field" id="secDesc"><div class="sec-head"><label onclick="toggleSecao('desc')"><span class="sec-arrow">▾</span>Descrição (opcional)</label><span class="sec-info" id="descInfo"></span></div>
+        <div class="field" id="secDesc"><div class="sec-head"><label onclick="toggleSecao('desc')"><span class="sec-arrow">▾</span>Descrição</label><span class="sec-info" id="descInfo"></span></div>
             <div class="sec-body"><div class="rte-wrap"><div id="rteBarraForm"></div>
             <div id="formDescricao" class="notas-editor rte rte-form" contenteditable="true" data-placeholder="Detalhes, anotações…" onkeydown="rteKeydown(event)" onpaste="rtePaste(event)" onkeyup="fmtAtualizarEstado()" onmouseup="fmtAtualizarEstado()"></div></div></div></div>
 
@@ -1092,7 +1179,6 @@
             <div class="sec-head">
                 <label onclick="toggleSecao('check')"><span class="sec-arrow">▾</span>Checklist <span class="pct" id="formChecklistPct"></span></label>
                 <span class="sec-tools">
-                    <button type="button" class="checklist-add" onmousedown="event.preventDefault()" onclick="checklistDaDescricao()" title="Transforma cada linha da descrição (ou do trecho selecionado) em um item">Da descrição</button>
                     <button type="button" class="checklist-add" data-ic="plus" onclick="adicionarChecklistItem()" title="Adicionar item"></button>
                 </span>
             </div>
@@ -1102,11 +1188,6 @@
             </div>
         </div>
 
-        <div class="row2 row3">
-            <div class="field"><label>Tipo</label><select id="formTipo"></select></div>
-            <div class="field"><label>Status</label><select id="formStatus"></select></div>
-            <div class="field"><label>Complexidade</label><select id="formComplexidade"></select></div>
-        </div>
         <div class="actions">
             <button class="btn btn-danger left" id="btnExcluirForm" style="display:none;" onclick="excluirEventoForm()">Excluir</button>
             <button class="btn btn-secondary" onclick="fecharForm()">Fechar</button>
@@ -1413,6 +1494,8 @@ let notaAtivaId = null;
 let notaCheckTimer = null;
 let notaAnexosProcessando = false;
 let notaTextoSelecionado = '';
+let reuniaoSerieAtivaId = null;
+let reuniaoEntradaAtivaId = null;
 
 /* ============================================================
    AUTOSAVE — ESTADO
@@ -1831,8 +1914,22 @@ function prepararDados(){
     if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
     if(data.config.userPhoto === undefined) data.config.userPhoto = '';
     if(!data.notas) data.notas = [];
-    data.notas.forEach(n => {
+    data.notas.forEach((n, idx) => {
         if(!n.anexos) n.anexos = [];
+        if(n.ordem === undefined) n.ordem = idx * 10;
+    });
+    if(!data.reunioes) data.reunioes = [];
+    data.reunioes.forEach(r => {
+        if(!Array.isArray(r.entradas)) r.entradas = [];
+        r.entradas.forEach(en => {
+            if(!Array.isArray(en.pautas)) en.pautas = [];
+            if(!Array.isArray(en.pendencias)) en.pendencias = [];
+            if(!Array.isArray(en.assuntos)) en.assuntos = [];
+            if(!Array.isArray(en.encaminhamentos)) en.encaminhamentos = [];
+            if(en.participantes === undefined) en.participantes = '';
+            if(en.setor === undefined) en.setor = '';
+            if(en.dataHora === undefined) en.dataHora = '';
+        });
     });
     if(!data.config.autosave) data.config.autosave = { ativo: true, debounceMs: 3000, dragImediato: true };
     const embutidos = [['claro', 'Sharkbite Claro', THEME_VARS_SHARKBITE], ['escuro', 'Sharkbite Escuro', THEME_VARS_ESCURO]];
@@ -2299,6 +2396,7 @@ function render(){
     else if(view === 'dia') c.innerHTML = renderDia();
     else if(view === 'inbox') c.innerHTML = renderInbox();
     else if(view === 'notas') { renderNotas(); return; }
+    else if(view === 'reunioes') { renderReunioes(); return; }
     else c.innerHTML = renderQuadro();
     renderLegend();
     atualizarContadorFiltro();
@@ -2475,13 +2573,15 @@ function renderNotas(){
     // Se nenhuma nota está ativa e existem notas, seleciona a primeira
     if(!notaAtivaId && data.notas.length > 0) notaAtivaId = data.notas[0].id;
 
-    const listaHtml = data.notas.length === 0
+    const notasOrdenadas = [...data.notas].sort((a,b) => (a.ordem||0) - (b.ordem||0));
+    const listaHtml = notasOrdenadas.length === 0
         ? '<li class="notas-vazio">Nenhuma nota ainda.<br>Clique em "+ Nova nota".</li>'
-        : data.notas.map(n => {
+        : notasOrdenadas.map(n => {
             const ativa = n.id === notaAtivaId ? 'ativa' : '';
             const data = new Date(n.atualizadoEm || n.criadoEm || Date.now());
             const dataStr = `${pad(data.getDate())}/${pad(data.getMonth()+1)}`;
-            return `<li class="nota-item ${ativa}" onclick="selecionarNota(${n.id})">
+            return `<li class="nota-item ${ativa}" data-nota-id="${n.id}" onclick="selecionarNota(${n.id})">
+                <span class="nota-handle" title="Arraste para reordenar" onmousedown="event.stopPropagation()">${ic('grip', 14)}</span>
                 <span class="nota-cor-dot" style="background:${escapeHtml(n.cor || '#ffffff')}"></span>
                 <span class="nota-titulo-lista" id="nota-lista-titulo-${n.id}">${escapeHtml(n.titulo || 'Sem título')}</span>
                 <span class="nota-data-lista">${dataStr}</span>
@@ -2524,6 +2624,39 @@ function renderNotas(){
 
     // Reanexa os listeners dos checkboxes (para marcar/desmarcar e riscar)
     if(nota) setTimeout(() => rteBind(document.getElementById('notaEditor')), 30);
+    notasBindDrag();
+}
+/* Reordenação das notas por drag-and-drop (alça ⋮⋮) */
+function notasBindDrag(){
+    const root = document.querySelector('.notas-lista');
+    if(!root || root.dataset.dragBound) return;
+    root.dataset.dragBound = '1';
+    let arrastando = null;
+    const linhaDe = e => e.target.closest && e.target.closest('.nota-item');
+    root.addEventListener('mousedown', e => { const h = e.target.closest && e.target.closest('.nota-handle'); if(h) h.closest('.nota-item').draggable = true; });
+    document.addEventListener('mouseup', () => { if(!arrastando) root.querySelectorAll('.nota-item[draggable="true"]').forEach(r => { r.draggable = false; }); });
+    root.addEventListener('dragstart', e => {
+        const row = linhaDe(e); if(!row || e.target !== row) return;
+        arrastando = row; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'nota');
+        setTimeout(() => row.classList.add('dragging-ck'), 0);
+    });
+    root.addEventListener('dragover', e => {
+        if(!arrastando) return;
+        e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+        const ref = [...root.querySelectorAll('.nota-item')].filter(r => r !== arrastando)
+            .find(r => { const b = r.getBoundingClientRect(); return e.clientY < b.top + b.height / 2; });
+        if(ref){ if(arrastando.nextElementSibling !== ref) root.insertBefore(arrastando, ref); }
+        else if(root.lastElementChild !== arrastando) root.appendChild(arrastando);
+    });
+    root.addEventListener('drop', e => { if(arrastando) e.preventDefault(); });
+    root.addEventListener('dragend', () => {
+        if(!arrastando) return;
+        const r = arrastando; arrastando = null;
+        r.draggable = false; r.classList.remove('dragging-ck');
+        const ids = [...root.querySelectorAll('.nota-item')].map(el => Number(el.dataset.notaId));
+        ids.forEach((id, idx) => { const n = data.notas.find(x => x.id === id); if(n) n.ordem = idx * 10; });
+        marcarAlterado();
+    });
 }
 
 function selecionarNota(id){
@@ -2775,6 +2908,278 @@ function notaAddTexto(){
     editor.focus();
     document.execCommand('insertHTML', false, '<div><br></div>');
     notaOnInput();
+}
+
+
+
+/* ============================================================
+   REUNIÕES — Atas com 2 níveis (reunião > data da reunião)
+============================================================ */
+const REUN_DIAS_SEMANA = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+function reunFormatarDataCurta(key){
+    if(!key) return 'Sem data';
+    const d = parseDateKey(key);
+    return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+}
+function reunFormatarDataLonga(key){
+    if(!key) return '';
+    const d = parseDateKey(key);
+    return `${REUN_DIAS_SEMANA[d.getDay()]}, ${d.getDate()} de ${['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'][d.getMonth()]} de ${d.getFullYear()}`;
+}
+function reunFormatarCriadoEm(iso){
+    if(!iso) return '';
+    const d = new Date(iso);
+    return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function reunEntradasOrdenadas(serie){
+    return [...(serie.entradas||[])].sort((a,b) => (a.data||'').localeCompare(b.data||'') || a.id-b.id);
+}
+function reunSerieAtiva(){ return data.reunioes.find(r => r.id === reuniaoSerieAtivaId) || null; }
+function reunEntradaAtiva(){
+    const serie = reunSerieAtiva(); if(!serie) return null;
+    return serie.entradas.find(e => e.id === reuniaoEntradaAtivaId) || null;
+}
+
+function renderReunioes(){
+    const c = document.getElementById('viewContainer');
+    if(!data.reunioes) data.reunioes = [];
+
+    if(!reuniaoSerieAtivaId && data.reunioes.length > 0) reuniaoSerieAtivaId = data.reunioes[0].id;
+    const serieAtiva = reunSerieAtiva();
+    if(serieAtiva && !reuniaoEntradaAtivaId && serieAtiva.entradas.length > 0){
+        reuniaoEntradaAtivaId = reunEntradasOrdenadas(serieAtiva)[serieAtiva.entradas.length-1].id;
+    }
+
+    const listaHtml = data.reunioes.length === 0
+        ? '<li class="notas-vazio">Nenhuma reunião ainda.<br>Clique em "+ Nova reunião".</li>'
+        : data.reunioes.map(serie => {
+            const ativa = serie.id === reuniaoSerieAtivaId ? 'ativa' : '';
+            const entradasHtml = serie.entradas.length === 0
+                ? '<li class="reun-vazio-mini">Nenhuma data ainda.</li>'
+                : reunEntradasOrdenadas(serie).map(en => `
+                    <li class="reun-entrada-item ${en.id===reuniaoEntradaAtivaId && serie.id===reuniaoSerieAtivaId ? 'ativa':''}"
+                        onclick="event.stopPropagation(); selecionarReuniaoEntrada(${serie.id}, ${en.id})">${escapeHtml(reunFormatarDataCurta(en.data))}</li>
+                `).join('');
+            return `<li class="reun-serie">
+                <div class="reun-serie-head ${ativa}" onclick="toggleReuniaoSerie(${serie.id})">
+                    <span class="reun-arrow">${serie.expandido !== false ? '▾' : '▸'}</span>
+                    <span class="reun-cor-dot" style="background:${escapeHtml(serie.cor || '#4caf50')}"></span>
+                    <span class="reun-serie-nome">${escapeHtml(serie.nome || 'Sem nome')}</span>
+                    <button type="button" class="reun-mini-add" title="Nova data" onclick="event.stopPropagation(); novaReuniaoEntrada(${serie.id})">${ic('plus',12)}</button>
+                    <button type="button" class="reun-mini-del" title="Excluir reunião" onclick="event.stopPropagation(); excluirReuniaoSerie(${serie.id})">×</button>
+                </div>
+                ${serie.expandido !== false ? `<ul class="reun-entradas">${entradasHtml}</ul>` : ''}
+            </li>`;
+        }).join('');
+
+    const en = reunEntradaAtiva();
+    const editorHtml = !en ? `
+        <div class="reun-vazio-editor">
+            <p>Selecione uma data à esquerda, ou crie uma nova reunião / data.</p>
+        </div>` : `
+        <div class="reun-editor">
+            <div class="reun-editor-top">
+                <input type="date" id="reunData" value="${escapeHtml(en.data || '')}" onchange="reunSincronizar()">
+                <span class="reun-meta">${escapeHtml(reunFormatarDataLonga(en.data))} · criado em ${escapeHtml(reunFormatarCriadoEm(en.criadoEm))}</span>
+                <button type="button" class="btn btn-danger btn-mini" onclick="excluirReuniaoEntrada()">Excluir esta data</button>
+            </div>
+            <div class="row2">
+                <div class="field"><label>Participantes</label><input type="text" id="reunParticipantes" value="${escapeHtml(en.participantes || '')}" oninput="reunSincronizar()" placeholder="Nomes dos participantes"></div>
+                <div class="field"><label>Setor</label><input type="text" id="reunSetor" value="${escapeHtml(en.setor || '')}" oninput="reunSincronizar()" placeholder="Setor / área"></div>
+            </div>
+            <div class="field"><label>Data e Hora da Reunião</label><input type="datetime-local" id="reunDataHora" value="${escapeHtml(en.dataHora || '')}" onchange="reunSincronizar()"></div>
+
+            <div class="reun-secao">
+                <div class="sec-head"><label>Pautas</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarLista('pautas')" title="Adicionar pauta"></button></span></div>
+                <div id="reunListaPautas">${reunListaHtml(en.pautas, 'pautas')}</div>
+            </div>
+
+            <div class="reun-secao">
+                <div class="sec-head"><label>Pendências da Reunião Anterior</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarTabela('pendencias')" title="Adicionar pendência"></button></span></div>
+                ${en.pendencias.length ? `<div class="reun-tabela-head"><span>Pendências</span><span>Responsável</span><span>Prazo</span><span>Status</span><span></span></div>` : ''}
+                <div id="reunTabelaPendencias">${reunTabelaHtml(en.pendencias, 'pendencias')}</div>
+            </div>
+
+            <div class="reun-secao">
+                <div class="sec-head"><label>Assuntos Abordados</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarLista('assuntos')" title="Adicionar assunto"></button></span></div>
+                <div id="reunListaAssuntos">${reunListaHtml(en.assuntos, 'assuntos')}</div>
+            </div>
+
+            <div class="reun-secao">
+                <div class="sec-head"><label>Encaminhamentos para as próximas reuniões</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarTabela('encaminhamentos')" title="Adicionar encaminhamento"></button></span></div>
+                ${en.encaminhamentos.length ? `<div class="reun-tabela-head"><span>Encaminhamentos</span><span>Responsável</span><span>Prazo</span><span>Status</span><span></span></div>` : ''}
+                <div id="reunTabelaEncaminhamentos">${reunTabelaHtml(en.encaminhamentos, 'encaminhamentos')}</div>
+            </div>
+        </div>`;
+
+    c.innerHTML = `
+        <div class="notas-view">
+            <div class="notas-sidebar reun-sidebar">
+                <button class="btn-nova-nota" onclick="novaReuniaoSerie()">+ Nova reunião</button>
+                <ul class="notas-lista reun-lista">${listaHtml}</ul>
+            </div>
+            <div class="notas-editor-wrap" id="reunEditorWrap">${editorHtml}</div>
+        </div>`;
+
+    requestAnimationFrame(() => {
+        document.querySelectorAll('#reunEditorWrap .reun-simples-input, #reunEditorWrap .reun-tab-texto').forEach(reunAjustarAltura);
+    });
+}
+
+function reunListaHtml(arr, campo){
+    if(!arr || !arr.length) return `<div class="task-checklist-empty">Nenhum item.</div>`;
+    return arr.map((texto, idx) => `
+        <div class="reun-linha-simples" data-idx="${idx}">
+            <textarea class="reun-simples-input" rows="1" placeholder="Descreva o item…" oninput="reunAjustarAltura(this)" onchange="reunSincronizar()">${escapeHtml(texto || '')}</textarea>
+            <button type="button" class="check-delete" title="Excluir" onclick="reunRemoverItem('${campo}', ${idx})">×</button>
+        </div>`).join('');
+}
+function reunTabelaHtml(arr, campo){
+    if(!arr || !arr.length) return `<div class="task-checklist-empty">Nenhum item.</div>`;
+    const respOpts = (data.config.responsaveis || []).map(r => r.label);
+    const statusOpts = data.config.status || [];
+    return arr.map((item, idx) => `
+        <div class="reun-linha-tabela" data-idx="${idx}" data-item-id="${escapeHtml(item.id || '')}">
+            <textarea class="reun-tab-texto" rows="1" placeholder="Descreva…" oninput="reunAjustarAltura(this)" onchange="reunSincronizar()">${escapeHtml(item.texto || '')}</textarea>
+            <select class="reun-tab-resp" onchange="reunSincronizar()">
+                <option value="">—</option>
+                ${respOpts.map(r => `<option value="${escapeHtml(r)}" ${item.responsavel===r?'selected':''}>${escapeHtml(r)}</option>`).join('')}
+            </select>
+            <input type="date" class="reun-tab-prazo" value="${escapeHtml(item.prazo || '')}" onchange="reunSincronizar()">
+            <select class="reun-tab-status" onchange="reunSincronizar()">
+                <option value="">—</option>
+                ${statusOpts.map(s => `<option value="${escapeHtml(s.id)}" ${item.status===s.id?'selected':''}>${escapeHtml(s.label)}</option>`).join('')}
+            </select>
+            <button type="button" class="check-delete" title="Excluir" onclick="reunRemoverItem('${campo}', ${idx})">×</button>
+        </div>`).join('');
+}
+function reunAjustarAltura(el){
+    if(!el) return;
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
+}
+
+/* Lê o DOM do editor de volta para o modelo de dados da entrada ativa */
+function reunSincronizar(){
+    const en = reunEntradaAtiva(); if(!en) return;
+    const $ = id => document.getElementById(id);
+    if($('reunData')) en.data = $('reunData').value;
+    if($('reunParticipantes')) en.participantes = $('reunParticipantes').value;
+    if($('reunSetor')) en.setor = $('reunSetor').value;
+    if($('reunDataHora')) en.dataHora = $('reunDataHora').value;
+    const lerLista = sel => [...document.querySelectorAll(sel)].map(t => t.value);
+    en.pautas = lerLista('#reunListaPautas .reun-simples-input');
+    en.assuntos = lerLista('#reunListaAssuntos .reun-simples-input');
+    const lerTabela = sel => [...document.querySelectorAll(sel)].map(row => ({
+        id: row.dataset.itemId || novoChecklistId(),
+        texto: row.querySelector('.reun-tab-texto') ? row.querySelector('.reun-tab-texto').value : '',
+        responsavel: row.querySelector('.reun-tab-resp') ? row.querySelector('.reun-tab-resp').value : '',
+        prazo: row.querySelector('.reun-tab-prazo') ? row.querySelector('.reun-tab-prazo').value : '',
+        status: row.querySelector('.reun-tab-status') ? row.querySelector('.reun-tab-status').value : ''
+    }));
+    en.pendencias = lerTabela('#reunTabelaPendencias .reun-linha-tabela');
+    en.encaminhamentos = lerTabela('#reunTabelaEncaminhamentos .reun-linha-tabela');
+    marcarAlterado();
+    // Atualiza o rótulo da data na barra lateral sem re-renderizar tudo
+    const item = document.querySelector(`.reun-entrada-item.ativa`);
+    if(item) item.textContent = reunFormatarDataCurta(en.data);
+}
+
+function reunAdicionarLista(campo){
+    const en = reunEntradaAtiva(); if(!en) return;
+    reunSincronizar();
+    en[campo].push('');
+    marcarAlterado();
+    renderReunioes();
+    setTimeout(() => {
+        const root = document.getElementById(campo === 'pautas' ? 'reunListaPautas' : 'reunListaAssuntos');
+        const last = root && root.querySelector('.reun-linha-simples:last-child .reun-simples-input');
+        if(last) last.focus();
+    }, 0);
+}
+function reunAdicionarTabela(campo){
+    const en = reunEntradaAtiva(); if(!en) return;
+    reunSincronizar();
+    en[campo].push({ id: novoChecklistId(), texto: '', responsavel: '', prazo: '', status: '' });
+    marcarAlterado();
+    renderReunioes();
+    setTimeout(() => {
+        const root = document.getElementById(campo === 'pendencias' ? 'reunTabelaPendencias' : 'reunTabelaEncaminhamentos');
+        const last = root && root.querySelector('.reun-linha-tabela:last-child .reun-tab-texto');
+        if(last) last.focus();
+    }, 0);
+}
+function reunRemoverItem(campo, idx){
+    const en = reunEntradaAtiva(); if(!en) return;
+    reunSincronizar();
+    en[campo].splice(idx, 1);
+    marcarAlterado();
+    renderReunioes();
+}
+
+function novaReuniaoSerie(){
+    const nome = prompt('Nome da reunião (ex.: NIO + TI):');
+    if(!nome || !nome.trim()) return;
+    const nova = { id: Date.now(), nome: nome.trim(), cor: corAutomatica(nome.trim()), expandido: true, entradas: [] };
+    data.reunioes.unshift(nova);
+    reuniaoSerieAtivaId = nova.id;
+    reuniaoEntradaAtivaId = null;
+    marcarAlterado();
+    novaReuniaoEntrada(nova.id);
+}
+function novaReuniaoEntrada(serieId){
+    const serie = data.reunioes.find(r => r.id === serieId); if(!serie) return;
+    reunSincronizar();
+    const ordenadas = reunEntradasOrdenadas(serie);
+    const anterior = ordenadas.length ? ordenadas[ordenadas.length - 1] : null;
+    // Os encaminhamentos da reunião anterior (da mesma série) viram as pendências desta nova reunião
+    const pendenciasHerdadas = anterior
+        ? (anterior.encaminhamentos || []).map(e => ({ id: novoChecklistId(), texto: e.texto, responsavel: e.responsavel, prazo: e.prazo, status: e.status }))
+        : [];
+    const agora = new Date().toISOString();
+    const nova = {
+        id: Date.now() + Math.floor(Math.random()*1000),
+        data: dateKeyFromDate(new Date()),
+        dataHora: '', participantes: '', setor: '',
+        pautas: [], pendencias: pendenciasHerdadas, assuntos: [], encaminhamentos: [],
+        criadoEm: agora
+    };
+    serie.entradas.push(nova);
+    serie.expandido = true;
+    reuniaoSerieAtivaId = serieId;
+    reuniaoEntradaAtivaId = nova.id;
+    marcarAlterado();
+    renderReunioes();
+}
+function selecionarReuniaoEntrada(serieId, entradaId){
+    reunSincronizar();
+    reuniaoSerieAtivaId = serieId;
+    reuniaoEntradaAtivaId = entradaId;
+    renderReunioes();
+}
+function toggleReuniaoSerie(id){
+    reunSincronizar();
+    const serie = data.reunioes.find(r => r.id === id); if(!serie) return;
+    if(reuniaoSerieAtivaId !== id){ reuniaoSerieAtivaId = id; serie.expandido = true; }
+    else serie.expandido = serie.expandido === false ? true : false;
+    renderReunioes();
+}
+function excluirReuniaoSerie(id){
+    if(!confirm('Excluir esta reunião e todas as suas datas?')) return;
+    data.reunioes = data.reunioes.filter(r => r.id !== id);
+    if(reuniaoSerieAtivaId === id){ reuniaoSerieAtivaId = data.reunioes[0] ? data.reunioes[0].id : null; reuniaoEntradaAtivaId = null; }
+    marcarAlterado();
+    renderReunioes();
+}
+function excluirReuniaoEntrada(){
+    const serie = reunSerieAtiva(); if(!serie) return;
+    if(!reuniaoEntradaAtivaId) return;
+    if(!confirm('Excluir esta data de reunião?')) return;
+    serie.entradas = serie.entradas.filter(e => e.id !== reuniaoEntradaAtivaId);
+    const ordenadas = reunEntradasOrdenadas(serie);
+    reuniaoEntradaAtivaId = ordenadas.length ? ordenadas[ordenadas.length-1].id : null;
+    marcarAlterado();
+    renderReunioes();
 }
 
 
@@ -3517,6 +3922,7 @@ function fecharModalDia(){ document.getElementById('modalDia').classList.remove(
 function novoEventoHoje(){
     if(view === 'inbox'){ novoEventoInbox(); return; }
     if(view === 'notas'){ novaNota(); return; }
+    if(view === 'reunioes'){ if(reuniaoSerieAtivaId){ novaReuniaoEntrada(reuniaoSerieAtivaId); } else { novaReuniaoSerie(); } return; }
     diaSelecionado = dateKeyFromDate(currentDate); abrirFormEvento();
 }
 function toggleSemData(){
@@ -3545,7 +3951,17 @@ function atualizarToggleIsolado(){
         wrap.style.display = 'none';
         const chk = document.getElementById('formIsolado');
         if(chk) chk.checked = false;
+        const du = document.getElementById('formDiasUteis');
+        if(du) du.checked = false;
     }
+    atualizarDiasUteisWrap();
+}
+function atualizarDiasUteisWrap(){
+    const isolado = document.getElementById('formIsolado');
+    const wrap = document.getElementById('formDiasUteisWrap');
+    if(!wrap) return;
+    wrap.style.display = (isolado && isolado.checked) ? '' : 'none';
+    if(!isolado || !isolado.checked){ const du = document.getElementById('formDiasUteis'); if(du) du.checked = false; }
 }
 function novoChecklistId(){
     if(window.crypto && crypto.randomUUID) return 'ck_' + crypto.randomUUID();
@@ -3713,6 +4129,8 @@ function abrirFormEvento(id, diaForcado){
 
     const chk = document.getElementById('formIsolado');
     if(chk) chk.checked = false;
+    const du = document.getElementById('formDiasUteis');
+    if(du) du.checked = false;
     toggleSemData();
     atualizarToggleIsolado();
 
@@ -3748,6 +4166,7 @@ function persistirFormulario(){
     const complexidade = document.getElementById('formComplexidade').value;
     const id = document.getElementById('formId').value;
     const isolado = document.getElementById('formIsolado').checked;
+    const diasUteis = isolado && document.getElementById('formDiasUteis') && document.getElementById('formDiasUteis').checked;
 
     checklistSincronizarDoDOM();
     const checklist = clonarChecklist(formChecklistDraft);
@@ -3763,6 +4182,10 @@ function persistirFormulario(){
         const N = daysBetween(dataInicio, dataFim) + 1;
         for(let i=0; i<N; i++){
             const d = addDays(dataInicio, i);
+            if(diasUteis){
+                const dow = parseDateKey(d).getDay(); // 0=domingo, 6=sábado
+                if(dow === 0 || dow === 6) continue;
+            }
             data.eventos.push({
                 id: nextId++, dataInicio: d, dataFim: d,
                 titulo, responsavel, area, descricao, descricaoHtml, tipo, status, complexidade,
@@ -3821,7 +4244,16 @@ function fecharForm(opcoes){
     const salvar = opcoes.salvar !== false;
     const modal = document.getElementById('modalForm');
     if(!modal || !modal.classList.contains('active')) return;
-    if(salvar && !persistirFormulario()) return;
+    if(salvar){
+        const tituloEl = document.getElementById('formTitulo');
+        const titulo = tituloEl ? tituloEl.value.trim() : '';
+        if(!titulo){
+            if(!confirm('Tarefa sem título, prosseguir?\nA tarefa não será salva.')) return;
+            modal.classList.remove('active');
+            return;
+        }
+        if(!persistirFormulario()) return;
+    }
     modal.classList.remove('active');
 }
 
@@ -3897,8 +4329,8 @@ document.addEventListener('DOMContentLoaded', async ()=>{
    EDITOR DE TEXTO RICO — usado nas Notas e na descrição das tarefas
 ============================================================ */
 let rteUltimo = null, rteRange = null, formVoltarDia = false, overlayDown = false;
-const RTE_FONTES = ['Inter', 'Arial', 'Georgia', 'Times New Roman', 'Verdana', 'Courier New', 'Comic Sans MS'];
-const RTE_TAMANHOS = [['Pequeno', 2], ['Normal', 3], ['Médio', 4], ['Grande', 5], ['Título', 6]];
+const RTE_FONTES = ['Inter', 'Calibri', 'Arial', 'Georgia', 'Times New Roman', 'Verdana', 'Courier New', 'Comic Sans MS'];
+const RTE_TAMANHOS = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
 const SAN_TAGS = new Set(['B','STRONG','I','EM','U','S','STRIKE','MARK','SUB','SUP','CODE','BR','DIV','P','SPAN','UL','OL','LI','A','H1','H2','H3','FONT','INPUT']);
 const SAN_STYLE = ['color','background-color','font-family','font-size','font-weight','font-style','text-decoration','text-align'];
 
@@ -3916,13 +4348,25 @@ function rteBarra(){
     const al = (cmd, p, t) => b(cmd, `<svg width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${p}"/></svg>`, t);
     return `<div class="rte-bar">
         <select onchange="rteSel('fontName', this)" title="Fonte"><option value="">Fonte</option>${RTE_FONTES.map(f => `<option value="${f}" style="font-family:'${f}'">${f}</option>`).join('')}</select>
-        <select onchange="rteSel('fontSize', this)" title="Tamanho"><option value="">Tamanho</option>${RTE_TAMANHOS.map(t => `<option value="${t[1]}">${t[0]}</option>`).join('')}</select>
+        <select onchange="rteTamanho(this)" title="Tamanho"><option value="">Tamanho</option>${RTE_TAMANHOS.map(t => `<option value="${t}">${t}</option>`).join('')}</select>
         <div class="fmt-group">${b('bold','B','Negrito (Ctrl+B)','fmt-b')}${b('italic','I','Itálico (Ctrl+I)','fmt-i')}${b('underline','U','Sublinhado (Ctrl+U)','fmt-u')}${b('strikeThrough','S','Riscado','fmt-s')}${b('superscript','X²','Sobrescrito','fmt-sup')}${b('subscript','X₂','Subscrito','fmt-sub')}</div>
         <div class="fmt-group"><input type="color" value="#0b2a4a" onchange="rteCor(this.value)" title="Cor da fonte">${b('mark',ic('marker'),'Marca-texto (liga/desliga)','fmt-hl')}</div>
         <div class="fmt-group">${b('insertUnorderedList',ic('ul'),'Lista com marcadores')}${b('insertOrderedList','1.','Lista numerada')}</div>
-        <div class="fmt-group">${al('justifyLeft','M1 1h12M1 4.5h8M1 8h12M1 11.5h8','Alinhar à esquerda')}${al('justifyCenter','M1 1h12M3 4.5h8M1 8h12M3 11.5h8','Centralizar')}${al('justifyRight','M1 1h12M5 4.5h8M1 8h12M5 11.5h8','Alinhar à direita')}</div>
         <div class="fmt-group">${b('createLink',ic('link'),'Inserir link')}${b('removeFormat','Tx','Limpar formatação')}${b('undo','↶','Desfazer')}${b('redo','↷','Refazer')}</div>
     </div>`;
+}
+/* Tamanho em pontos: aplica via span (execCommand fontSize só aceita 1-7) */
+function rteTamanho(sel){
+    const v = sel.value; sel.selectedIndex = 0; if(!v) return;
+    const ed = rteRestaurar(); if(!ed) return;
+    document.execCommand('fontSize', false, '7');
+    ed.querySelectorAll('font[size="7"]').forEach(f => {
+        const span = document.createElement('span');
+        span.style.fontSize = v + 'pt';
+        while(f.firstChild) span.appendChild(f.firstChild);
+        f.replaceWith(span);
+    });
+    rteMudou(ed);
 }
 function edAtivo(){
     const a = document.activeElement, c = a && a.closest ? a.closest('.rte') : null;
