@@ -1072,7 +1072,70 @@
         border-color: var(--primary);
     
     }
-    
+
+    .reun-rte-secao {
+    padding: 0;
+    overflow: visible;
+}
+
+.reun-rte-wrap {
+    position: relative;
+}
+
+.reun-rte-toolbar {
+    display: none;
+
+    margin-bottom: 8px;
+}
+
+.reun-rte-wrap.ativo .reun-rte-toolbar {
+    display: block;
+}
+
+.reun-rte-editor {
+
+    min-height: 150px;
+
+    padding: 14px;
+
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+
+    background: var(--bg-container);
+
+    color: var(--text-color);
+
+    font: 400 14px/1.55 var(--font-body);
+
+    outline: none;
+
+    overflow-y: auto;
+}
+
+.reun-rte-editor:focus {
+    border-color: var(--primary);
+}
+
+.reun-rte-editor:empty::before {
+    content: attr(data-placeholder);
+
+    color: var(--text-muted);
+
+    pointer-events: none;
+}
+
+.reun-rte-editor ul,
+.reun-rte-editor ol {
+    padding-left: 24px;
+}
+
+.reun-rte-editor img {
+    max-width: 100%;
+}
+
+.reun-rte-editor a {
+    color: var(--primary);
+}
     
     /* ============================================================
        TABELAS
@@ -1890,6 +1953,7 @@
             <button class="admin-tab active" data-pane="tipos" onclick="switchAdminTab('tipos')">Tipos</button>
             <button class="admin-tab" data-pane="status" onclick="switchAdminTab('status')">Status</button>
             <button class="admin-tab" data-pane="responsaveis" onclick="switchAdminTab('responsaveis')">Respon.</button>
+            <button class="admin-tab" data-pane="setores" onclick="switchAdminTab('setores')">Setores</button>
             <button class="admin-tab" data-pane="areas" onclick="switchAdminTab('areas')">Áreas</button>
             <button class="admin-tab" data-pane="aparencia" onclick="switchAdminTab('aparencia')">Aparência</button>
             <button class="admin-tab" data-pane="tema" onclick="switchAdminTab('tema')">Tema</button>
@@ -1920,6 +1984,30 @@
                 <input type="text" id="novoResponsavel" placeholder="Nome do responsável" onkeydown="if(event.key==='Enter') addResponsavel()">
                 <button class="btn btn-primary" onclick="addResponsavel()">Adicionar</button>
             </div>
+        </div>
+
+                <div class="admin-pane" id="pane-setores">
+        
+            <ul class="admin-list" id="listaSetores"></ul>
+        
+            <div class="admin-add">
+        
+                <input
+                    type="text"
+                    id="novoSetor"
+                    placeholder="Nome do setor"
+                    onkeydown="if(event.key==='Enter') addSetor()"
+                >
+        
+                <button
+                    class="btn btn-primary"
+                    onclick="addSetor()"
+                >
+                    Adicionar
+                </button>
+        
+            </div>
+        
         </div>
 
         <div class="admin-pane" id="pane-areas">
@@ -2150,7 +2238,9 @@ const DEFAULT_CONFIG = {
         { id:'em-andamento', label:'Em andamento', cor:'#f5a623' },
         { id:'finalizado', label:'Finalizado', cor:'#1a9c4a' }
     ],
-    responsaveis: [], areas: [],
+    responsaveis: [],
+    areas: [],
+    setores: [],
     background: { tipo: 'cor', cor: '#f4f7fa', imagem: '' },
     notas: [],
     userPhoto: '',
@@ -2630,9 +2720,48 @@ function prepararDados(){
             if(!Array.isArray(en.pendencias)) en.pendencias = [];
             if(!Array.isArray(en.assuntos)) en.assuntos = [];
             if(!Array.isArray(en.encaminhamentos)) en.encaminhamentos = [];
-            if(en.participantes === undefined) en.participantes = '';
-            if(en.setor === undefined) en.setor = '';
-            if(en.dataHora === undefined) en.dataHora = '';
+            if(en.participantes === undefined)
+    en.participantes = [];
+
+else if(typeof en.participantes === 'string')
+    en.participantes =
+        en.participantes
+            .split(',')
+            .map(x => x.trim())
+            .filter(Boolean);
+
+if(en.setor === undefined)
+    en.setor = '';
+
+if(en.dataHora === undefined)
+    en.dataHora = '';
+
+if(en.hora === undefined)
+    en.hora = '';
+
+if(en.minuto === undefined)
+    en.minuto = '';
+
+/* Compatibilidade com reuniões antigas */
+if(
+    !en.hora &&
+    !en.minuto &&
+    en.dataHora
+){
+
+    const m =
+        en.dataHora.match(
+            /T(\d{2}):(\d{2})/
+        );
+
+    if(m){
+
+        en.hora = m[1];
+        en.minuto = m[2];
+
+    }
+
+}
         });
     });
     if(!data.config.autosave) data.config.autosave = { ativo: true, debounceMs: 3000, dragImediato: true };
@@ -2644,6 +2773,11 @@ function prepararDados(){
 
     data.config.responsaveis = (data.config.responsaveis || []).map(r => typeof r === 'string' ? { label: r, cor: corAutomatica(r) } : r);
     data.config.areas = (data.config.areas || []).map(a => typeof a === 'string' ? { label: a, cor: corAutomatica(a) } : a);
+    data.config.setores = (data.config.setores || []).map(
+    s => typeof s === 'string'
+        ? { label: s, cor: corAutomatica(s) }
+        : s
+    );
 
     data.eventos.forEach(ev=>{
         if(!ev.dataInicio && ev.data){ ev.dataInicio = ev.data; delete ev.data; }
@@ -2874,6 +3008,71 @@ function renderAdminListas(){
             </div>
         </li>`).join('');
 }
+    const ls = document.getElementById('listaSetores');
+
+if(ls){
+
+    ls.innerHTML =
+        data.config.setores.length === 0
+
+        ? '<div class="admin-empty">Nenhum setor cadastrado.</div>'
+
+        : data.config.setores.map((s,i)=>`
+
+            <li>
+
+                <span
+                    class="badge"
+                    style="${badgeStyle(s.cor)}"
+                >
+                    ${escapeHtml(s.label)}
+                </span>
+
+                <input
+                    type="text"
+                    class="item-label"
+                    value="${escapeHtml(s.label)}"
+                    onchange="editarSetorLabel(${i}, this.value)"
+                >
+
+                <input
+                    type="color"
+                    value="${escapeHtml(s.cor)}"
+                    onchange="editarSetorCor(${i}, this.value)"
+                >
+
+                <div class="item-actions">
+
+                    <button
+                        class="btn-mini up"
+                        onclick="moverSetor(${i}, -1)"
+                        ${i===0?'disabled':''}
+                    >
+                        ↑
+                    </button>
+
+                    <button
+                        class="btn-mini down"
+                        onclick="moverSetor(${i}, 1)"
+                        ${i===data.config.setores.length-1?'disabled':''}
+                    >
+                        ↓
+                    </button>
+
+                    <button
+                        class="btn-mini del"
+                        onclick="delSetor(${i})"
+                    >
+                        ${ic('x',14)}
+                    </button>
+
+                </div>
+
+            </li>
+
+        `).join('');
+
+}
 function addTipo(){
     const label = document.getElementById('novoTipoLabel').value.trim();
     const cor = document.getElementById('novoTipoCor').value;
@@ -2917,6 +3116,97 @@ function editarRespLabel(i,v){ v=v.trim(); if(!v){ renderAdminListas(); return; 
 function editarRespCor(i,v){ data.config.responsaveis[i].cor = v; marcarAlterado(); renderAdminListas(); render(); }
 function moverResponsavel(i,d){ moverItem(data.config.responsaveis, i, d, renderAdminListas); }
 
+function addSetor(){
+
+    const input = document.getElementById('novoSetor');
+
+    const v = input.value.trim();
+
+    if(!v) return;
+
+    if(
+        data.config.setores.find(
+            s => s.label.toLowerCase() === v.toLowerCase()
+        )
+    ){
+        alert('Já cadastrado.');
+        return;
+    }
+
+    data.config.setores.push({
+        label: v,
+        cor: corAutomatica(v)
+    });
+
+    input.value = '';
+
+    marcarAlterado();
+
+    renderAdminListas();
+
+}
+
+
+function delSetor(i){
+
+    if(!confirm('Remover este setor?')) return;
+
+    data.config.setores.splice(i,1);
+
+    marcarAlterado();
+
+    renderAdminListas();
+
+    render();
+
+}
+
+
+function editarSetorLabel(i,v){
+
+    v = v.trim();
+
+    if(!v){
+
+        renderAdminListas();
+
+        return;
+
+    }
+
+    data.config.setores[i].label = v;
+
+    marcarAlterado();
+
+    renderAdminListas();
+
+    render();
+
+}
+
+
+function editarSetorCor(i,v){
+
+    data.config.setores[i].cor = v;
+
+    marcarAlterado();
+
+    renderAdminListas();
+
+}
+
+
+function moverSetor(i,d){
+
+    moverItem(
+        data.config.setores,
+        i,
+        d,
+        renderAdminListas
+    );
+
+}
+    
 function addArea(){
     const v = document.getElementById('novaArea').value.trim();
     if(!v) return;
@@ -4318,6 +4608,402 @@ function reunEntradaAtiva(){
     return serie.entradas.find(e => e.id === reuniaoEntradaAtivaId) || null;
 }
 
+function reunParticipantesArray(en){
+
+    if(!en) return [];
+
+    if(Array.isArray(en.participantes))
+        return en.participantes;
+
+    if(typeof en.participantes === 'string'){
+
+        return en.participantes
+            .split(',')
+            .map(x => x.trim())
+            .filter(Boolean);
+
+    }
+
+    return [];
+
+}
+
+
+function reunAbrirParticipantes(){
+
+    const menu =
+        document.getElementById(
+            'reunParticipantesMenu'
+        );
+
+    if(!menu) return;
+
+    menu.style.display = 'block';
+
+    reunRenderParticipantes();
+
+}
+
+
+function reunRenderParticipantes(){
+
+    const menu =
+        document.getElementById(
+            'reunParticipantesMenu'
+        );
+
+    if(!menu) return;
+
+    const busca =
+        (
+            document.getElementById(
+                'reunParticipantesBusca'
+            )?.value || ''
+        )
+        .toLowerCase()
+        .trim();
+
+    const en = reunEntradaAtiva();
+
+    if(!en) return;
+
+    const selecionados =
+        reunParticipantesArray(en);
+
+    const lista =
+        (data.config.responsaveis || [])
+            .filter(r =>
+                !busca ||
+                r.label.toLowerCase().includes(busca)
+            );
+
+    if(!lista.length){
+
+        menu.innerHTML = `
+            <div class="reun-multi-vazio">
+                Nenhum responsável encontrado.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    menu.innerHTML = lista.map(r => `
+
+        <label class="reun-multi-option">
+
+            <input
+                type="checkbox"
+                value="${escapeHtml(r.label)}"
+                ${selecionados.includes(r.label) ? 'checked' : ''}
+                onchange="
+                    reunAlternarParticipante(
+                        this.value,
+                        this.checked
+                    )
+                "
+            >
+
+            <span
+                class="badge badge-resp"
+                style="${badgeStyle(r.cor)}"
+            >
+                @${escapeHtml(r.label)}
+            </span>
+
+        </label>
+
+    `).join('');
+
+}
+
+
+function reunFiltrarParticipantes(){
+
+    reunAbrirParticipantes();
+
+}
+
+
+function reunAlternarParticipante(nome, marcado){
+
+    const en = reunEntradaAtiva();
+
+    if(!en) return;
+
+    let lista =
+        reunParticipantesArray(en);
+
+    if(marcado){
+
+        if(!lista.includes(nome))
+            lista.push(nome);
+
+    }else{
+
+        lista =
+            lista.filter(x => x !== nome);
+
+    }
+
+    en.participantes = lista;
+
+    marcarAlterado();
+
+    reunRenderParticipantes();
+
+    reunRenderParticipantesTags();
+
+}
+
+
+function reunRenderParticipantesTags(){
+
+    const en = reunEntradaAtiva();
+
+    const el =
+        document.getElementById(
+            'reunParticipantesTags'
+        );
+
+    if(!en || !el) return;
+
+    const lista =
+        reunParticipantesArray(en);
+
+    el.innerHTML = lista.map(nome => {
+
+        const r =
+            (data.config.responsaveis || [])
+                .find(x => x.label === nome);
+
+        return `
+
+            <span
+                class="reun-participante-tag"
+                style="${r ? badgeStyle(r.cor) : ''}"
+            >
+
+                @${escapeHtml(nome)}
+
+                <button
+                    type="button"
+                    onclick="
+                        event.stopPropagation();
+                        reunAlternarParticipante(
+                            '${escapeHtml(nome).replace(/'/g,"\\'")}',
+                            false
+                        )
+                    "
+                >
+                    ×
+                </button>
+
+            </span>
+
+        `;
+
+    }).join('');
+
+}
+
+
+document.addEventListener('mousedown', function(e){
+
+    const picker =
+        document.getElementById(
+            'reunParticipantesPicker'
+        );
+
+    if(
+        picker &&
+        !picker.contains(e.target)
+    ){
+
+        const menu =
+            document.getElementById(
+                'reunParticipantesMenu'
+            );
+
+        if(menu)
+            menu.style.display = 'none';
+
+    }
+
+});
+
+    function reunSomenteNumeros(el){
+
+    el.value =
+        el.value
+            .replace(/\D/g,'')
+            .slice(0,2);
+
+}
+
+
+function reunValidarHora(el){
+
+    reunSomenteNumeros(el);
+
+    if(el.value !== ''){
+
+        let v = Number(el.value);
+
+        if(v > 23)
+            v = 23;
+
+        el.value =
+            String(v).padStart(2,'0');
+
+    }
+
+}
+
+
+function reunValidarMinuto(el){
+
+    reunSomenteNumeros(el);
+
+    if(el.value !== ''){
+
+        let v = Number(el.value);
+
+        if(v > 59)
+            v = 59;
+
+        el.value =
+            String(v).padStart(2,'0');
+
+    }
+
+}
+
+    function reunEditorHtml(campo, titulo, conteudo){
+
+    const id =
+        'reunEditor_' + campo;
+
+    return `
+
+        <div
+            class="reun-secao reun-rte-secao"
+        >
+
+            <div class="sec-head">
+
+                <label>
+                    ${titulo}
+                </label>
+
+            </div>
+
+
+            <div
+                class="reun-rte-wrap"
+                id="${id}_wrap"
+            >
+
+                <div
+                    class="reun-rte-toolbar"
+                >
+                    ${rteBarra()}
+                </div>
+
+
+                <div
+                    id="${id}"
+                    class="reun-rte-editor rte"
+                    contenteditable="true"
+                    data-placeholder="Escreva aqui..."
+                    onclick="
+                        reunRteAtivar('${id}')
+                    "
+                    onfocus="
+                        reunRteAtivar('${id}')
+                    "
+                    oninput="
+                        reunRteAlterou(
+                            '${campo}',
+                            this
+                        )
+                    "
+                    onkeydown="rteKeydown(event)"
+                    onpaste="rtePaste(event)"
+                    onkeyup="fmtAtualizarEstado()"
+                    onmouseup="fmtAtualizarEstado()"
+                >${conteudo || ''}</div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+    function reunRteAtivar(id){
+
+    const ed =
+        document.getElementById(id);
+
+    if(!ed) return;
+
+    rteUltimo = ed;
+
+    document
+        .querySelectorAll('.reun-rte-wrap')
+        .forEach(w =>
+            w.classList.remove('ativo')
+        );
+
+    const wrap =
+        ed.closest('.reun-rte-wrap');
+
+    if(wrap)
+        wrap.classList.add('ativo');
+
+}
+
+
+function reunRteAlterou(campo, el){
+
+    const en =
+        reunEntradaAtiva();
+
+    if(!en) return;
+
+    en[campo] =
+        sanitizarHtml(
+            el.innerHTML
+        ).trim();
+
+    marcarAlterado();
+
+}
+
+
+document.addEventListener(
+    'mousedown',
+    function(e){
+
+        if(
+            e.target.closest &&
+            e.target.closest('.reun-rte-wrap')
+        ){
+            return;
+        }
+
+        document
+            .querySelectorAll('.reun-rte-wrap')
+            .forEach(w =>
+                w.classList.remove('ativo')
+            );
+
+    }
+);
+    
 function renderReunioes(){
 
     const c =
@@ -4634,42 +5320,72 @@ function renderReunioes(){
                     <div class="reun-info-grid">
 
 
-                        <div class="field">
+                     <div class="field">
 
-                            <label>
-                                Participantes
-                            </label>
-
-                            <input
-                                type="text"
-                                id="reunParticipantes"
-                                value="${escapeHtml(
-                                    en.participantes || ''
-                                )}"
-                                oninput="reunSincronizar()"
-                                placeholder="Nomes dos participantes"
+                        <label>Participantes</label>
+                    
+                        <div
+                            class="reun-multi"
+                            id="reunParticipantesPicker"
+                        >
+                    
+                            <div
+                                class="reun-multi-input"
+                                onclick="reunAbrirParticipantes()"
                             >
-
+                    
+                                <div
+                                    class="reun-multi-tags"
+                                    id="reunParticipantesTags"
+                                ></div>
+                    
+                                <input
+                                    type="text"
+                                    id="reunParticipantesBusca"
+                                    placeholder="Buscar responsável..."
+                                    oninput="reunFiltrarParticipantes()"
+                                    onclick="event.stopPropagation(); reunAbrirParticipantes()"
+                                >
+                    
+                            </div>
+                    
+                            <div
+                                class="reun-multi-menu"
+                                id="reunParticipantesMenu"
+                            ></div>
+                    
                         </div>
+                    
+                    </div>
 
 
-                        <div class="field">
+                       <div class="field">
 
-                            <label>
-                                Setor / área
-                            </label>
-
-                            <input
-                                type="text"
-                                id="reunSetor"
-                                value="${escapeHtml(
-                                    en.setor || ''
-                                )}"
-                                oninput="reunSincronizar()"
-                                placeholder="Setor / área"
+                    <label>Setor</label>
+                
+                    <select
+                        id="reunSetor"
+                        onchange="reunSincronizar()"
+                    >
+                
+                        <option value="">
+                            Selecione o setor
+                        </option>
+                
+                        ${(data.config.setores || []).map(s => `
+                
+                            <option
+                                value="${escapeHtml(s.label)}"
+                                ${en.setor === s.label ? 'selected' : ''}
                             >
-
-                        </div>
+                                ${escapeHtml(s.label)}
+                            </option>
+                
+                        `).join('')}
+                
+                    </select>
+                
+                </div>
 
 
                         <div class="field field-full">
@@ -4678,14 +5394,50 @@ function renderReunioes(){
                                 Data e hora da reunião
                             </label>
 
-                            <input
-                                type="datetime-local"
-                                id="reunDataHora"
-                                value="${escapeHtml(
-                                    en.dataHora || ''
-                                )}"
-                                onchange="reunSincronizar()"
-                            >
+                           <div class="field">
+
+    <label>Data e hora da reunião</label>
+
+    <div class="reun-datahora">
+
+        <input
+            type="date"
+            id="reunData"
+            value="${escapeHtml(en.data || '')}"
+            onchange="reunSincronizar()"
+        >
+
+        <span class="reun-hora-label">
+            às
+        </span>
+
+        <input
+            type="text"
+            id="reunHora"
+            class="reun-hora"
+            maxlength="2"
+            inputmode="numeric"
+            placeholder="00"
+            value="${escapeHtml(en.hora || '')}"
+            oninput="reunValidarHora(this); reunSincronizar()"
+        >
+
+        <span>:</span>
+
+        <input
+            type="text"
+            id="reunMinuto"
+            class="reun-hora"
+            maxlength="2"
+            inputmode="numeric"
+            placeholder="00"
+            value="${escapeHtml(en.minuto || '')}"
+            oninput="reunValidarMinuto(this); reunSincronizar()"
+        >
+
+    </div>
+
+</div>
 
                         </div>
 
@@ -4694,214 +5446,33 @@ function renderReunioes(){
                 </div>
 
 
-                <!-- PAUTAS -->
-
-                <div class="reun-secao">
-
-                    <div class="sec-head">
-
-                        <label>
-                            Pautas
-                        </label>
-
-                        <span class="sec-tools">
-
-                            <button
-                                type="button"
-                                class="checklist-add"
-                                data-ic="plus"
-                                onclick="
-                                    reunAdicionarLista(
-                                        'pautas'
-                                    )
-                                "
-                                title="Adicionar pauta"
-                            ></button>
-
-                        </span>
-
-                    </div>
-
-
-                    <div id="reunListaPautas">
-
-                        ${reunListaHtml(
-                            en.pautas,
-                            'pautas'
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <!-- PENDÊNCIAS -->
-
-                <div class="reun-secao">
-
-                    <div class="sec-head">
-
-                        <label>
-                            Pendências da reunião anterior
-                        </label>
-
-                        <span class="sec-tools">
-
-                            <button
-                                type="button"
-                                class="checklist-add"
-                                data-ic="plus"
-                                onclick="
-                                    reunAdicionarTabela(
-                                        'pendencias'
-                                    )
-                                "
-                                title="Adicionar pendência"
-                            ></button>
-
-                        </span>
-
-                    </div>
-
-
-                    ${
-                        en.pendencias.length
-
-                        ? `
-                            <div class="reun-tabela-head">
-
-                                <span>Pendência</span>
-                                <span>Responsável</span>
-                                <span>Prazo</span>
-                                <span>Status</span>
-                                <span></span>
-
-                            </div>
-                          `
-
-                        : ''
-                    }
-
-
-                    <div id="reunTabelaPendencias">
-
-                        ${reunTabelaHtml(
-                            en.pendencias,
-                            'pendencias'
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <!-- ASSUNTOS -->
-
-                <div class="reun-secao">
-
-                    <div class="sec-head">
-
-                        <label>
-                            Assuntos abordados
-                        </label>
-
-                        <span class="sec-tools">
-
-                            <button
-                                type="button"
-                                class="checklist-add"
-                                data-ic="plus"
-                                onclick="
-                                    reunAdicionarLista(
-                                        'assuntos'
-                                    )
-                                "
-                                title="Adicionar assunto"
-                            ></button>
-
-                        </span>
-
-                    </div>
-
-
-                    <div id="reunListaAssuntos">
-
-                        ${reunListaHtml(
-                            en.assuntos,
-                            'assuntos'
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <!-- ENCAMINHAMENTOS -->
-
-                <div class="reun-secao">
-
-                    <div class="sec-head">
-
-                        <label>
-                            Encaminhamentos para as próximas reuniões
-                        </label>
-
-                        <span class="sec-tools">
-
-                            <button
-                                type="button"
-                                class="checklist-add"
-                                data-ic="plus"
-                                onclick="
-                                    reunAdicionarTabela(
-                                        'encaminhamentos'
-                                    )
-                                "
-                                title="Adicionar encaminhamento"
-                            ></button>
-
-                        </span>
-
-                    </div>
-
-
-                    ${
-                        en.encaminhamentos.length
-
-                        ? `
-                            <div class="reun-tabela-head">
-
-                                <span>Encaminhamento</span>
-                                <span>Responsável</span>
-                                <span>Prazo</span>
-                                <span>Status</span>
-                                <span></span>
-
-                            </div>
-                          `
-
-                        : ''
-                    }
-
-
-                    <div id="reunTabelaEncaminhamentos">
-
-                        ${reunTabelaHtml(
-                            en.encaminhamentos,
-                            'encaminhamentos'
-                        )}
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-        `;
-
+ ${reunEditorHtml(
+    'pautasHtml',
+    'Pautas',
+    en.pautasHtml || ''
+)}
+
+${reunEditorHtml(
+    'pendenciasHtml',
+    'Pendências da Reunião Anterior',
+    en.pendenciasHtml || ''
+)}
+
+${reunEditorHtml(
+    'assuntosHtml',
+    'Assuntos Abordados',
+    en.assuntosHtml || ''
+)}
+
+${reunEditorHtml(
+    'encaminhamentosHtml',
+    'Encaminhamentos para as próximas reuniões',
+    en.encaminhamentosHtml || ''
+)}
+
+        </div>
+    `;
     }
-
 
     /*
        =========================================================
@@ -4997,12 +5568,46 @@ function reunSincronizar(){
     const en = reunEntradaAtiva(); if(!en) return;
     const $ = id => document.getElementById(id);
     if($('reunData')) en.data = $('reunData').value;
-    if($('reunParticipantes')) en.participantes = $('reunParticipantes').value;
+    if(
+        en &&
+        Array.isArray(en.participantes)
+    ){
+    
+        // já está sincronizado pelo seletor múltiplo
+    
+    }else if(en){
+    
+        en.participantes =
+            reunParticipantesArray(en);
+    
+    }
     if($('reunSetor')) en.setor = $('reunSetor').value;
     if($('reunDataHora')) en.dataHora = $('reunDataHora').value;
-    const lerLista = sel => [...document.querySelectorAll(sel)].map(t => t.value);
-    en.pautas = lerLista('#reunListaPautas .reun-simples-input');
-    en.assuntos = lerLista('#reunListaAssuntos .reun-simples-input');
+    const camposRte = [
+    'pautasHtml',
+    'pendenciasHtml',
+    'assuntosHtml',
+    'encaminhamentosHtml'
+];
+
+camposRte.forEach(campo => {
+
+    const el =
+        document.getElementById(
+            'reunEditor_' +
+            campo.replace('Html','')
+        );
+
+    if(el){
+
+        en[campo] =
+            sanitizarHtml(
+                el.innerHTML
+            ).trim();
+
+    }
+
+});
     const lerTabela = sel => [...document.querySelectorAll(sel)].map(row => ({
         id: row.dataset.itemId || novoChecklistId(),
         texto: row.querySelector('.reun-tab-texto') ? row.querySelector('.reun-tab-texto').value : '',
@@ -5066,16 +5671,27 @@ function novaReuniaoEntrada(serieId){
     const ordenadas = reunEntradasOrdenadas(serie);
     const anterior = ordenadas.length ? ordenadas[ordenadas.length - 1] : null;
     // Os encaminhamentos da reunião anterior (da mesma série) viram as pendências desta nova reunião
-    const pendenciasHerdadas = anterior
-        ? (anterior.encaminhamentos || []).map(e => ({ id: novoChecklistId(), texto: e.texto, responsavel: e.responsavel, prazo: e.prazo, status: e.status }))
-        : [];
+    const pendenciasHerdadas =
+    anterior &&
+    anterior.encaminhamentosHtml
+
+        ? anterior.encaminhamentosHtml
+
+        : '';
     const agora = new Date().toISOString();
     const nova = {
         id: Date.now() + Math.floor(Math.random()*1000),
         data: dateKeyFromDate(new Date()),
         dataHora: '', participantes: '', setor: '',
-        pautas: [], pendencias: pendenciasHerdadas, assuntos: [], encaminhamentos: [],
-        criadoEm: agora
+        pautas: [],
+        pendencias: [],
+        assuntos: [],
+        encaminhamentos: [],
+
+        pautasHtml: '',
+        pendenciasHtml: pendenciasHerdadas,
+        assuntosHtml: '',
+        encaminhamentosHtml: '',
     };
     serie.entradas.push(nova);
     serie.expandido = true;
