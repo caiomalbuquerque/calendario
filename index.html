@@ -464,81 +464,760 @@
     .notas-editor .checklist-item.concluido .check-text {
         text-decoration: line-through; opacity: .55;
     }
+/* ============================================================
+   REGISTROS — Histórico de modificações
+============================================================ */
 
-    /* ============================================================
-       REUNIÕES — Atas com 2 níveis (reunião > data)
+.registros-view .notas-sidebar {
+    max-height: 70vh;
+}
+
+.registro-produto {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.registro-produto-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 34px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.registro-produto-head:hover {
+    background: var(--bg-hover);
+}
+
+.registro-produto-head.ativa {
+    background: var(--bg-selected);
+}
+
+.registro-arrow {
+    width: 14px;
+    flex: 0 0 14px;
+    font-size: 12px;
+}
+
+.registro-cor-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex: 0 0 9px;
+}
+
+.registro-produto-nome {
+    flex: 1;
+    min-width: 0;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.registro-mini-add {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+.registro-mini-edit {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    color: var(--text-muted);
+}
+
+.registro-mini-edit:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+}
+    
+.registro-mini-add:hover {
+    background: var(--bg-hover);
+}
+
+.registro-entradas {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 4px 24px;
+}
+
+.registro-entrada-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    min-height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.registro-entrada-item:hover {
+    background: var(--bg-hover);
+}
+
+.registro-entrada-item.ativa {
+    background: var(--bg-selected);
+}
+
+.registro-entrada-titulo {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.registro-entrada-data {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.registro-vazio-mini {
+    padding: 6px 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.registro-lista-conteudo {
+    width: 100%;
+    padding: 24px;
+}
+
+.registro-lista-titulo {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-heading);
+    margin-bottom: 4px;
+}
+
+.registro-lista-subtitulo {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.registro-lista-vazio {
+    padding: 30px 0;
+    color: var(--text-muted);
+}
+
+.registro-card {
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.registro-card:hover {
+    background: var(--bg-hover);
+}
+
+.registro-card-data {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.registro-card-titulo {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.registro-card-link {
+    margin-top: 7px;
+    font-size: 12px;
+    color: var(--primary);
+}
+
+.registro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 4px 2px 20px;
+    overflow-y: auto;
+}
+
+.registro-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.registro-campo label {
+    font-weight: 800;
+    color: var(--text-heading);
+    font-size: 14px;
+}
+
+.registro-campo input,
+.registro-campo textarea {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid var(--border-color-strong);
+    background: var(--bg-container);
+    color: var(--text-color);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 15px;
+}
+
+.registro-campo input {
+    font-weight: 600;
+}
+
+.registro-campo textarea {
+    min-height: 80px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.registro-acoes {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 6px;
+    border-top: 1px solid var(--border-color);
+}
+     /* ============================================================
+       REUNIÕES — mesmo conceito visual de REGISTROS
     ============================================================ */
-    .reun-sidebar .btn-nova-nota { margin-bottom: 2px; }
-    .reun-lista { gap: 2px !important; }
-    .reun-serie { list-style: none; }
+    
+    .reun-sidebar .btn-nova-nota {
+        margin-bottom: 8px;
+    }
+    
+    .reun-lista {
+        gap: 3px !important;
+    }
+    
+    .reun-serie {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    
     .reun-serie-head {
-        display: flex; align-items: center; gap: 6px;
-        padding: 8px 8px; border-radius: var(--radius-sm);
-        background: var(--bg-panel-alt); border: 1px solid var(--border-color);
-        cursor: pointer; font-family: var(--font-body); font-size: 14px; font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    
+        min-height: 34px;
+        padding: 6px 8px;
+    
+        border-radius: 6px;
+        border: 1px solid transparent;
+    
+        background: transparent;
+    
+        cursor: pointer;
+    
         color: var(--text-heading);
+        font-size: 14px;
+        font-weight: 700;
     }
-    .reun-serie-head:hover { border-color: var(--secondary); }
-    .reun-serie-head.ativa { border-color: var(--primary); box-shadow: inset 3px 0 0 var(--primary); }
-    .reun-arrow { width: 10px; flex-shrink: 0; color: var(--text-muted); font-size: 11px; }
-    .reun-cor-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,.25); }
-    .reun-serie-nome { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .reun-mini-add, .reun-mini-del {
-        width: 20px; height: 20px; flex-shrink: 0; padding: 0; border: 0; border-radius: 5px;
-        background: transparent; color: var(--text-muted); cursor: pointer; font-size: 14px; line-height: 1;
-        display: inline-flex; align-items: center; justify-content: center;
+    
+    .reun-serie-head:hover {
+        background: var(--bg-hover);
     }
-    .reun-mini-add:hover { background: var(--bg-panel-dark); color: var(--primary); }
-    .reun-mini-del:hover { background: rgba(220,53,69,.12); color: var(--danger); }
-    .reun-entradas { list-style: none; margin: 3px 0 6px; padding-left: 16px; display: flex; flex-direction: column; gap: 3px; }
+    
+    .reun-serie-head.ativa {
+        background: var(--bg-selected);
+        border-color: var(--border-color);
+    }
+    
+    .reun-arrow {
+        width: 14px;
+        flex: 0 0 14px;
+    
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+    
+    .reun-cor-dot {
+        width: 9px;
+        height: 9px;
+    
+        flex: 0 0 9px;
+    
+        border-radius: 50%;
+    }
+    
+    .reun-serie-nome {
+        flex: 1;
+        min-width: 0;
+    
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .reun-mini-add,
+    .reun-mini-del {
+        width: 24px;
+        height: 24px;
+    
+        padding: 0;
+        border: 0;
+        border-radius: 5px;
+    
+        background: transparent;
+    
+        color: var(--text-muted);
+    
+        cursor: pointer;
+    
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .reun-mini-add {
+        font-size: 17px;
+    }
+    
+    .reun-mini-del {
+        font-size: 16px;
+    }
+    
+    .reun-mini-add:hover {
+        background: var(--bg-hover);
+        color: var(--primary);
+    }
+    
+    .reun-mini-del:hover {
+        background: rgba(220,53,69,.10);
+        color: var(--danger);
+    }
+    
+    .reun-entradas {
+        list-style: none;
+    
+        margin: 2px 0 7px;
+        padding: 0 0 0 25px;
+    
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    
     .reun-entrada-item {
-        padding: 6px 8px; border-radius: var(--radius-sm); font-size: 13px; cursor: pointer;
-        background: var(--bg-container); border: 1px solid var(--border-color); color: var(--text-color);
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        display: flex;
+        align-items: center;
+    
+        min-height: 30px;
+        padding: 5px 8px;
+    
+        border-radius: 5px;
+        border: 1px solid transparent;
+    
+        background: transparent;
+    
+        color: var(--text-color);
+    
+        font-size: 13px;
+    
+        cursor: pointer;
     }
-    .reun-entrada-item:hover { border-color: var(--secondary); }
-    .reun-entrada-item.ativa { background: var(--primary); color: var(--text-on-primary); border-color: var(--primary); }
-    .reun-vazio-mini { padding: 5px 8px; font-size: 12px; color: var(--text-muted); }
-
-    .reun-editor { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; padding-right: 2px; }
-    .reun-editor-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-    .reun-editor-top input[type=date] { font: 700 20px var(--font-heading); border: 1px solid var(--border-color-strong); border-radius: var(--radius-sm); padding: 4px 8px; background: var(--bg-panel); color: var(--text-heading); }
-    .reun-meta { color: var(--text-muted); font-size: 12px; flex: 1; }
-    .reun-secao { display: flex; flex-direction: column; gap: 6px; }
-    .reun-secao .sec-head label { font-weight: 800; color: var(--text-heading); font-size: 14px; }
-    .reun-linha-simples { display: flex; align-items: flex-start; gap: 7px; }
+    
+    .reun-entrada-item:hover {
+        background: var(--bg-hover);
+    }
+    
+    .reun-entrada-item.ativa {
+        background: var(--primary);
+        border-color: var(--primary);
+    
+        color: var(--text-on-primary);
+        font-weight: 700;
+    }
+    
+    .reun-vazio-mini {
+        padding: 6px 8px;
+    
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+    
+    
+    /* ============================================================
+       EDITOR
+    ============================================================ */
+    
+    .reun-editor {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    
+        height: 100%;
+        overflow-y: auto;
+    
+        padding: 2px 4px 24px;
+    }
+    
+    
+    /* Cabeçalho da reunião */
+    
+    .reun-editor-top {
+        display: flex;
+        align-items: center;
+    
+        gap: 12px;
+    
+        padding-bottom: 14px;
+    
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .reun-editor-top input[type="date"] {
+        width: 150px;
+    
+        padding: 9px 10px;
+    
+        border: 1px solid var(--border-color);
+        border-radius: 7px;
+    
+        background: var(--bg-container);
+        color: var(--text-heading);
+    
+        font: 800 20px var(--font-heading);
+    }
+    
+    .reun-meta {
+        flex: 1;
+    
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+    
+    
+    /* ============================================================
+       INFORMAÇÕES DA REUNIÃO
+    ============================================================ */
+    
+    .reun-info-card {
+    
+        padding: 16px;
+    
+        border: 1px solid var(--border-color);
+        border-radius: 9px;
+    
+        background: var(--bg-container);
+    
+    }
+    
+    .reun-info-titulo {
+    
+        margin-bottom: 14px;
+    
+        font-size: 15px;
+        font-weight: 800;
+    
+        color: var(--text-heading);
+    
+    }
+    
+    .reun-info-grid {
+    
+        display: grid;
+    
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+    
+        gap: 12px;
+    
+    }
+    
+    .reun-info-grid .field {
+        display: flex;
+        flex-direction: column;
+    
+        gap: 5px;
+    }
+    
+    .reun-info-grid .field-full {
+        grid-column: 1 / -1;
+    }
+    
+    .reun-info-grid label {
+    
+        font-size: 12px;
+        font-weight: 700;
+    
+        color: var(--text-muted);
+    
+    }
+    
+    .reun-info-grid input {
+    
+        width: 100%;
+    
+        box-sizing: border-box;
+    
+        padding: 9px 10px;
+    
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+    
+        background: var(--bg-panel-alt);
+        color: var(--text-color);
+    
+        font: 500 14px var(--font-body);
+    
+    }
+    
+    .reun-info-grid input:focus {
+    
+        outline: none;
+    
+        border-color: var(--primary);
+    
+    }
+    
+    
+    /* ============================================================
+       SEÇÕES DA ATA
+    ============================================================ */
+    
+    .reun-secao {
+    
+        padding: 15px;
+    
+        border: 1px solid var(--border-color);
+        border-radius: 9px;
+    
+        background: var(--bg-container);
+    
+    }
+    
+    .reun-secao .sec-head {
+    
+        display: flex;
+        align-items: center;
+    
+        margin-bottom: 12px;
+    
+    }
+    
+    .reun-secao .sec-head label {
+    
+        flex: 1;
+    
+        color: var(--text-heading);
+    
+        font-size: 15px;
+        font-weight: 800;
+    
+    }
+    
+    .reun-secao .sec-tools {
+    
+        display: flex;
+        align-items: center;
+    
+    }
+    
+    .reun-linha-simples {
+    
+        display: flex;
+    
+        align-items: flex-start;
+    
+        gap: 7px;
+    
+        margin-bottom: 7px;
+    
+    }
+    
     .reun-simples-input {
-        flex: 1; min-width: 0; resize: none; overflow: hidden; padding: 6px 8px; line-height: 1.35;
-        border: 1px solid var(--border-color-strong); background: var(--bg-container); color: var(--text-color);
-        border-radius: var(--radius-sm); font: 500 14px var(--font-body);
+    
+        flex: 1;
+        min-width: 0;
+    
+        resize: none;
+        overflow: hidden;
+    
+        padding: 8px 10px;
+    
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+    
+        background: var(--bg-panel-alt);
+        color: var(--text-color);
+    
+        font: 500 14px var(--font-body);
+    
+        line-height: 1.4;
+    
     }
-    .reun-linha-tabela {
-        display: grid; grid-template-columns: minmax(0,1fr) 140px 135px 140px 30px;
-        align-items: start; gap: 7px;
+    
+    .reun-simples-input:focus {
+    
+        outline: none;
+    
+        border-color: var(--primary);
+    
     }
-    .reun-linha-tabela .reun-tab-texto {
-        resize: none; overflow: hidden; padding: 6px 8px; line-height: 1.35;
-        border: 1px solid var(--border-color-strong); background: var(--bg-container); color: var(--text-color);
-        border-radius: var(--radius-sm); font: 500 14px var(--font-body);
-    }
-    .reun-linha-tabela select, .reun-linha-tabela input[type=date] {
-        width: 100%; padding: 6px 6px; border: 1px solid var(--border-color-strong);
-        background: var(--bg-panel-alt); color: var(--text-color); font: 500 12px var(--font-body);
-        border-radius: 4px;
-    }
+    
+    
+    /* ============================================================
+       TABELAS
+    ============================================================ */
+    
     .reun-tabela-head {
-        display: grid; grid-template-columns: minmax(0,1fr) 140px 135px 140px 30px; gap: 7px;
-        font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
-        color: var(--text-muted); padding: 0 2px 2px;
+    
+        display: grid;
+    
+        grid-template-columns:
+            minmax(0,1fr)
+            140px
+            135px
+            140px
+            30px;
+    
+        gap: 7px;
+    
+        margin-bottom: 5px;
+    
+        padding: 0 2px;
+    
+        color: var(--text-muted);
+    
+        font-size: 10px;
+        font-weight: 800;
+    
+        text-transform: uppercase;
+    
+        letter-spacing: .04em;
+    
     }
+    
+    .reun-linha-tabela {
+    
+        display: grid;
+    
+        grid-template-columns:
+            minmax(0,1fr)
+            140px
+            135px
+            140px
+            30px;
+    
+        align-items: start;
+    
+        gap: 7px;
+    
+        margin-bottom: 7px;
+    
+    }
+    
+    .reun-linha-tabela .reun-tab-texto {
+    
+        width: 100%;
+        box-sizing: border-box;
+    
+        resize: none;
+        overflow: hidden;
+    
+        padding: 8px 10px;
+    
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+    
+        background: var(--bg-panel-alt);
+        color: var(--text-color);
+    
+        font: 500 14px var(--font-body);
+    
+    }
+    
+    .reun-linha-tabela select,
+    .reun-linha-tabela input[type="date"] {
+    
+        width: 100%;
+        box-sizing: border-box;
+    
+        padding: 8px;
+    
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+    
+        background: var(--bg-panel-alt);
+        color: var(--text-color);
+    
+        font: 500 12px var(--font-body);
+    
+    }
+    
+    .reun-vazio-editor {
+    
+        height: 100%;
+    
+        display: flex;
+    
+        align-items: center;
+        justify-content: center;
+    
+        text-align: center;
+    
+        color: var(--text-muted);
+    
+        font-size: 14px;
+    
+    }
+    
     @media (max-width: 700px) {
-        .reun-linha-tabela, .reun-tabela-head { grid-template-columns: minmax(0,1fr) 30px; }
-        .reun-tabela-head span:not(:first-child) { display: none; }
-        .reun-linha-tabela .reun-tab-resp, .reun-linha-tabela .reun-tab-prazo, .reun-linha-tabela .reun-tab-status { grid-column: 1 / 2; }
-        .reun-linha-tabela .check-delete { grid-row: 1 / span 4; }
+    
+        .reun-info-grid {
+            grid-template-columns: 1fr;
+        }
+    
+        .reun-info-grid .field-full {
+            grid-column: auto;
+        }
+    
+        .reun-linha-tabela,
+        .reun-tabela-head {
+    
+            grid-template-columns:
+                minmax(0,1fr)
+                30px;
+    
+        }
+    
+        .reun-tabela-head span:not(:first-child) {
+            display: none;
+        }
+    
+        .reun-linha-tabela .reun-tab-resp,
+        .reun-linha-tabela .reun-tab-prazo,
+        .reun-linha-tabela .reun-tab-status {
+    
+            grid-column: 1 / 2;
+    
+        }
+    
+        .reun-linha-tabela .check-delete {
+    
+            grid-row: 1 / span 4;
+    
+        }
+    
     }
-    .reun-vazio-editor { margin: auto; text-align: center; color: var(--text-muted); font-family: var(--font-body); font-size: 14px; }
-
     /* Context menu (botão direito) */
     .nota-context-menu {
         position: fixed;
@@ -861,6 +1540,13 @@
     /* respiro entre o cabeçalho e a barra de filtros */
     .appbar + .filters { margin-top: 16px; }
 
+    /* respiro entre o cabeçalho e os conteúdos de Registros e Reuniões */
+    body[data-view=registros] #viewContainer,
+    body[data-view=notas] #viewContainer,
+    body[data-view=reunioes] #viewContainer {
+        padding-top: 16px;
+    }
+
     /* ===== Complexidade, legenda e menu rápido ===== */
     .row2.row3 { grid-template-columns: repeat(3, 1fr); }
     .lg-bar { display: inline-block; width: 4px; height: 14px; border-radius: 2px; }
@@ -1080,6 +1766,7 @@
             <span class="tabs-sep"></span>
             <button class="btn btn-toggle" data-view="inbox" onclick="setView('inbox')" title="Tarefas sem data">Inbox <span class="inbox-badge" id="inboxBadge" style="display:none;">0</span></button>
             <button class="btn btn-toggle" data-view="notas" onclick="setView('notas')" title="Bloco de anotações">Notas</button>
+            <button class="btn btn-toggle" data-view="registros" onclick="setView('registros')" title="Registro de modificações">Registros</button>
             <button class="btn btn-toggle" data-view="reunioes" onclick="setView('reunioes')" title="Atas de reunião">Reuniões</button>
         </nav>
         <div class="appbar-actions">
@@ -1478,7 +2165,11 @@ const DEFAULT_CONFIG = {
 /* ============================================================
    ESTADO
 ============================================================ */
-let data = { config: JSON.parse(JSON.stringify(DEFAULT_CONFIG)), eventos: [] };
+let data = {
+    config: JSON.parse(JSON.stringify(DEFAULT_CONFIG)),
+    eventos: [],
+    registros: []
+};
 let nextId = 1;
 let currentDate = new Date();
 let view = 'mes';
@@ -1494,6 +2185,8 @@ let notaAtivaId = null;
 let notaCheckTimer = null;
 let notaAnexosProcessando = false;
 let notaTextoSelecionado = '';
+let registroProdutoAtivoId = null;
+let registroEntradaAtivaId = null;
 let reuniaoSerieAtivaId = null;
 let reuniaoEntradaAtivaId = null;
 
@@ -1914,6 +2607,17 @@ function prepararDados(){
     if(!data.config.background) data.config.background = { tipo:'cor', cor:'#f4f7fa', imagem:'' };
     if(data.config.userPhoto === undefined) data.config.userPhoto = '';
     if(!data.notas) data.notas = [];
+    if(!data.registros) data.registros = [];
+
+    /*
+       Registros novos usam:
+       Produto/Painel → Entradas
+    */
+    data.registros.forEach(produto => {
+        if(!produto.entradas){
+            produto.entradas = [];
+        }
+    });
     data.notas.forEach((n, idx) => {
         if(!n.anexos) n.anexos = [];
         if(n.ordem === undefined) n.ordem = idx * 10;
@@ -2388,6 +3092,13 @@ function construirMapa(){
 ============================================================ */
 function render(){
     document.body.dataset.view = view;
+
+    const filtersBar = document.getElementById('filtersBar');
+    if(filtersBar){
+        filtersBar.style.display =
+            view === 'registros' ? 'none' : '';
+    }
+    
     aplicarTamanhoView(); fecharPopDia(); marcarSemana();
     document.querySelectorAll('.btn-toggle').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
     const c = document.getElementById('viewContainer');
@@ -2396,6 +3107,7 @@ function render(){
     else if(view === 'dia') c.innerHTML = renderDia();
     else if(view === 'inbox') c.innerHTML = renderInbox();
     else if(view === 'notas') { renderNotas(); return; }
+    else if(view === 'registros') { renderRegistros(); return; }
     else if(view === 'reunioes') { renderReunioes(); return; }
     else c.innerHTML = renderQuadro();
     renderLegend();
@@ -2910,7 +3622,673 @@ function notaAddTexto(){
     notaOnInput();
 }
 
+/* ============================================================
+   REGISTROS — Histórico de modificações
+============================================================ */
 
+function renderRegistros(){
+
+    const c = document.getElementById('viewContainer');
+
+    if(!data.registros) data.registros = [];
+
+    // Se ainda não houver produto selecionado,
+    // seleciona o primeiro.
+    if(!registroProdutoAtivoId && data.registros.length > 0){
+        registroProdutoAtivoId = data.registros[0].id;
+    }
+
+    const produtoAtivo = data.registros.find(
+        p => p.id === registroProdutoAtivoId
+    ) || null;
+
+    /*
+       PAINEL LATERAL
+       Produto/Painel
+           └── Modificações
+    */
+
+    const listaHtml = data.registros.length === 0
+
+        ? `
+            <li class="notas-vazio">
+                Nenhum produto/painel ainda.
+            </li>
+          `
+
+        : data.registros.map(produto => {
+
+            const ativa =
+                produto.id === registroProdutoAtivoId
+                    ? 'ativa'
+                    : '';
+
+            const entradas = [...(produto.entradas || [])]
+                .sort((a,b) =>
+                    new Date(b.data) - new Date(a.data)
+                );
+
+            const entradasHtml = entradas.length === 0
+
+                ? `
+                    <li class="registro-vazio-mini">
+                        Nenhuma modificação ainda.
+                    </li>
+                  `
+
+                : entradas.map(registro => {
+
+                    const registroAtivo =
+                        produto.id === registroProdutoAtivoId &&
+                        registro.id === registroEntradaAtivaId
+                            ? 'ativa'
+                            : '';
+
+                    const d = new Date(registro.data);
+
+                    const dataStr =
+                        `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+
+                    return `
+                        <li
+                            class="registro-entrada-item ${registroAtivo}"
+                            onclick="
+                                event.stopPropagation();
+                                selecionarRegistroEntrada(
+                                    ${produto.id},
+                                    ${registro.id}
+                                )
+                            "
+                        >
+                            <span class="registro-entrada-titulo">
+                                ${escapeHtml(
+                                    registro.titulo || 'Sem título'
+                                )}
+                            </span>
+
+                            <span class="registro-entrada-data">
+                                ${dataStr}
+                            </span>
+                        </li>
+                    `;
+
+                }).join('');
+
+            return `
+                <li class="registro-produto">
+
+                    <div
+                        class="registro-produto-head ${ativa}"
+                        onclick="selecionarRegistroProduto(${produto.id})"
+                    >
+
+                        <span class="registro-arrow">
+                            ${produto.expandido !== false ? '▾' : '▸'}
+                        </span>
+
+                        <span
+                            class="registro-cor-dot"
+                            style="
+                                background:${escapeHtml(
+                                    produto.cor || 'var(--primary)'
+                                )}
+                            "
+                        ></span>
+
+                      <span class="registro-produto-nome">
+                        ${escapeHtml(
+                            produto.nome || 'Sem nome'
+                        )}
+                    </span>
+                    
+                    <button
+                        type="button"
+                        class="registro-mini-edit"
+                        title="Editar nome"
+                        onclick="
+                            event.stopPropagation();
+                            editarRegistroProduto(${produto.id})
+                        "
+                    >
+                        ✎
+                    </button>
+                    
+                    <button
+                        type="button"
+                        class="registro-mini-add"
+                        title="Nova modificação"
+                        onclick="
+                            event.stopPropagation();
+                            novoRegistro(${produto.id})
+                        "
+                    >
+                        +
+                    </button>
+
+                    </div>
+
+                    ${
+                        produto.expandido !== false
+                            ? `
+                                <ul class="registro-entradas">
+                                    ${entradasHtml}
+                                </ul>
+                              `
+                            : ''
+                    }
+
+                </li>
+            `;
+
+        }).join('');
+
+
+    /*
+       CONTEÚDO DA DIREITA
+    */
+
+    let conteudoDireita = '';
+
+    if(!produtoAtivo){
+
+        conteudoDireita = `
+            <div class="notas-vazio" style="margin:auto;">
+                <p>
+                    Crie um produto ou painel para começar
+                    a registrar modificações.
+                </p>
+            </div>
+        `;
+
+    } else {
+
+        const entradas = [...(produtoAtivo.entradas || [])]
+            .sort((a,b) =>
+                new Date(b.data) - new Date(a.data)
+            );
+
+        const registroAtivo =
+            registroEntradaAtivaId
+                ? entradas.find(
+                    r => r.id === registroEntradaAtivaId
+                  )
+                : null;
+
+
+        /*
+           SE NÃO HÁ MODIFICAÇÃO ABERTA:
+           mostra a LISTA das modificações.
+        */
+
+        if(!registroAtivo){
+
+            conteudoDireita = `
+                <div class="registro-lista-conteudo">
+
+                    <div class="registro-lista-titulo">
+                        ${escapeHtml(
+                            produtoAtivo.nome
+                        )}
+                    </div>
+
+                    <div class="registro-lista-subtitulo">
+                        Modificações registradas
+                    </div>
+
+                    ${
+                        entradas.length === 0
+
+                        ? `
+                            <div class="registro-lista-vazio">
+                                Nenhuma modificação registrada
+                                neste produto/painel.
+                            </div>
+                          `
+
+                        : entradas.map(registro => {
+
+                            const d = new Date(registro.data);
+
+                            const dataStr =
+                                `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+
+                            return `
+                                <div
+                                    class="registro-card"
+                                    onclick="
+                                        selecionarRegistroEntrada(
+                                            ${produtoAtivo.id},
+                                            ${registro.id}
+                                        )
+                                    "
+                                >
+
+                                    <div class="registro-card-data">
+                                        ${dataStr}
+                                    </div>
+
+                                    <div class="registro-card-titulo">
+                                        ${escapeHtml(
+                                            registro.titulo ||
+                                            'Sem título'
+                                        )}
+                                    </div>
+
+                                    <div class="registro-card-link">
+                                        Ver registro →
+                                    </div>
+
+                                </div>
+                            `;
+
+                        }).join('')
+                    }
+
+                </div>
+            `;
+
+        }
+
+        /*
+           SE HÁ MODIFICAÇÃO ABERTA:
+           mostra o formulário.
+        */
+
+        else {
+
+            conteudoDireita = `
+
+                <div class="notas-toolbar">
+
+                    <strong style="
+                        flex:1;
+                        font-size:16px;
+                        color:var(--text-heading);
+                    ">
+                        ${escapeHtml(produtoAtivo.nome)}
+                    </strong>
+
+                    <button
+                        class="danger"
+                        onclick="fecharRegistroEntrada()"
+                    >
+                        Voltar
+                    </button>
+
+                </div>
+
+
+                <div class="registro-form">
+
+                    <div class="registro-campo">
+                        <label>Título</label>
+
+                        <input
+                            type="text"
+                            id="registroTitulo"
+                            placeholder="Título da modificação"
+                            value="${escapeHtml(
+                                registroAtivo.titulo || ''
+                            )}"
+                        >
+                    </div>
+
+
+                    <div class="registro-campo">
+                        <label>Descrição</label>
+
+                        <textarea
+                            id="registroDescricao"
+                            placeholder="Descreva a modificação realizada..."
+                        >${escapeHtml(
+                            registroAtivo.descricao || ''
+                        )}</textarea>
+                    </div>
+
+
+                    <div class="registro-campo">
+                        <label>Onde</label>
+
+                        <textarea
+                            id="registroOnde"
+                            placeholder="Informe onde a alteração foi realizada..."
+                        >${escapeHtml(
+                            registroAtivo.onde || ''
+                        )}</textarea>
+                    </div>
+
+
+                    <div class="registro-campo">
+                        <label>Resolução</label>
+
+                        <textarea
+                            id="registroResolucao"
+                            placeholder="Descreva como o problema foi resolvido ou o que foi alterado..."
+                        >${escapeHtml(
+                            registroAtivo.resolucao || ''
+                        )}</textarea>
+                    </div>
+
+
+                    <div class="registro-campo">
+                        <label>Anexos</label>
+
+                        <textarea
+                            id="registroAnexos"
+                            placeholder="Informe arquivos, links, queries ou outros anexos relacionados..."
+                        >${escapeHtml(
+                            registroAtivo.anexos || ''
+                        )}</textarea>
+                    </div>
+
+
+                    <div class="registro-acoes">
+
+                        <button
+                            class="btn btn-success"
+                            onclick="registrarModificacao()"
+                        >
+                            Registrar modificação
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+        }
+    }
+
+
+    /*
+       HTML PRINCIPAL
+    */
+
+    c.innerHTML = `
+
+        <div class="notas-view registros-view">
+
+            <div class="notas-sidebar">
+
+                <button
+                    class="btn-nova-nota"
+                    onclick="novoRegistroProduto()"
+                >
+                    + Novo produto/painel
+                </button>
+
+                <ul class="notas-lista">
+                    ${listaHtml}
+                </ul>
+
+            </div>
+
+
+            <div class="notas-editor-wrap">
+
+                ${conteudoDireita}
+
+            </div>
+
+        </div>
+    `;
+}
+
+    function novoRegistroProduto(){
+
+    const nome = prompt(
+        'Nome do produto/painel:'
+    );
+
+    if(!nome || !nome.trim()) return;
+
+    const novo = {
+        id: Date.now(),
+        nome: nome.trim(),
+        cor: 'var(--primary)',
+        expandido: true,
+        entradas: []
+    };
+
+    data.registros.unshift(novo);
+
+    registroProdutoAtivoId = novo.id;
+    registroEntradaAtivaId = null;
+
+    marcarAlterado();
+
+    renderRegistros();
+}
+
+    function editarRegistroProduto(id){
+
+    const produto = data.registros.find(
+        p => p.id === id
+    );
+
+    if(!produto) return;
+
+    const novoNome = prompt(
+        'Nome do produto/painel:',
+        produto.nome || ''
+    );
+
+    if(novoNome === null) return;
+
+    const nome = novoNome.trim();
+
+    if(!nome){
+        alert('Informe um nome para o produto/painel.');
+        return;
+    }
+
+    produto.nome = nome;
+
+    marcarAlterado();
+
+    renderRegistros();
+}
+
+function selecionarRegistroProduto(id){
+
+    const produto = data.registros.find(
+        p => p.id === id
+    );
+
+    if(!produto) return;
+
+    registroProdutoAtivoId = id;
+    registroEntradaAtivaId = null;
+
+    produto.expandido =
+        produto.expandido === false
+            ? true
+            : false;
+
+    renderRegistros();
+}
+
+
+function selecionarRegistroEntrada(
+    produtoId,
+    entradaId
+){
+
+    registroProdutoAtivoId = produtoId;
+    registroEntradaAtivaId = entradaId;
+
+    renderRegistros();
+}
+
+
+function novoRegistro(produtoId){
+
+    const produto = data.registros.find(
+        p => p.id === produtoId
+    );
+
+    if(!produto) return;
+
+    if(!produto.entradas){
+        produto.entradas = [];
+    }
+
+    const novo = {
+        id: Date.now(),
+        titulo: '',
+        descricao: '',
+        onde: '',
+        resolucao: '',
+        anexos: '',
+        data: new Date().toISOString()
+    };
+
+    produto.entradas.unshift(novo);
+
+    produto.expandido = true;
+
+    registroProdutoAtivoId = produtoId;
+    registroEntradaAtivaId = novo.id;
+
+    renderRegistros();
+
+    setTimeout(() => {
+
+        const campo =
+            document.getElementById(
+                'registroTitulo'
+            );
+
+        if(campo) campo.focus();
+
+    }, 50);
+}
+
+
+function fecharRegistroEntrada(){
+
+    registroEntradaAtivaId = null;
+
+    renderRegistros();
+}
+
+
+function cancelarRegistro(){
+
+    if(
+        !registroProdutoAtivoId ||
+        !registroEntradaAtivaId
+    ){
+        return;
+    }
+
+    const produto =
+        data.registros.find(
+            p => p.id === registroProdutoAtivoId
+        );
+
+    if(!produto) return;
+
+    const registro =
+        produto.entradas.find(
+            r => r.id === registroEntradaAtivaId
+        );
+
+    if(
+        registro &&
+        !registro.titulo.trim() &&
+        !registro.descricao.trim() &&
+        !registro.onde.trim() &&
+        !registro.resolucao.trim() &&
+        !registro.anexos.trim()
+    ){
+
+        produto.entradas =
+            produto.entradas.filter(
+                r => r.id !== registroEntradaAtivaId
+            );
+    }
+
+    registroEntradaAtivaId = null;
+
+    renderRegistros();
+}
+
+
+function registrarModificacao(){
+
+    if(
+        !registroProdutoAtivoId ||
+        !registroEntradaAtivaId
+    ){
+        return;
+    }
+
+    const produto =
+        data.registros.find(
+            p => p.id === registroProdutoAtivoId
+        );
+
+    if(!produto) return;
+
+    const registro =
+        produto.entradas.find(
+            r => r.id === registroEntradaAtivaId
+        );
+
+    if(!registro) return;
+
+
+    const titulo =
+        document
+            .getElementById('registroTitulo')
+            .value.trim();
+
+    const descricao =
+        document
+            .getElementById('registroDescricao')
+            .value.trim();
+
+    const onde =
+        document
+            .getElementById('registroOnde')
+            .value.trim();
+
+    const resolucao =
+        document
+            .getElementById('registroResolucao')
+            .value.trim();
+
+    const anexos =
+        document
+            .getElementById('registroAnexos')
+            .value.trim();
+
+
+    if(!titulo){
+
+        alert(
+            'Informe um título para a modificação.'
+        );
+
+        return;
+    }
+
+
+    registro.titulo = titulo;
+    registro.descricao = descricao;
+    registro.onde = onde;
+    registro.resolucao = resolucao;
+    registro.anexos = anexos;
+    registro.data = new Date().toISOString();
+
+
+    marcarAlterado();
+
+
+    registroEntradaAtivaId = null;
+
+    renderRegistros();
+}
 
 /* ============================================================
    REUNIÕES — Atas com 2 níveis (reunião > data da reunião)
@@ -2941,89 +4319,644 @@ function reunEntradaAtiva(){
 }
 
 function renderReunioes(){
-    const c = document.getElementById('viewContainer');
-    if(!data.reunioes) data.reunioes = [];
 
-    if(!reuniaoSerieAtivaId && data.reunioes.length > 0) reuniaoSerieAtivaId = data.reunioes[0].id;
-    const serieAtiva = reunSerieAtiva();
-    if(serieAtiva && !reuniaoEntradaAtivaId && serieAtiva.entradas.length > 0){
-        reuniaoEntradaAtivaId = reunEntradasOrdenadas(serieAtiva)[serieAtiva.entradas.length-1].id;
+    const c =
+        document.getElementById('viewContainer');
+
+    if(!data.reunioes)
+        data.reunioes = [];
+
+
+    if(
+        !reuniaoSerieAtivaId &&
+        data.reunioes.length
+    ){
+        reuniaoSerieAtivaId =
+            data.reunioes[0].id;
     }
 
-    const listaHtml = data.reunioes.length === 0
-        ? '<li class="notas-vazio">Nenhuma reunião ainda.<br>Clique em "+ Nova reunião".</li>'
+
+    const serieAtiva =
+        reunSerieAtiva();
+
+
+    if(
+        serieAtiva &&
+        !reuniaoEntradaAtivaId &&
+        serieAtiva.entradas.length
+    ){
+
+        reuniaoEntradaAtivaId =
+            reunEntradasOrdenadas(serieAtiva)
+                [serieAtiva.entradas.length - 1]
+                .id;
+
+    }
+
+
+    /*
+       =========================================================
+       LATERAL
+       =========================================================
+    */
+
+    const listaHtml =
+        data.reunioes.length === 0
+
+        ? `
+            <li class="notas-vazio">
+                Nenhuma reunião ainda.
+            </li>
+          `
+
         : data.reunioes.map(serie => {
-            const ativa = serie.id === reuniaoSerieAtivaId ? 'ativa' : '';
-            const entradasHtml = serie.entradas.length === 0
-                ? '<li class="reun-vazio-mini">Nenhuma data ainda.</li>'
-                : reunEntradasOrdenadas(serie).map(en => `
-                    <li class="reun-entrada-item ${en.id===reuniaoEntradaAtivaId && serie.id===reuniaoSerieAtivaId ? 'ativa':''}"
-                        onclick="event.stopPropagation(); selecionarReuniaoEntrada(${serie.id}, ${en.id})">${escapeHtml(reunFormatarDataCurta(en.data))}</li>
-                `).join('');
-            return `<li class="reun-serie">
-                <div class="reun-serie-head ${ativa}" onclick="toggleReuniaoSerie(${serie.id})">
-                    <span class="reun-arrow">${serie.expandido !== false ? '▾' : '▸'}</span>
-                    <span class="reun-cor-dot" style="background:${escapeHtml(serie.cor || '#4caf50')}"></span>
-                    <span class="reun-serie-nome">${escapeHtml(serie.nome || 'Sem nome')}</span>
-                    <button type="button" class="reun-mini-add" title="Nova data" onclick="event.stopPropagation(); novaReuniaoEntrada(${serie.id})">${ic('plus',12)}</button>
-                    <button type="button" class="reun-mini-del" title="Excluir reunião" onclick="event.stopPropagation(); excluirReuniaoSerie(${serie.id})">×</button>
-                </div>
-                ${serie.expandido !== false ? `<ul class="reun-entradas">${entradasHtml}</ul>` : ''}
-            </li>`;
+
+            const ativa =
+                serie.id === reuniaoSerieAtivaId
+                    ? 'ativa'
+                    : '';
+
+
+            const entradas =
+                reunEntradasOrdenadas(serie);
+
+
+            const entradasHtml =
+                entradas.length === 0
+
+                ? `
+                    <li class="reun-vazio-mini">
+                        Nenhuma data ainda.
+                    </li>
+                  `
+
+                : entradas.map(en => {
+
+                    const entradaAtiva =
+                        en.id === reuniaoEntradaAtivaId &&
+                        serie.id === reuniaoSerieAtivaId
+                            ? 'ativa'
+                            : '';
+
+
+                    return `
+
+                        <li
+                            class="reun-entrada-item ${entradaAtiva}"
+                            onclick="
+                                event.stopPropagation();
+                                selecionarReuniaoEntrada(
+                                    ${serie.id},
+                                    ${en.id}
+                                )
+                            "
+                        >
+
+                            ${escapeHtml(
+                                reunFormatarDataCurta(
+                                    en.data
+                                )
+                            )}
+
+                        </li>
+
+                    `;
+
+                }).join('');
+
+
+            return `
+
+                <li class="reun-serie">
+
+                    <div
+                        class="reun-serie-head ${ativa}"
+                        onclick="
+                            toggleReuniaoSerie(
+                                ${serie.id}
+                            )
+                        "
+                    >
+
+                        <span class="reun-arrow">
+                            ${
+                                serie.expandido !== false
+                                    ? '▾'
+                                    : '▸'
+                            }
+                        </span>
+
+                        <span
+                            class="reun-cor-dot"
+                            style="
+                                background:${escapeHtml(
+                                    serie.cor ||
+                                    'var(--primary)'
+                                )}
+                            "
+                        ></span>
+
+                        <span class="reun-serie-nome">
+
+                            ${escapeHtml(
+                                serie.nome ||
+                                'Sem nome'
+                            )}
+
+                        </span>
+
+
+                        <button
+                            type="button"
+                            class="reun-mini-add"
+                            title="Nova data"
+                            onclick="
+                                event.stopPropagation();
+                                novaReuniaoEntrada(
+                                    ${serie.id}
+                                )
+                            "
+                        >
+                            ${ic('plus',12)}
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="reun-mini-del"
+                            title="Excluir reunião"
+                            onclick="
+                                event.stopPropagation();
+                                excluirReuniaoSerie(
+                                    ${serie.id}
+                                )
+                            "
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+
+                    ${
+                        serie.expandido !== false
+
+                            ? `
+                                <ul class="reun-entradas">
+
+                                    ${entradasHtml}
+
+                                </ul>
+                              `
+
+                            : ''
+                    }
+
+                </li>
+
+            `;
+
         }).join('');
 
-    const en = reunEntradaAtiva();
-    const editorHtml = !en ? `
-        <div class="reun-vazio-editor">
-            <p>Selecione uma data à esquerda, ou crie uma nova reunião / data.</p>
-        </div>` : `
-        <div class="reun-editor">
-            <div class="reun-editor-top">
-                <input type="date" id="reunData" value="${escapeHtml(en.data || '')}" onchange="reunSincronizar()">
-                <span class="reun-meta">${escapeHtml(reunFormatarDataLonga(en.data))} · criado em ${escapeHtml(reunFormatarCriadoEm(en.criadoEm))}</span>
-                <button type="button" class="btn btn-danger btn-mini" onclick="excluirReuniaoEntrada()">Excluir esta data</button>
-            </div>
-            <div class="row2">
-                <div class="field"><label>Participantes</label><input type="text" id="reunParticipantes" value="${escapeHtml(en.participantes || '')}" oninput="reunSincronizar()" placeholder="Nomes dos participantes"></div>
-                <div class="field"><label>Setor</label><input type="text" id="reunSetor" value="${escapeHtml(en.setor || '')}" oninput="reunSincronizar()" placeholder="Setor / área"></div>
-            </div>
-            <div class="field"><label>Data e Hora da Reunião</label><input type="datetime-local" id="reunDataHora" value="${escapeHtml(en.dataHora || '')}" onchange="reunSincronizar()"></div>
 
-            <div class="reun-secao">
-                <div class="sec-head"><label>Pautas</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarLista('pautas')" title="Adicionar pauta"></button></span></div>
-                <div id="reunListaPautas">${reunListaHtml(en.pautas, 'pautas')}</div>
+    /*
+       =========================================================
+       EDITOR
+       =========================================================
+    */
+
+    const en =
+        reunEntradaAtiva();
+
+
+    let editorHtml;
+
+
+    if(!en){
+
+        editorHtml = `
+
+            <div class="reun-vazio-editor">
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(
+                            serieAtiva?.nome ||
+                            'Reuniões'
+                        )}
+                    </strong>
+
+                    <p>
+                        Selecione uma data à esquerda
+                        ou crie uma nova data.
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="reun-secao">
-                <div class="sec-head"><label>Pendências da Reunião Anterior</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarTabela('pendencias')" title="Adicionar pendência"></button></span></div>
-                ${en.pendencias.length ? `<div class="reun-tabela-head"><span>Pendências</span><span>Responsável</span><span>Prazo</span><span>Status</span><span></span></div>` : ''}
-                <div id="reunTabelaPendencias">${reunTabelaHtml(en.pendencias, 'pendencias')}</div>
+        `;
+
+    }
+
+    else {
+
+        editorHtml = `
+
+            <div class="reun-editor">
+
+
+                <!-- CABEÇALHO -->
+
+                <div class="reun-editor-top">
+
+                    <input
+                        type="date"
+                        id="reunData"
+                        value="${escapeHtml(
+                            en.data || ''
+                        )}"
+                        onchange="reunSincronizar()"
+                    >
+
+
+                    <div class="reun-meta">
+
+                        <strong>
+                            ${escapeHtml(
+                                serieAtiva?.nome ||
+                                'Reunião'
+                            )}
+                        </strong>
+
+                        <br>
+
+                        ${escapeHtml(
+                            reunFormatarDataLonga(
+                                en.data
+                            )
+                        )}
+
+                        ${
+                            en.criadoEm
+                                ? ` · criado em ${escapeHtml(
+                                    reunFormatarCriadoEm(
+                                        en.criadoEm
+                                    )
+                                  )}`
+                                : ''
+                        }
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-danger btn-mini"
+                        onclick="excluirReuniaoEntrada()"
+                    >
+                        Excluir esta data
+                    </button>
+
+                </div>
+
+
+                <!-- INFORMAÇÕES -->
+
+                <div class="reun-info-card">
+
+                    <div class="reun-info-titulo">
+                        Informações da reunião
+                    </div>
+
+
+                    <div class="reun-info-grid">
+
+
+                        <div class="field">
+
+                            <label>
+                                Participantes
+                            </label>
+
+                            <input
+                                type="text"
+                                id="reunParticipantes"
+                                value="${escapeHtml(
+                                    en.participantes || ''
+                                )}"
+                                oninput="reunSincronizar()"
+                                placeholder="Nomes dos participantes"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Setor / área
+                            </label>
+
+                            <input
+                                type="text"
+                                id="reunSetor"
+                                value="${escapeHtml(
+                                    en.setor || ''
+                                )}"
+                                oninput="reunSincronizar()"
+                                placeholder="Setor / área"
+                            >
+
+                        </div>
+
+
+                        <div class="field field-full">
+
+                            <label>
+                                Data e hora da reunião
+                            </label>
+
+                            <input
+                                type="datetime-local"
+                                id="reunDataHora"
+                                value="${escapeHtml(
+                                    en.dataHora || ''
+                                )}"
+                                onchange="reunSincronizar()"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PAUTAS -->
+
+                <div class="reun-secao">
+
+                    <div class="sec-head">
+
+                        <label>
+                            Pautas
+                        </label>
+
+                        <span class="sec-tools">
+
+                            <button
+                                type="button"
+                                class="checklist-add"
+                                data-ic="plus"
+                                onclick="
+                                    reunAdicionarLista(
+                                        'pautas'
+                                    )
+                                "
+                                title="Adicionar pauta"
+                            ></button>
+
+                        </span>
+
+                    </div>
+
+
+                    <div id="reunListaPautas">
+
+                        ${reunListaHtml(
+                            en.pautas,
+                            'pautas'
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PENDÊNCIAS -->
+
+                <div class="reun-secao">
+
+                    <div class="sec-head">
+
+                        <label>
+                            Pendências da reunião anterior
+                        </label>
+
+                        <span class="sec-tools">
+
+                            <button
+                                type="button"
+                                class="checklist-add"
+                                data-ic="plus"
+                                onclick="
+                                    reunAdicionarTabela(
+                                        'pendencias'
+                                    )
+                                "
+                                title="Adicionar pendência"
+                            ></button>
+
+                        </span>
+
+                    </div>
+
+
+                    ${
+                        en.pendencias.length
+
+                        ? `
+                            <div class="reun-tabela-head">
+
+                                <span>Pendência</span>
+                                <span>Responsável</span>
+                                <span>Prazo</span>
+                                <span>Status</span>
+                                <span></span>
+
+                            </div>
+                          `
+
+                        : ''
+                    }
+
+
+                    <div id="reunTabelaPendencias">
+
+                        ${reunTabelaHtml(
+                            en.pendencias,
+                            'pendencias'
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ASSUNTOS -->
+
+                <div class="reun-secao">
+
+                    <div class="sec-head">
+
+                        <label>
+                            Assuntos abordados
+                        </label>
+
+                        <span class="sec-tools">
+
+                            <button
+                                type="button"
+                                class="checklist-add"
+                                data-ic="plus"
+                                onclick="
+                                    reunAdicionarLista(
+                                        'assuntos'
+                                    )
+                                "
+                                title="Adicionar assunto"
+                            ></button>
+
+                        </span>
+
+                    </div>
+
+
+                    <div id="reunListaAssuntos">
+
+                        ${reunListaHtml(
+                            en.assuntos,
+                            'assuntos'
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ENCAMINHAMENTOS -->
+
+                <div class="reun-secao">
+
+                    <div class="sec-head">
+
+                        <label>
+                            Encaminhamentos para as próximas reuniões
+                        </label>
+
+                        <span class="sec-tools">
+
+                            <button
+                                type="button"
+                                class="checklist-add"
+                                data-ic="plus"
+                                onclick="
+                                    reunAdicionarTabela(
+                                        'encaminhamentos'
+                                    )
+                                "
+                                title="Adicionar encaminhamento"
+                            ></button>
+
+                        </span>
+
+                    </div>
+
+
+                    ${
+                        en.encaminhamentos.length
+
+                        ? `
+                            <div class="reun-tabela-head">
+
+                                <span>Encaminhamento</span>
+                                <span>Responsável</span>
+                                <span>Prazo</span>
+                                <span>Status</span>
+                                <span></span>
+
+                            </div>
+                          `
+
+                        : ''
+                    }
+
+
+                    <div id="reunTabelaEncaminhamentos">
+
+                        ${reunTabelaHtml(
+                            en.encaminhamentos,
+                            'encaminhamentos'
+                        )}
+
+                    </div>
+
+                </div>
+
+
             </div>
 
-            <div class="reun-secao">
-                <div class="sec-head"><label>Assuntos Abordados</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarLista('assuntos')" title="Adicionar assunto"></button></span></div>
-                <div id="reunListaAssuntos">${reunListaHtml(en.assuntos, 'assuntos')}</div>
-            </div>
+        `;
 
-            <div class="reun-secao">
-                <div class="sec-head"><label>Encaminhamentos para as próximas reuniões</label><span class="sec-tools"><button type="button" class="checklist-add" data-ic="plus" onclick="reunAdicionarTabela('encaminhamentos')" title="Adicionar encaminhamento"></button></span></div>
-                ${en.encaminhamentos.length ? `<div class="reun-tabela-head"><span>Encaminhamentos</span><span>Responsável</span><span>Prazo</span><span>Status</span><span></span></div>` : ''}
-                <div id="reunTabelaEncaminhamentos">${reunTabelaHtml(en.encaminhamentos, 'encaminhamentos')}</div>
-            </div>
-        </div>`;
+    }
+
+
+    /*
+       =========================================================
+       ESTRUTURA
+       =========================================================
+    */
 
     c.innerHTML = `
+
         <div class="notas-view">
+
             <div class="notas-sidebar reun-sidebar">
-                <button class="btn-nova-nota" onclick="novaReuniaoSerie()">+ Nova reunião</button>
-                <ul class="notas-lista reun-lista">${listaHtml}</ul>
+
+                <button
+                    class="btn-nova-nota"
+                    onclick="novaReuniaoSerie()"
+                >
+                    + Nova reunião
+                </button>
+
+
+                <ul class="notas-lista reun-lista">
+
+                    ${listaHtml}
+
+                </ul>
+
             </div>
-            <div class="notas-editor-wrap" id="reunEditorWrap">${editorHtml}</div>
-        </div>`;
+
+
+            <div
+                class="notas-editor-wrap"
+                id="reunEditorWrap"
+            >
+
+                ${editorHtml}
+
+            </div>
+
+        </div>
+
+    `;
+
 
     requestAnimationFrame(() => {
-        document.querySelectorAll('#reunEditorWrap .reun-simples-input, #reunEditorWrap .reun-tab-texto').forEach(reunAjustarAltura);
+
+        document
+            .querySelectorAll(
+                '#reunEditorWrap .reun-simples-input, ' +
+                '#reunEditorWrap .reun-tab-texto'
+            )
+            .forEach(reunAjustarAltura);
+
     });
+
 }
 
 function reunListaHtml(arr, campo){
