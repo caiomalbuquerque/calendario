@@ -1830,6 +1830,15 @@
   },
   "notas": [
     {
+      "id": 1790341361650,
+      "titulo": "Documentação: Planejamento Estratégico",
+      "conteudo": "<div><a href=\"https://app.powerbi.com/view?r=eyJrIjoiN2YzOTRhNzQtMDBkMS00ZGFhLWE3ZmQtZGNjYTZjYWU4NDQ0IiwidCI6IjIyMmFlZWI1LTFlN2ItNDgwNy04MDhiLTVlYmFlMmE4YTNiMyJ9&amp;pageName=b5e3f5fdb7472a961a85\">Painel Planejamento Estratégico</a></div><div><br></div><div><b>25/09: </b></div><div>Descrição: Questionamentos feitos pelo HDH e HPS sobre a presença de especialidades que não fazem parte do escopo da Unidade. </div><div>Onde: Páginas Taxa de Ocupação e Tempo Médio de Permanência</div><div>Resolução: realizou-se ajuste na query <a class=\"anexo-link\" href=\"https://raw.githubusercontent.com/caiomalbuquerque/calendario/main/img/notas-anexos/1790341446594-r_est_hosp_analitico_25-09-2026.sql\" target=\"_blank\" rel=\"noopener\" data-anexo=\"1790341446594-r_est_hosp_analitico_25-09-2026.sql\">r_est_hosp_analitico_25-09-2026.sql</a> </div><div><br></div>",
+      "cor": "#ffffff",
+      "anexos": [],
+      "criadoEm": "2026-09-25T13:02:41.650Z",
+      "atualizadoEm": "2026-09-25T13:14:07.870Z"
+    },
+    {
       "id": 1790166062714,
       "titulo": "Anotações Gerais",
       "conteudo": "Adicionar especialidade no painel de exames laboratoriais &gt; Atribuída ao atendimento;<div>Trocar o caminho do CID para vir da tabela <b>DIAGNOSTICO_ATENDIME</b></div><div><b><br></b></div><div>Deixar a linha de meta fixa, independente do filtro de consultas: ofertadas, agendadas, realizadas e se clicar nas especialidades, manter a linha de meta</div><div><br></div><div>Ouvidoria: Ser menos repetitivo. </div><div><br></div><div>Manutenção geral: painéis do estratégico: programar para o início de outubro (dia 05/10?)</div><div><br></div><div><br></div>",
