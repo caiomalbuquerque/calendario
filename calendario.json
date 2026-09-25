@@ -1361,16 +1361,38 @@
     {
       "id": 66,
       "dataInicio": "2026-09-25",
-      "dataFim": "2026-09-25",
-      "titulo": "Cobrar preenchimento ENVOLVER SORMANE",
-      "responsavel": "",
-      "area": "",
-      "descricao": "",
-      "descricaoHtml": "",
+      "dataFim": "2026-09-28",
+      "titulo": "NGC: Cobrar preenchimento do forms",
+      "responsavel": "Caio Albuquerque",
+      "area": "SG",
+      "descricao": "Momento 1: Avaliação - Desafio Unidades 2026 (NGC)https://forms.cloud.microsoft/r/S9xjKJf5zY",
+      "descricaoHtml": "<div>Momento 1: Avaliação - Desafio Unidades 2026 (NGC)</div><a href=\"https://forms.cloud.microsoft/r/S9xjKJf5zY\" target=\"_blank\" rel=\"noopener\">https://forms.cloud.microsoft/r/S9xjKJf5zY</a>",
       "tipo": "lembrete",
       "status": "nao-iniciado",
       "complexidade": "",
-      "checklist": [],
+      "checklist": [
+        {
+          "id": "ck_68f118fd-f158-46f9-9b70-cadd2b85f19e",
+          "texto": "Enviar novamente o e-mail, com prazo até 23h59 do dia 28/09",
+          "concluido": false,
+          "data": "2026-09-25",
+          "responsavel": "Caio Albuquerque"
+        },
+        {
+          "id": "ck_dc8606f7-9fc5-486b-b2a3-69e90be8dfb7",
+          "texto": "Mandar print do e-mail para Sormane",
+          "concluido": false,
+          "data": "2026-09-25",
+          "responsavel": "Caio Albuquerque"
+        },
+        {
+          "id": "ck_40100b2a-da87-4f50-96b9-9bd417cfa7db",
+          "texto": "",
+          "concluido": false,
+          "data": "",
+          "responsavel": ""
+        }
+      ],
       "ordem": 670
     }
   ],
@@ -1396,6 +1418,10 @@
       {
         "label": "Caio Albuquerque",
         "cor": "#f00000"
+      },
+      {
+        "label": "Sormane Britto",
+        "cor": "#21409c"
       },
       {
         "label": "Lucas Xavier",
@@ -1720,7 +1746,7 @@
       "dragImediato": false
     },
     "tamanhos": {
-      "semana": 90,
+      "semana": 80,
       "mes": 85,
       "dia": 70,
       "quadro": 90,
