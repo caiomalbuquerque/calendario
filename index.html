@@ -33,6 +33,7 @@
         --day-strip-hoje-bg: #f5a623; --day-strip-hoje-text: #ffffff;
         --toolbar-bg: #f8fafc; --toolbar-border: #e6edf5;
         --modal-bg: #ffffff; --modal-overlay: rgba(22,60,109,.55); --modal-border: none;
+        --bg-hover: #f0f4f8; --bg-selected: #e2ecf5;
         --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         --font-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         --font-mono: 'Courier New', monospace;
@@ -513,9 +514,9 @@
     flex: 1;
     min-width: 0;
     font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.3;
 }
 
 .registro-mini-add {
@@ -548,6 +549,22 @@
     background: var(--bg-hover);
 }
 
+.registro-mini-del {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: 17px;
+    border-radius: 5px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+.registro-mini-del:hover {
+    background: rgba(220,53,69,.10);
+    color: var(--danger);
+}
+    
 .registro-entradas {
     list-style: none;
     margin: 0;
@@ -610,6 +627,23 @@
     margin-bottom: 20px;
 }
 
+.registro-lista-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+.registro-lista-head .registro-lista-titulo,
+.registro-lista-head .registro-lista-subtitulo {
+    margin-bottom: 0;
+}
+.registro-lista-head .registro-lista-titulo { margin-bottom: 4px; }
+.registro-lista-acoes {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
 .registro-lista-vazio {
     padding: 30px 0;
     color: var(--text-muted);
@@ -665,6 +699,7 @@
 }
 
 .registro-campo input,
+.registro-campo select,
 .registro-campo textarea {
     width: 100%;
     padding: 9px 10px;
@@ -675,23 +710,119 @@
     font-family: var(--font-body);
     font-size: 15px;
 }
+.registro-row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+@media (max-width: 480px) {
+    .registro-row2 { grid-template-columns: 1fr; }
+}
 
 .registro-campo input {
     font-weight: 600;
 }
 
 .registro-campo textarea {
-    min-height: 80px;
+    min-height: 15px;
     resize: vertical;
     line-height: 1.5;
+    
 }
 
+#registroResolucao {
+    min-height: 220px;
+}
+    
 .registro-acoes {
     display: flex;
     justify-content: flex-end;
     padding-top: 6px;
     border-top: 1px solid var(--border-color);
 }
+
+.registro-log-acoes {
+    display: flex;
+    gap: 6px;
+    margin-right: 10px;
+}
+.registro-view {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 4px 2px 20px;
+}
+.registro-view-campo label {
+    display: block;
+    font-weight: 800;
+    color: var(--text-heading);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.registro-view-valor {
+    padding: 9px 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-panel);
+    color: var(--text-color);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.registro-anexos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.registro-anexo-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-panel);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--secondary);
+    font-weight: 600;
+    font-size: 14px;
+}
+.registro-anexo-item:hover { background: var(--bg-panel-dark); }
+.registro-anexo-item a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+    overflow: hidden;
+}
+.registro-anexo-nome {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.registro-anexo-del {
+    border: 0;
+    background: transparent;
+    color: var(--danger);
+    cursor: pointer;
+    padding: 2px 6px;
+    font-size: 16px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+}
+.registro-anexo-del:hover { background: rgba(220,53,69,.10); border-radius: 4px; }
+
      /* ============================================================
        REUNIÕES — mesmo conceito visual de REGISTROS
     ============================================================ */
@@ -987,7 +1118,60 @@
         border-color: var(--primary);
     
     }
-    
+
+    /* Participantes (seletor múltiplo) */
+.reun-multi { position: relative; }
+.reun-multi-input {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    min-height: 38px; padding: 6px 8px; cursor: text;
+    border: 1px solid var(--border-color); border-radius: 6px;
+    background: var(--bg-panel-alt);
+}
+.reun-multi-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.reun-participante-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 6px; border-radius: 10px; font-size: 12px; font-weight: 700;
+}
+.reun-participante-tag button {
+    border: 0; background: transparent; cursor: pointer;
+    font-size: 13px; line-height: 1; color: inherit; opacity: .7;
+}
+.reun-participante-tag button:hover { opacity: 1; }
+.reun-multi-input input[type=text] {
+    flex: 1; min-width: 100px; border: 0; background: transparent;
+    outline: none; font: 500 14px var(--font-body); color: var(--text-color);
+}
+.reun-multi-menu {
+    display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+    z-index: 50; max-height: 220px; overflow-y: auto; padding: 4px;
+    background: var(--bg-container); border: 1px solid var(--border-color-strong);
+    border-radius: 8px; box-shadow: var(--shadow);
+    width: 100%; max-width: 100%; box-sizing: border-box;
+}
+.reun-multi-option {
+    display: flex; align-items: center; gap: 8px; padding: 7px 8px;
+    border-radius: 6px; cursor: pointer; font-size: 13px;
+    width: 100%; box-sizing: border-box;
+}
+.reun-multi-option input[type=checkbox] {
+    flex: 0 0 16px; width: 16px; height: 16px; margin: 0;
+    accent-color: var(--primary); cursor: pointer;
+}
+.reun-multi-option .badge {
+    flex: 1 1 auto; min-width: 0; text-align: left;
+}
+.reun-multi-option:hover { background: var(--bg-panel-dark); }
+
+/* Data e hora da reunião */
+.reun-datahora { display: flex; align-items: center; gap: 6px; }
+.reun-datahora input[type=date] { flex: 1; min-width: 0; }
+.reun-hora-label { color: var(--text-muted); font-size: 13px; }
+.reun-hora {
+    width: 42px; text-align: center; padding: 8px 4px;
+    border: 1px solid var(--border-color); border-radius: 6px;
+    background: var(--bg-panel-alt); color: var(--text-color);
+    font: 600 14px var(--font-body);
+}
     
     /* ============================================================
        SEÇÕES DA ATA
@@ -1829,7 +2013,7 @@
             <span class="tabs-sep"></span>
             <button class="btn btn-toggle" data-view="inbox" onclick="setView('inbox')" title="Tarefas sem data">Inbox <span class="inbox-badge" id="inboxBadge" style="display:none;">0</span></button>
             <button class="btn btn-toggle" data-view="notas" onclick="setView('notas')" title="Bloco de anotações">Notas</button>
-            <button class="btn btn-toggle" data-view="registros" onclick="setView('registros')" title="Registro de modificações">Registros</button>
+            <button class="btn btn-toggle" data-view="registros" onclick="setView('registros')" title="Histórico de modificações">Change Log</button>
             <button class="btn btn-toggle" data-view="reunioes" onclick="setView('reunioes')" title="Atas de reunião">Reuniões</button>
         </nav>
         <div class="appbar-actions">
@@ -2206,6 +2390,7 @@ const THEME_VARS_SHARKBITE = Object.assign({}, THEME_VARS_DEFAULT, {
     '--day-badge-bg': '#0f9fb0', '--day-number-color': '#0b2a4a', '--day-number-weekend': '#0f9fb0',
     '--day-header-bg': '#0b2a4a', '--day-strip-bg-active': '#0b2a4a', '--day-strip-text': '#0b2a4a', '--day-strip-hoje-bg': '#0f9fb0',
     '--toolbar-bg': '#f5f8fb', '--modal-overlay': 'rgba(11,42,74,.55)',
+    '--bg-hover': '#eef3f8', '--bg-selected': '#dfe9f2',
     '--font-body': "'Inter', 'Segoe UI', Tahoma, sans-serif", '--font-heading': "'Inter', 'Segoe UI', Tahoma, sans-serif",
     '--btn-font-family': "'Inter', 'Segoe UI', Tahoma, sans-serif", '--font-weight-h1': '800', '--letter-spacing-h1': '.5px',
     '--radius': '10px', '--radius-lg': '16px', '--btn-radius': '8px', '--shadow': '0 8px 30px rgba(11,42,74,.10)'
@@ -2222,7 +2407,8 @@ const THEME_VARS_ESCURO = Object.assign({}, THEME_VARS_SHARKBITE, {
     '--cal-head-bg': '#16365c', '--cal-head-weekend': '#1a4272', '--cal-cell-bg': '#111b2e', '--cal-cell-hover': '#16233a', '--cal-cell-other': '#0e1626',
     '--day-badge-bg': '#19b5c7', '--day-number-color': '#dbe4f0', '--day-number-weekend': '#19b5c7', '--day-number-other': '#3a4b66',
     '--day-header-bg': '#16365c', '--day-strip-bg': '#16233a', '--day-strip-bg-active': '#1f4a7c', '--day-strip-text': '#dbe4f0', '--day-strip-hoje-bg': '#19b5c7',
-    '--toolbar-bg': '#16233a', '--modal-bg': '#16233a', '--modal-overlay': 'rgba(3,8,18,.7)', '--shadow': '0 8px 30px rgba(0,0,0,.4)'
+    '--toolbar-bg': '#16233a', '--modal-bg': '#16233a', '--modal-overlay': 'rgba(3,8,18,.7)', '--shadow': '0 8px 30px rgba(0,0,0,.4)',
+    '--bg-hover': '#1e2e48', '--bg-selected': '#27395a'
 });
 
 const DEFAULT_CONFIG = {
@@ -2277,6 +2463,7 @@ let notaAnexosProcessando = false;
 let notaTextoSelecionado = '';
 let registroProdutoAtivoId = null;
 let registroEntradaAtivaId = null;
+let registroEditandoLog = false;
 let reuniaoSerieAtivaId = null;
 let reuniaoEntradaAtivaId = null;
 
@@ -2583,7 +2770,8 @@ const THEME_FIELDS_COLOR = [
     ['--day-badge-bg', 'Badge de contagem'], ['--day-number-color', 'Número do dia'],
     ['--day-header-bg', 'Cabeçalho da view Dia'],
     ['--day-strip-bg', 'Strip Dia'], ['--day-strip-bg-active', 'Strip Dia (ativo)'], ['--day-strip-hoje-bg', 'Strip Dia (hoje)'],
-    ['--toolbar-bg', 'Toolbar'], ['--modal-bg', 'Modal'], ['--modal-overlay', 'Overlay do modal']
+    ['--toolbar-bg', 'Toolbar'], ['--modal-bg', 'Modal'], ['--modal-overlay', 'Overlay do modal'],
+    ['--bg-hover', 'Fundo (hover)'], ['--bg-selected', 'Fundo (selecionado)']
 ];
 const THEME_FIELDS_FONT = [
     ['--font-body', 'Fonte do corpo', 'font'],
@@ -2707,6 +2895,11 @@ function prepararDados(){
         if(!produto.entradas){
             produto.entradas = [];
         }
+        produto.entradas.forEach(registro => {
+            if(registro.responsavel === undefined) registro.responsavel = '';
+            if(registro.statusLog === undefined) registro.statusLog = '';
+            if(!Array.isArray(registro.anexosArquivos)) registro.anexosArquivos = [];
+        });
     });
     data.notas.forEach((n, idx) => {
         if(!n.anexos) n.anexos = [];
@@ -3916,6 +4109,16 @@ function notaAddTexto(){
    REGISTROS — Histórico de modificações
 ============================================================ */
 
+const REGISTRO_STATUS = [
+    { id:'nao-iniciado', label:'Não iniciado', cor:'#9e9e9e' },
+    { id:'em-andamento', label:'Em andamento', cor:'#f5a623' },
+    { id:'em-validacao', label:'Em validação com área/setor', cor:'#2b6ca3' },
+    { id:'finalizado', label:'Finalizado', cor:'#1a9c4a' },
+    { id:'finalizado-publicado', label:'Finalizado e publicado', cor:'#0f9fb0' },
+    { id:'finalizado-publicado-informado', label:'Finalizado, publicado e informado', cor:'#673ab7' }
+];
+function getRegistroStatus(id){ return REGISTRO_STATUS.find(s => s.id === id) || null; }
+    
 function renderRegistros(){
 
     const c = document.getElementById('viewContainer');
@@ -3962,7 +4165,7 @@ function renderRegistros(){
 
                 ? `
                     <li class="registro-vazio-mini">
-                        Nenhuma modificação ainda.
+                        Nenhum log ainda.
                     </li>
                   `
 
@@ -4033,26 +4236,14 @@ function renderRegistros(){
                     
                     <button
                         type="button"
-                        class="registro-mini-edit"
-                        title="Editar nome"
+                        class="registro-mini-del"
+                        title="Excluir produto/painel"
                         onclick="
                             event.stopPropagation();
-                            editarRegistroProduto(${produto.id})
+                            excluirRegistroProduto(${produto.id})
                         "
                     >
-                        ✎
-                    </button>
-                    
-                    <button
-                        type="button"
-                        class="registro-mini-add"
-                        title="Nova modificação"
-                        onclick="
-                            event.stopPropagation();
-                            novoRegistro(${produto.id})
-                        "
-                    >
-                        +
+                        ×
                     </button>
 
                     </div>
@@ -4085,7 +4276,7 @@ function renderRegistros(){
             <div class="notas-vazio" style="margin:auto;">
                 <p>
                     Crie um produto ou painel para começar
-                    a registrar modificações.
+                    a registrar logs.
                 </p>
             </div>
         `;
@@ -4112,26 +4303,34 @@ function renderRegistros(){
 
         if(!registroAtivo){
 
-            conteudoDireita = `
-                <div class="registro-lista-conteudo">
+conteudoDireita = `
+    <div class="registro-lista-conteudo">
 
-                    <div class="registro-lista-titulo">
-                        ${escapeHtml(
-                            produtoAtivo.nome
-                        )}
-                    </div>
+        <div class="registro-lista-head">
+            <div>
+                <div class="registro-lista-titulo">
+                    ${escapeHtml(
+                        produtoAtivo.nome
+                    )}
+                </div>
 
-                    <div class="registro-lista-subtitulo">
-                        Modificações registradas
-                    </div>
+                <div class="registro-lista-subtitulo">
+                    Logs registrados
+                </div>
+            </div>
 
-                    ${
+            <div class="registro-lista-acoes">
+                <button type="button" class="btn-mini edit" title="Editar nome" onclick="editarRegistroProduto(${produtoAtivo.id})">${ic('edit',14)}</button>
+                <button type="button" class="btn-mini dup" title="Novo log" onclick="novoRegistro(${produtoAtivo.id})">${ic('plus',14)}</button>
+            </div>
+        </div>
+
+        ${
                         entradas.length === 0
 
                         ? `
                             <div class="registro-lista-vazio">
-                                Nenhuma modificação registrada
-                                neste produto/painel.
+                                Nenhum log registrado neste produto/painel.
                             </div>
                           `
 
@@ -4184,7 +4383,93 @@ function renderRegistros(){
            mostra o formulário.
         */
 
-        else {
+                else {
+
+            const logAcoes = registroEditandoLog
+                ? `
+                    <button type="button" class="btn-mini del" title="Excluir log" onclick="excluirRegistroEntrada()">${ic('x',14)}</button>
+                    <button type="button" class="btn btn-success" onclick="registrarModificacao()">Registrar log</button>
+                `
+                : `
+                    <button type="button" class="btn-mini del" title="Excluir log" onclick="excluirRegistroEntrada()">${ic('x',14)}</button>
+                    <button type="button" class="btn-mini edit" title="Editar log" onclick="editarRegistroEntrada()">${ic('edit',14)}</button>
+                `;
+
+            const statusLogInfo = getRegistroStatus(registroAtivo.statusLog);
+            const anexosViewHtml = (registroAtivo.anexosArquivos || []).length
+                ? `<div class="registro-anexos-lista">${registroAtivo.anexosArquivos.map(a => `
+                    <a class="registro-anexo-item" href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${ic('clip',14)}<span class="registro-anexo-nome">${escapeHtml(a.nome)}</span></a>
+                `).join('')}</div>`
+                : '—';
+
+            const camposView = [
+                ['Título', escapeHtml(registroAtivo.titulo || '—')],
+                ['Responsável', registroAtivo.responsavel ? `<span class="badge badge-resp" style="${badgeStyle(getRespCor(registroAtivo.responsavel))}">@${escapeHtml(registroAtivo.responsavel)}</span>` : '—'],
+                ['Status', statusLogInfo ? `<span class="badge" style="${badgeStyle(statusLogInfo.cor)}">${escapeHtml(statusLogInfo.label)}</span>` : '—'],
+                ['Descrição', escapeHtml(registroAtivo.descricao || '—')],
+                ['Onde', escapeHtml(registroAtivo.onde || '—')],
+                ['Resolução', escapeHtml(registroAtivo.resolucao || '—')],
+                ['Anexos', anexosViewHtml]
+            ].map(([label, valorHtml]) => `
+                <div class="registro-view-campo">
+                    <label>${label}</label>
+                    <div class="registro-view-valor">${valorHtml}</div>
+                </div>
+            `).join('');
+
+            const anexosEdicaoHtml = (registroAtivo.anexosArquivos || []).length
+                ? registroAtivo.anexosArquivos.map((a, i) => `
+                    <div class="registro-anexo-item">
+                        <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${ic('clip',14)}<span class="registro-anexo-nome">${escapeHtml(a.nome)}</span></a>
+                        <button type="button" class="registro-anexo-del" title="Remover anexo" onclick="registroRemoverAnexo(${i})">${ic('x',13)}</button>
+                    </div>
+                `).join('')
+                : '<div class="registro-vazio-mini">Nenhum arquivo anexado.</div>';
+
+            const camposEdicao = `
+                <div class="registro-campo">
+                    <label>Título</label>
+                    <input type="text" id="registroTitulo" placeholder="Título do log" value="${escapeHtml(registroAtivo.titulo || '')}">
+                </div>
+
+                <div class="registro-row2">
+                    <div class="registro-campo">
+                        <label>Responsável</label>
+                        <select id="registroResponsavel">
+                            <option value="">— Nenhum —</option>
+                            ${(data.config.responsaveis || []).map(r => `<option value="${escapeHtml(r.label)}" ${registroAtivo.responsavel===r.label?'selected':''}>${escapeHtml(r.label)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="registro-campo">
+                        <label>Status</label>
+                        <select id="registroStatusLog">
+                            <option value="">— Nenhum —</option>
+                            ${REGISTRO_STATUS.map(s => `<option value="${escapeHtml(s.id)}" ${registroAtivo.statusLog===s.id?'selected':''}>${escapeHtml(s.label)}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="registro-campo">
+                    <label>Descrição</label>
+                    <textarea id="registroDescricao" placeholder="Descreva o log realizado...">${escapeHtml(registroAtivo.descricao || '')}</textarea>
+                </div>
+
+                <div class="registro-campo">
+                    <label>Onde</label>
+                    <textarea id="registroOnde" placeholder="Informe onde a alteração foi realizada...">${escapeHtml(registroAtivo.onde || '')}</textarea>
+                </div>
+
+                <div class="registro-campo">
+                    <label>Resolução</label>
+                    <textarea id="registroResolucao" placeholder="Descreva como o problema foi resolvido ou o que foi alterado...">${escapeHtml(registroAtivo.resolucao || '')}</textarea>
+                </div>
+
+                <div class="registro-campo">
+                    <label>Anexos</label>
+                    <div class="registro-anexos-lista">${anexosEdicaoHtml}</div>
+                    <button type="button" class="checklist-add" onclick="registroAnexarArquivo()">Anexar arquivo</button>
+                </div>
+            `;
 
             conteudoDireita = `
 
@@ -4198,6 +4483,10 @@ function renderRegistros(){
                         ${escapeHtml(produtoAtivo.nome)}
                     </strong>
 
+                    <div class="registro-log-acoes">
+                        ${logAcoes}
+                    </div>
+
                     <button
                         class="danger"
                         onclick="fecharRegistroEntrada()"
@@ -4207,82 +4496,8 @@ function renderRegistros(){
 
                 </div>
 
-
-                <div class="registro-form">
-
-                    <div class="registro-campo">
-                        <label>Título</label>
-
-                        <input
-                            type="text"
-                            id="registroTitulo"
-                            placeholder="Título da modificação"
-                            value="${escapeHtml(
-                                registroAtivo.titulo || ''
-                            )}"
-                        >
-                    </div>
-
-
-                    <div class="registro-campo">
-                        <label>Descrição</label>
-
-                        <textarea
-                            id="registroDescricao"
-                            placeholder="Descreva a modificação realizada..."
-                        >${escapeHtml(
-                            registroAtivo.descricao || ''
-                        )}</textarea>
-                    </div>
-
-
-                    <div class="registro-campo">
-                        <label>Onde</label>
-
-                        <textarea
-                            id="registroOnde"
-                            placeholder="Informe onde a alteração foi realizada..."
-                        >${escapeHtml(
-                            registroAtivo.onde || ''
-                        )}</textarea>
-                    </div>
-
-
-                    <div class="registro-campo">
-                        <label>Resolução</label>
-
-                        <textarea
-                            id="registroResolucao"
-                            placeholder="Descreva como o problema foi resolvido ou o que foi alterado..."
-                        >${escapeHtml(
-                            registroAtivo.resolucao || ''
-                        )}</textarea>
-                    </div>
-
-
-                    <div class="registro-campo">
-                        <label>Anexos</label>
-
-                        <textarea
-                            id="registroAnexos"
-                            placeholder="Informe arquivos, links, queries ou outros anexos relacionados..."
-                        >${escapeHtml(
-                            registroAtivo.anexos || ''
-                        )}</textarea>
-                    </div>
-
-
-                    <div class="registro-acoes">
-
-                        <button
-                            class="btn btn-success"
-                            onclick="registrarModificacao()"
-                        >
-                            Registrar modificação
-                        </button>
-
-                    </div>
-
+                <div class="${registroEditandoLog ? 'registro-form' : 'registro-view'}">
+                    ${registroEditandoLog ? camposEdicao : camposView}
                 </div>
             `;
         }
@@ -4378,6 +4593,39 @@ function renderRegistros(){
     renderRegistros();
 }
 
+function excluirRegistroProduto(id){
+
+    const produto = data.registros.find(
+        p => p.id === id
+    );
+
+    if(!produto) return;
+
+    const qtd = (produto.entradas || []).length;
+
+    const msg = qtd > 0
+        ? `Excluir "${produto.nome}" e ${qtd} log(s) registrado(s)?`
+        : `Excluir "${produto.nome}"?`;
+
+    if(!confirm(msg)) return;
+
+    data.registros = data.registros.filter(
+        p => p.id !== id
+    );
+
+    if(registroProdutoAtivoId === id){
+        registroProdutoAtivoId =
+            data.registros.length > 0
+                ? data.registros[0].id
+                : null;
+        registroEntradaAtivaId = null;
+    }
+
+    marcarAlterado();
+
+    renderRegistros();
+}
+    
 function selecionarRegistroProduto(id){
 
     const produto = data.registros.find(
@@ -4405,6 +4653,7 @@ function selecionarRegistroEntrada(
 
     registroProdutoAtivoId = produtoId;
     registroEntradaAtivaId = entradaId;
+    registroEditandoLog = false;
 
     renderRegistros();
 }
@@ -4428,7 +4677,9 @@ function novoRegistro(produtoId){
         descricao: '',
         onde: '',
         resolucao: '',
-        anexos: '',
+        responsavel: '',
+        statusLog: '',
+        anexosArquivos: [],
         data: new Date().toISOString()
     };
 
@@ -4438,6 +4689,7 @@ function novoRegistro(produtoId){
 
     registroProdutoAtivoId = produtoId;
     registroEntradaAtivaId = novo.id;
+    registroEditandoLog = true;
 
     renderRegistros();
 
@@ -4503,6 +4755,43 @@ function cancelarRegistro(){
     renderRegistros();
 }
 
+function editarRegistroEntrada(){
+    registroEditandoLog = true;
+    renderRegistros();
+    setTimeout(() => {
+        const campo = document.getElementById('registroTitulo');
+        if(campo) campo.focus();
+    }, 50);
+}
+
+function excluirRegistroEntrada(){
+
+    if(
+        !registroProdutoAtivoId ||
+        !registroEntradaAtivaId
+    ){
+        return;
+    }
+
+    const produto = data.registros.find(
+        p => p.id === registroProdutoAtivoId
+    );
+
+    if(!produto) return;
+
+    if(!confirm('Excluir este log?')) return;
+
+    produto.entradas = produto.entradas.filter(
+        r => r.id !== registroEntradaAtivaId
+    );
+
+    registroEntradaAtivaId = null;
+    registroEditandoLog = false;
+
+    marcarAlterado();
+
+    renderRegistros();
+}
 
 function registrarModificacao(){
 
@@ -4548,16 +4837,21 @@ function registrarModificacao(){
             .getElementById('registroResolucao')
             .value.trim();
 
-    const anexos =
+    const responsavel =
         document
-            .getElementById('registroAnexos')
-            .value.trim();
+            .getElementById('registroResponsavel')
+            .value;
+
+    const statusLog =
+        document
+            .getElementById('registroStatusLog')
+            .value;
 
 
     if(!titulo){
 
         alert(
-            'Informe um título para a modificação.'
+            'Informe um título para o log.'
         );
 
         return;
@@ -4568,18 +4862,138 @@ function registrarModificacao(){
     registro.descricao = descricao;
     registro.onde = onde;
     registro.resolucao = resolucao;
-    registro.anexos = anexos;
+    registro.responsavel = responsavel;
+    registro.statusLog = statusLog;
     registro.data = new Date().toISOString();
 
 
     marcarAlterado();
 
 
-    registroEntradaAtivaId = null;
+    registroEditandoLog = false;
 
     renderRegistros();
+}    
+
+function registroEntradaAtiva(){
+    const produto = data.registros.find(p => p.id === registroProdutoAtivoId);
+    if(!produto) return null;
+    return (produto.entradas || []).find(r => r.id === registroEntradaAtivaId) || null;
 }
 
+/* Salva no objeto o que já foi digitado antes de re-renderizar (upload/remoção de anexo
+   dispara um render, e sem isso o texto ainda não salvo seria perdido) */
+function registroSincronizarCamposEdicao(){
+    if(!registroEditandoLog) return;
+    const registro = registroEntradaAtiva();
+    if(!registro) return;
+    const $ = id => document.getElementById(id);
+    if($('registroTitulo')) registro.titulo = $('registroTitulo').value;
+    if($('registroDescricao')) registro.descricao = $('registroDescricao').value;
+    if($('registroOnde')) registro.onde = $('registroOnde').value;
+    if($('registroResolucao')) registro.resolucao = $('registroResolucao').value;
+    if($('registroResponsavel')) registro.responsavel = $('registroResponsavel').value;
+    if($('registroStatusLog')) registro.statusLog = $('registroStatusLog').value;
+}
+
+function registroAnexarArquivo(){
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '*/*';
+    input.onchange = function(){
+        const file = input.files && input.files[0];
+        if(!file) return;
+        if(file.size > 5 * 1024 * 1024){
+            alert('Arquivo muito grande (máx. 5 MB).\nO GitHub aceita até ~25 MB via API, mas valores altos deixam o repositório pesado.');
+            return;
+        }
+        registroUploadAnexoGitHub(file);
+    };
+    input.click();
+}
+
+async function registroUploadAnexoGitHub(file){
+    if(!authToken){
+        alert('Para anexar arquivos é preciso estar logado como admin (Admin).\nSem o token, os arquivos não podem ser enviados para o repositório.');
+        return;
+    }
+    const registro = registroEntradaAtiva();
+    if(!registro) return;
+
+    const pasta = 'img/registros-anexos';
+    const agora = Date.now();
+    const nomeLimpo = file.name
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .replace(/[^a-zA-Z0-9._-]+/g,'-')
+        .replace(/^-+|-+$/g,'');
+    const nomeFinal = `${agora}-${nomeLimpo}`;
+    const caminho = `${pasta}/${nomeFinal}`;
+
+    const progress = document.getElementById('uploadProgress');
+    const progressText = document.getElementById('uploadProgressText');
+    if(progress){ progress.style.display = 'flex'; }
+    if(progressText){ progressText.textContent = `Enviando "${file.name}"…`; }
+
+    try {
+        const base64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${caminho}`;
+        const body = { message: `Anexa arquivo no log: ${nomeFinal}`, content: base64, branch: GITHUB_BRANCH };
+
+        try {
+            const r = await fetch(apiUrl + `?ref=${GITHUB_BRANCH}`, {headers:{Authorization:`Bearer ${authToken}`}});
+            if(r.ok){
+                const info = await r.json();
+                if(info && info.sha) body.sha = info.sha;
+            }
+        } catch(e){}
+
+        const put = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${authToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        if(!put.ok){
+            const err = await put.json().catch(()=>({}));
+            throw new Error(err.message || ('HTTP ' + put.status));
+        }
+
+        const urlRaw = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${caminho}`;
+        registro.anexosArquivos.push({ nome: file.name, url: urlRaw, arquivo: nomeFinal });
+
+        registroSincronizarCamposEdicao();
+        marcarAlterado();
+        renderRegistros();
+    } catch(e){
+        console.error('Erro no upload:', e);
+        alert('Erro ao enviar o arquivo: ' + (e.message || 'desconhecido'));
+    } finally {
+        if(progress) progress.style.display = 'none';
+    }
+}
+
+async function registroRemoverAnexo(idx){
+    const registro = registroEntradaAtiva();
+    if(!registro || !registro.anexosArquivos || !registro.anexosArquivos[idx]) return;
+    const anexo = registro.anexosArquivos[idx];
+    if(!confirm(`Remover o anexo "${anexo.nome}"?`)) return;
+
+    if(authToken && anexo.arquivo){
+        await githubDeleteFile(`img/registros-anexos/${anexo.arquivo}`);
+    }
+
+    registro.anexosArquivos.splice(idx, 1);
+    registroSincronizarCamposEdicao();
+    marcarAlterado();
+    renderRegistros();
+}
+    
 /* ============================================================
    REUNIÕES — Atas com 2 níveis (reunião > data da reunião)
 ============================================================ */
@@ -5257,16 +5671,6 @@ function renderReunioes(){
 
                 <div class="reun-editor-top">
 
-                    <input
-                        type="date"
-                        id="reunData"
-                        value="${escapeHtml(
-                            en.data || ''
-                        )}"
-                        onchange="reunSincronizar()"
-                    >
-
-
                     <div class="reun-meta">
 
                         <strong>
@@ -5320,7 +5724,7 @@ function renderReunioes(){
                     <div class="reun-info-grid">
 
 
-                     <div class="field">
+                     <div class="field field-full">
 
                         <label>Participantes</label>
                     
@@ -5394,11 +5798,7 @@ function renderReunioes(){
                                 Data e hora da reunião
                             </label>
 
-                           <div class="field">
-
-    <label>Data e hora da reunião</label>
-
-    <div class="reun-datahora">
+                            <div class="reun-datahora">
 
         <input
             type="date"
@@ -5439,7 +5839,6 @@ function renderReunioes(){
 
 </div>
 
-                        </div>
 
                     </div>
 
@@ -5568,6 +5967,8 @@ function reunSincronizar(){
     const en = reunEntradaAtiva(); if(!en) return;
     const $ = id => document.getElementById(id);
     if($('reunData')) en.data = $('reunData').value;
+    if($('reunHora')) en.hora = $('reunHora').value;
+    if($('reunMinuto')) en.minuto = $('reunMinuto').value;
     if(
         en &&
         Array.isArray(en.participantes)
@@ -5594,8 +5995,7 @@ camposRte.forEach(campo => {
 
     const el =
         document.getElementById(
-            'reunEditor_' +
-            campo.replace('Html','')
+            'reunEditor_' + campo
         );
 
     if(el){
@@ -7362,6 +7762,19 @@ document.addEventListener('contextmenu', e => {
     if(!c || e.target.closest('.rte')) return;
     e.preventDefault(); abrirMenuRapido(e, Number(c.dataset.eventId));
 });
+/* Toque prolongado no celular abre o mesmo menu rápido do clique direito */
+let toquePressTimer = null;
+document.addEventListener('touchstart', e => {
+    const c = e.target.closest && e.target.closest('[data-event-id]');
+    if(!c || e.target.closest('.rte')) return;
+    const touch = e.touches[0];
+    toquePressTimer = setTimeout(() => {
+        toquePressTimer = null;
+        abrirMenuRapido({ clientX: touch.clientX, clientY: touch.clientY, preventDefault(){} }, Number(c.dataset.eventId));
+    }, 500);
+}, { passive: true });
+document.addEventListener('touchmove', () => { clearTimeout(toquePressTimer); }, { passive: true });
+document.addEventListener('touchend', () => { clearTimeout(toquePressTimer); });
 document.addEventListener('mousedown', e => { if(!e.target.closest || !e.target.closest('#ctxRapido')) fecharMenuRapido(); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharMenuRapido(); });
 window.addEventListener('resize', fecharMenuRapido);
